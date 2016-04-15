@@ -159,4 +159,28 @@ Additional material:
 
 ### [equalizer](https://github.com/dkubb/equalizer)
 
-TODO
+*equalizer* is a module to define equality, equivalence and inspection methods.
+
+An example from the README:
+
+```Ruby
+class GeoLocation
+  include Equalizer.new(:latitude, :longitude)
+
+  attr_reader :latitude, :longitude
+
+  def initialize(latitude, longitude)
+    @latitude, @longitude = latitude, longitude
+  end
+end
+
+point_a = GeoLocation.new(1, 2)
+point_b = GeoLocation.new(1, 2)
+
+point_a == point_b           # => true
+```Ruby
+
+Without the *include* from above this would be *false*, not *true*.
+
+How does equalizer do this?
+
