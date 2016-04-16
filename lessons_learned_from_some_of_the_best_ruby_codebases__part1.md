@@ -1,12 +1,12 @@
-I recently started looking into [mutant](https://github.com/mbj/mutant) and related gems for an upcoming presentation about abstract syntax trees I am working on at the moment.
+I recently started looking into [Mutant](https://github.com/mbj/mutant) and related gems for an upcoming presentation about abstract syntax trees I am working on at the moment.
 
 While browsing the source code of *Mutant* and of the gems that *Mutant* uses I realized that those codebases are among the cleanest code bases I have ever seen in Ruby land with an amazing overall architecture and I'd love to share what I've seen and learned reading their code.
 
 I intend to make this a series with the first part of this series not covering *Mutant* itself but the gems it uses.
 
-Let's get started with *Mutant`s [gem dependencies](https://github.com/mbj/mutant/blob/master/mutant.gemspec).
+Let's get started with *Mutant*s [gem dependencies](https://github.com/mbj/mutant/blob/master/mutant.gemspec).
 
-### The [parser](https://github.com/whitequark/parser) gem
+### [parser](https://github.com/whitequark/parser)
 
 Now that is one of my favourite gem of all times. My beloved [Reek gem](https://github.com/troessner/reek) would not be what it is without the *parser* gem. Nor would 80% of all other gems in Ruby land that have something to do with abstract syntax trees.
 
@@ -72,7 +72,7 @@ Let's contrast this with a proper module:
 => Module
 ```
 
-Now let's try to emulate the code I showed you from *Mutant`:
+Now let's try to emulate the code I showed you from *Mutant*:
 
 ```Bash
 [1] pry(main)> class Klazz < Module; end
@@ -147,7 +147,7 @@ def initialize(name)
 end
 ```
 
-Here things start to get interesting. We use a lambda (via the stabby lambda syntax) that takes an arbitrary number of arguments. And then it calls *new* with those. What *new* does it call? The block is executed at runtime and in the scope of....the object that *Procto* is included into, so the *new* here is not *Procto#new* but rather the object in questionvvc .
+Here things start to get interesting. We use a lambda (via the stabby lambda syntax) that takes an arbitrary number of arguments. And then it calls *new* with those. What *new* does it call? The block is executed at runtime and in the scope of....the object that *Procto* is included into, so the *new* here is not *Procto#new* but rather the object in question.
 
 In other words, the lambda will create a new object of whatever it is included into and call whatever *name* we pass into it. So that's basically where
 
@@ -190,7 +190,7 @@ point_a = GeoLocation.new(1, 2)
 point_b = GeoLocation.new(1, 2)
 
 point_a == point_b # => true
-```Ruby
+```
 
 Without the *include* from above Ruby would evaluate this as *false*, not *true*.
 
