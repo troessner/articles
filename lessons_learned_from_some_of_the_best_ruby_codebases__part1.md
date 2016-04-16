@@ -1,96 +1,51 @@
+I recently started looking into [mutant](https://github.com/mbj/mutant) and related gems for an upcoming presentation about abstract syntax trees I am working on at the moment.
 
+While browsing the source code of *Mutant* and of the gems that *Mutant* uses I realized that those codebases are among the cleanest code bases I have ever seen in Ruby land with an amazing overall architecture and I'd love to share what I've seen and learned reading their code.
 
-I recently started looking into the awesome [mutant](https://github.com/mbj/mutant) gem for an [upcoming presentation](https://github.com/troessner/talks/blob/master/exploiting-rubys-ast-a-love-story-in-three-chapters.html) I am working on at the moment.
-
-While browsing the source code of *Mutant* and of the gems that *Mutant* uses I realized that those codebases are among the cleanest code bases I have ever seen in Ruby land with an amazing overall architecture and I'd love to share what I've seen reading their code.
-
-I intend to make this a series with the first part of this series not covering *Mutant* or `synvert* itself but the gems they use.
+I intend to make this a series with the first part of this series not covering *Mutant* itself but the gems it uses.
 
 Let's get started with *Mutant`s [gem dependencies](https://github.com/mbj/mutant/blob/master/mutant.gemspec).
 
-### The *parser* gem
+### The [parser](https://github.com/whitequark/parser) gem
 
-Now that is one of my favourite gem of all times. My beloved [Reek](https://github.com/troessner/reek) would not be what it is without the *parser*. Nor would 80% of all other gems in Ruby land that have something to do with abstract syntax trees.
+Now that is one of my favourite gem of all times. My beloved [Reek gem](https://github.com/troessner/reek) would not be what it is without the *parser* gem. Nor would 80% of all other gems in Ruby land that have something to do with abstract syntax trees.
 
 The *parser* gem is huge though. I intend to cover this in a latter blog post and will skip this for now.
 
-### The [procto](https://github.com/snusnu/procto) gem
+### [Concord](https://github.com/mbj/concord)
 
-Turns your ruby object into a method object. The code example from the README speaks for itself so I'll just paste it here:
-
-```Ruby
-class Printer
-  include Procto.call(:print)
-
-  def initialize(text)
-    @text = text
-  end
-
-  def print
-    "Hello #{text}"
-  end
-end
-
-Printer.call('world') # => "Hello world"
-```
-
-The code to make this work is surprisingly small and very elegant.
+*Concord* is a nice little library that helps you turning this:
 
 ```Ruby
-class Procto < Module
-  # The default name of the instance method to be called
-  DEFAULT_NAME = :call
-  def self.call(name = DEFAULT_NAME)
-    new(name.to_sym)
+class ComposedObject
+  attr_reader :foo
+  protected :foo
+
+  attr_reader :bar
+  protected :bar
+
+  def initialize(foo, bar)
+    @foo, @bar = foo, bar
   end
-  # ...
 end
 ```
 
-Ok, we define a singleton method called "call" that takes a name just returns an instance of *Procto*. (But wait! Doesn't *include* only take modules as input? Why does this work on an instance of a class as well? We'll look into this later, for now let's just ignore this)
-
-How does the constructor look like?
+into this:
 
 ```Ruby
-  def initialize(name)
-    @block = ->(*args) { new(*args).public_send(name) }
-  end
+class ComposedObject
+  include Concord.new(:foo, :bar)
+end
 ```
 
-Here things start to get interesting. We use a lambda (via the stabby lambda syntax) that takes an arbitrary number of arguments. And then it calls *new* with those. What *new* does it call? The block is executed at runtime and in the scope of....the object that *Procto* is included into (so the *new* here is not Procto#new).
-
-In other words, the lambda will create a new object of whatever it is included into and call whatever *name* we pass into it. So that's basically where
+What's interesting here is how we we include it:
 
 ```Ruby
-Printer.call('world')
+include Concord.new(:foo, :bar)
 ```
 
-comes from.
 
-But how is this included?
-
-```Ruby
-  def included(host)
-    host.instance_exec(@block) do |block|
-      define_singleton_method(:call, &block)
-    end
-  end
-```
-
-TODO: Explain instance_exec and what happens here.
-
-### Including an instance of a class
-
-[Concord](https://github.com/mbj/concord) is a nice little library that ...TODO...
-*Mutant* makes heavy use of `Concord* e.g. like this:
-
-```Ruby
-  class Receiver
-    include Concord.new(:condition_variable, :mutex, :messages)
-  end
-````
-
-Ok, something is including a module. Wait, it's not a module. We're calling `new* on it. Wat?
+Ok, something is including a module. Wait, it's not a module. We're calling *new* on it. Wat?
 How does this work?
 
 Here's what happens when you try to include something that is not "module'sque":
@@ -105,7 +60,7 @@ from (pry):3:in `include'
 => Class
 ```
 
-Ok, makes sense. `Klazz* class is `class`, not *Module`.
+Ok, makes sense. *Klazz* class is *class*, not *Module*.
 Let's contrast this with a proper module:
 
 ```Bash
@@ -131,31 +86,88 @@ from (pry):2:in `include'
 => Class
 ```
 
-Now it get even more confusing - `include Klazz* doesn't work, `include Klazz.new* does and the class of `Foo* is still `Class* not *Module`.  What's happening here?
+Now it get even more confusing - *include Klazz* doesn't work, *include Klazz.new* does and the class of *Foo* is still *Class* not *Module*.  What's happening here?
 
 Let's see how Rubinius actually handles this in [module.rb](https://github.com/rubinius/rubinius/blob/master/core/module.rb#L471):
 
 ```Ruby
-  def include?(mod)
-    if !mod.kind_of?(Module) or mod.kind_of?(Class)
-      raise TypeError, "wrong argument type #{mod.class} (expected Module)"
-    end
-    # snip
+def include?(mod)
+  if !mod.kind_of?(Module) or mod.kind_of?(Class)
+    raise TypeError, "wrong argument type #{mod.class} (expected Module)"
   end
+  # snip
+end
 ```
 
-There it is. If the argument is not a module OR if it's a class we raise. Now we understand why `include Klazz* doesn't work (because it's class is `class`) but `include Klazz.new* does not raise (because its class is 'Klazz', not `Class`).
+There it is. If the argument is not a module __or__ if it's a class we raise. Now we understand why *include Klazz* doesn't work (because it's class is *class*) but *include Klazz.new* does not raise (because its class is *Klazz*, not *Class*).
 
-I'm not sure what's the point this whole enchilada but let's just accept it for now ;)
+This elegant trick allows to use a class in a kind-of module context and to use a module in a kind-of class context.
 
-Ok, now with that out of the way, where were we again? Right, *Mutant`.
+### [procto](https://github.com/snusnu/procto)
 
-`concord* uses this trick to pull off .....TODO: Why? It could also just use a singleton_method instead of #new
+Turns your ruby object into a method object. The code example from the README speaks for itself so I'll just paste it here:
 
-Additional material:
+```Ruby
+class Printer
+  include Procto.call(:print)
 
-- https://stackoverflow.com/questions/10558504/can-someone-explain-the-class-superclass-class-superclass-paradox
-- https://stackoverflow.com/questions/7675774/the-class-object-paradox-confusion
+  def initialize(text)
+    @text = text
+  end
+
+  def print
+    "Hello #{text}"
+  end
+end
+
+Printer.call('world') # => "Hello world"
+```
+
+The code to make this work is surprisingly small and very elegant.
+
+```Ruby
+class Procto < Module
+  # The default name of the instance method to be called
+  DEFAULT_NAME = :call
+
+  def self.call(name = DEFAULT_NAME)
+    new(name.to_sym)
+  end
+  # ...
+end
+```
+
+We define a singleton method called "call" that takes a name and returns an instance of *Procto*. (Using the same "include a kind-of class as module trick" *Concord* used above).
+
+How does the constructor look like?
+
+```Ruby
+def initialize(name)
+  @block = ->(*args) { new(*args).public_send(name) }
+end
+```
+
+Here things start to get interesting. We use a lambda (via the stabby lambda syntax) that takes an arbitrary number of arguments. And then it calls *new* with those. What *new* does it call? The block is executed at runtime and in the scope of....the object that *Procto* is included into, so the *new* here is not *Procto#new* but rather the object in questionvvc .
+
+In other words, the lambda will create a new object of whatever it is included into and call whatever *name* we pass into it. So that's basically where
+
+```Ruby
+Printer.call('world')
+```
+
+comes from.
+
+But how is this included?
+
+```Ruby
+def included(host)
+  host.instance_exec(@block) do |block|
+    define_singleton_method(:call, &block)
+  end
+end
+```
+
+TODO: Explain instance_exec and what happens here.
 
 ### [equalizer](https://github.com/dkubb/equalizer)
 
@@ -177,10 +189,20 @@ end
 point_a = GeoLocation.new(1, 2)
 point_b = GeoLocation.new(1, 2)
 
-point_a == point_b           # => true
+point_a == point_b # => true
 ```Ruby
 
-Without the *include* from above this would be *false*, not *true*.
+Without the *include* from above Ruby would evaluate this as *false*, not *true*.
+
+When can this be useful?
+
+Think about [value objects](http://www.sitepoint.com/ddd-for-rails-developers-part-2-entities-and-values/):
+
+```
+“A Value Object is an object that describes some characteristic or attribute but carries no concept of identity.” As there is no identity, two Value Objects are equal when all their attributes are equal. An example of a Value Object would be Money.
+```
+
+*Value objects* are heavily used in methodologies like [Domain Driven Design](https://en.wikipedia.org/wiki/Domain-driven_design) or when using *composed_of* in Rails (for a great introduction to this whole topic, check out [this article series](http://victorsavkin.com/ddd) from Victor Savkin).
 
 How does equalizer do this?
 
