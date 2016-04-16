@@ -206,3 +206,4 @@ Think about [value objects](http://www.sitepoint.com/ddd-for-rails-developers-pa
 
 How does equalizer do this?
 
+TODO
