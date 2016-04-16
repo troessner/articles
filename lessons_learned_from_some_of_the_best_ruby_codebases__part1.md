@@ -152,12 +152,12 @@ Here things start to get interesting. We use a lambda (via the stabby lambda syn
 In other words, the lambda will create a new object of whatever it is included into and call whatever *name* we pass into it. So that's basically where
 
 ```Ruby
-Printer.call('world')
+Procto.call(:print)
 ```
 
 comes from.
 
-But how is this included?
+So what happens when this is included?
 
 ```Ruby
 def included(host)
@@ -167,7 +167,13 @@ def included(host)
 end
 ```
 
-TODO: Explain instance_exec and what happens here.
+We're using the *included* callback here (note that it is __not__ *self.included* here due to us using the kind-of-class-module set up). In this callback, we're using *instance_exec* on the host class, which is *Printer* which effectively puts us a class scope.
+
+Now by using [Object.define_singleton_method](http://ruby-doc.org/core-2.3.0/Object.html#method-i-define_singleton_method) we define the singleton method *call* (or, in layman's terms: class method) so we can finally do
+
+```Ruby
+Printer.call('world')
+```
 
 ### [equalizer](https://github.com/dkubb/equalizer)
 
@@ -206,4 +212,95 @@ Think about [value objects](http://www.sitepoint.com/ddd-for-rails-developers-pa
 
 How does equalizer do this?
 
-TODO
+Let's look again at how it is included:
+
+```Ruby
+include Equalizer.new(:latitude, :longitude)
+```
+
+Pattern looks familiar, doesn't it?
+
+Ok, let's check out the initializer:
+
+```Ruby
+def initialize(*keys)
+  @keys = keys
+  define_methods
+  freeze
+end
+'''
+
+Nothing really to see here so let's check out *define_methods*:
+
+```Ruby
+def define_methods
+  define_cmp_method
+  define_hash_method
+  define_inspect_method
+end
+```
+
+Let's focus on *define_cmp_method* and ignore the other two:
+
+```Ruby
+def define_cmp_method
+  keys = @keys
+  define_method(:cmp?) do |comparator, other|
+    keys.all? do |key|
+      __send__(key).public_send(comparator, other.__send__(key))
+    end
+  end
+  private :cmp?
+end
+```
+Actually this whole chunk of code looks more complex than it actually is:
+
+We define a method called "cmp?" that takes something that will denote the actual comparison and then *other*, so the thing we are comparing it to
+We then check all keys (read: attributes) for the satisfaction of this monster:
+
+```Ruby
+__send__(key).public_send(comparator, other.__send__(key))
+```
+
+- *__send__(key)* will basically just return the attribute *key* points to
+- on this value we now call the *comparator*
+- so if we assume *==* as *comparator* for example this whole line boils down to
+  ```
+    attr_on_object == attr_on_other_object
+  ```
+- not so complicated anymore, is it?
+
+How is this used?
+
+```Ruby
+def ==(other)
+  # snip
+  other.kind_of?(self.class) && cmp?(__method__, other)
+end
+```
+
+So first we check if the objects
+Now comes the interesting part: We call *cmp?* and pass to it *__method__* which is a special identifier that Ruby sets up for when you enter a method and that gives you the method name back.
+So we could have also written:
+
+```Ruby
+cmp?(:==, other)
+```
+
+Why on earth would you then just not write it that way, you might ask?
+
+There are multiple reasons for this. First and foremost, it communicates intent clearer. Whoever reads this just __knows__ that you are referring to the same thing. Second, it makes it easier to refactor - in case you would change "==" to something else you could leave the rest of this method untouched.
+
+With this quick digression, let's come back to this one:
+
+
+```Ruby
+def ==(other)
+  # snip
+  cmp?(__method__, other)
+end
+```
+
+Taking into account what we talked about above it's now obvious what it does: It takes the *other* object we're comparing our current object to and calls *==* for comparison of all attributes both objects have in common.
+
+TODO: Ending
