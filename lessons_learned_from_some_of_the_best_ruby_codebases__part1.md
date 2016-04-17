@@ -96,9 +96,9 @@ end
 
 There it is. If the argument is not a module __or__ if it's a class we raise.
 
-Now we understand why *include Foo* doesn't work - because it's class is *class* - but *include Foo.new* does not raise - because its class is *Foo*, not *Class*.
+Now we understand why *include Foo* doesn't work - because it's class is *Class* - but *include Foo.new* does not raise - because its class is *Foo*, not *Class*.
 
-This elegant trick allows to use a class in a kind-of module context and to use a module in a kind-of class context.
+This elegant trick of having a class inherit from *Module* allows us to use a class in a kind-of module context and to use a module in a kind-of class context.
 
 ### [Procto](https://github.com/snusnu/procto)
 
