@@ -177,10 +177,15 @@ class Procto < Module
 end
 ```
 
-We're using the *included* callback here (note that it is __not__ *self.included* here due to  using the kind-of-class-module set up). In this callback, we're using *instance_exec* on the host class, which would be *Printer* from the example above. This effectively puts us a class scope.
-Furthermore we pass our *@block* instance variable to [BasicObject#instance_exec](http://ruby-doc.org/core-2.3.0/BasicObject.html#method-i-instance_exec) which *instance_exec* then passes as block-local variable to the block.
+We're using the *included* callback here (note that it is __not__ *self.included* here due to  using the kind-of-class-module set up).
 
-Now by using [Object.define_singleton_method](http://ruby-doc.org/core-2.3.0/Object.html#method-i-define_singleton_method) we define the singleton method *call* (or, in layman's terms: class method) so we can finally do
+In this callback, we're using *instance_exec* on the host class, which would be *Printer* from the example above. This effectively puts us into class scope.
+
+Furthermore we pass our *@block* instance variable to *[BasicObject#instance_exec](http://ruby-doc.org/core-2.3.0/BasicObject.html#method-i-instance_exec)* which *instance_exec* then passes as block-local variable *block* to the, uhm, block (sorry, that's a lot of "block" in one sentence, I know).
+
+Note that this is not a typo: We need to pass *@block* explicitly to *instance_exec* because instance variables will not be visible in the block that *instance_exec* takes (for details see [here](https://stackoverflow.com/questions/3071532/how-does-instance-eval-work-and-why-does-dhh-hate-it?lq=1), [here](https://groups.google.com/forum/#!msg/ruby-sunspot/5xanVMY6ekQ/JSc-3olBRNAJ) or [here](https://stackoverflow.com/questions/29598609/ruby-access-instance-variable-in-instance-eval)).
+
+Now by using *[Object.define_singleton_method](http://ruby-doc.org/core-2.3.0/Object.html#method-i-define_singleton_method)* we define the singleton method *call* (or, in layman's terms: class method) so we can finally do
 
 ```Ruby
 Printer.call('world')
