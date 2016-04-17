@@ -6,26 +6,18 @@ I intend to make this a series with the first part of this series not covering *
 
 Let's get started with *Mutant*s [gem dependencies](https://github.com/mbj/mutant/blob/master/mutant.gemspec).
 
-### [parser](https://github.com/whitequark/parser)
-
-Now that is one of my favourite gem of all times. My beloved [Reek gem](https://github.com/troessner/reek) would not be what it is without the *parser* gem. Nor would 80% of all other gems in Ruby land that have something to do with abstract syntax trees.
-
-The *parser* gem is huge though. I intend to cover this in a latter blog post and will skip this for now.
-
 ### [Concord](https://github.com/mbj/concord)
 
 *Concord* is a nice little library that helps you turning this:
 
 ```Ruby
 class ComposedObject
-  attr_reader :foo
-  protected :foo
-
-  attr_reader :bar
-  protected :bar
+  attr_reader :foo, :bar
+  protected :foo; :bar
 
   def initialize(foo, bar)
-    @foo, @bar = foo, bar
+    @foo = foo
+    @bar = bar
   end
 end
 ```
@@ -50,20 +42,21 @@ How does this work?
 
 Here's what happens when you try to include something that is not "module'sque":
 
-```Bash
-[2] pry(main)> class Klazz; end
+```
+[1] pry(main)> class Foo; end
 => nil
-[3] pry(main)> class Foo; include Klazz; end
+[2] pry(main)> class Bar; include Foo; end
 TypeError: wrong argument type Class (expected Module)
-from (pry):3:in `include'
-[4] pry(main)> Klazz.class
+from (pry):2:in `include'
+[3] pry(main)> Foo.class
 => Class
 ```
 
-Ok, makes sense. *Klazz* class is *class*, not *Module*.
+Ok, makes sense. *Foo*'s class is *Class*, not *Module*.
+
 Let's contrast this with a proper module:
 
-```Bash
+```
 [1] pry(main)> module Mod; end
 => nil
 [2] pry(main)> class Foo; include Mod; end
@@ -74,19 +67,19 @@ Let's contrast this with a proper module:
 
 Now let's try to emulate the code I showed you from *Mutant*:
 
-```Bash
-[1] pry(main)> class Klazz < Module; end
+```
+[1] pry(main)> class Foo < Module; end
 => nil
-[2] pry(main)> class Foo; include Klazz; end
+[2] pry(main)> class Bar; include Foo; end
 TypeError: wrong argument type Class (expected Module)
 from (pry):2:in `include'
-[3] pry(main)> class Foo; include Klazz.new; end
-=> Foo
+[3] pry(main)> class Bar; include Foo.new; end
+=> Bar
 [4] pry(main)> Foo.class
 => Class
 ```
 
-Now it get even more confusing - *include Klazz* doesn't work, *include Klazz.new* does and the class of *Foo* is still *Class* not *Module*.  What's happening here?
+Now it gets even more confusing - *include Foo* doesn't work, *include Foo.new* does but the class of *Foo* is still *Class* not *Module*.  What's happening here?
 
 Let's see how Rubinius actually handles this in [module.rb](https://github.com/rubinius/rubinius/blob/master/core/module.rb#L471):
 
@@ -99,11 +92,13 @@ def include?(mod)
 end
 ```
 
-There it is. If the argument is not a module __or__ if it's a class we raise. Now we understand why *include Klazz* doesn't work (because it's class is *class*) but *include Klazz.new* does not raise (because its class is *Klazz*, not *Class*).
+There it is. If the argument is not a module __or__ if it's a class we raise.
+
+Now we understand why *include Foo* doesn't work - because it's class is *class* - but *include Foo.new* does not raise - because its class is *Foo*, not *Class*.
 
 This elegant trick allows to use a class in a kind-of module context and to use a module in a kind-of class context.
 
-### [procto](https://github.com/snusnu/procto)
+### [Procto](https://github.com/snusnu/procto)
 
 Turns your ruby object into a method object. The code example from the README speaks for itself so I'll just paste it here:
 
@@ -125,6 +120,14 @@ Printer.call('world') # => "Hello world"
 
 The code to make this work is surprisingly small and very elegant.
 
+Let's start with looking at this part
+
+```Ruby
+Procto.call(:print)
+```
+
+from the example above without paying attention to what happens when it is included:
+
 ```Ruby
 class Procto < Module
   # The default name of the instance method to be called
@@ -133,11 +136,11 @@ class Procto < Module
   def self.call(name = DEFAULT_NAME)
     new(name.to_sym)
   end
-  # ...
+  # snip
 end
 ```
 
-We define a singleton method called "call" that takes a name and returns an instance of *Procto*. (Using the same "include a kind-of class as module trick" *Concord* used above).
+We define a singleton method called *call* that takes a name and returns an instance of *Procto*. (Using the same "include a kind-of class as module trick" *Concord* used above).
 
 How does the constructor look like?
 
@@ -147,27 +150,33 @@ def initialize(name)
 end
 ```
 
-Here things start to get interesting. We use a lambda (via the stabby lambda syntax) that takes an arbitrary number of arguments. And then it calls *new* with those. What *new* does it call? The block is executed at runtime and in the scope of....the object that *Procto* is included into, so the *new* here is not *Procto#new* but rather the object in question.
+Here things start to get interesting. We use a lambda (via the stabby lambda syntax) that takes an arbitrary number of arguments. And then it calls *new* with those. What *new* does it call? The block is executed at runtime and in the scope of....the object that *Procto* is included into, so the *new* here is not *Procto#new* but rather the object it has been included into.
 
-In other words, the lambda will create a new object of whatever it is included into and call whatever *name* we pass into it. So that's basically where
+In other words, the lambda will create a new object of whatever it is included into and call whatever *name* we pass into it.
+
+That's basically the
 
 ```Ruby
 Procto.call(:print)
 ```
 
-comes from.
+part.
 
 So what happens when this is included?
 
 ```Ruby
-def included(host)
-  host.instance_exec(@block) do |block|
-    define_singleton_method(:call, &block)
+class Procto < Module
+  # snip
+  def included(host)
+    host.instance_exec(@block) do |block|
+      define_singleton_method(:call, &block)
+    end
   end
 end
 ```
 
-We're using the *included* callback here (note that it is __not__ *self.included* here due to us using the kind-of-class-module set up). In this callback, we're using *instance_exec* on the host class, which is *Printer* which effectively puts us a class scope.
+We're using the *included* callback here (note that it is __not__ *self.included* here due to  using the kind-of-class-module set up). In this callback, we're using *instance_exec* on the host class, which would be *Printer* from the example above. This effectively puts us a class scope.
+Furthermore we pass our *@block* instance variable to [BasicObject#instance_exec](http://ruby-doc.org/core-2.3.0/BasicObject.html#method-i-instance_exec) which *instance_exec* then passes as block-local variable to the block.
 
 Now by using [Object.define_singleton_method](http://ruby-doc.org/core-2.3.0/Object.html#method-i-define_singleton_method) we define the singleton method *call* (or, in layman's terms: class method) so we can finally do
 
@@ -175,7 +184,7 @@ Now by using [Object.define_singleton_method](http://ruby-doc.org/core-2.3.0/Obj
 Printer.call('world')
 ```
 
-### [equalizer](https://github.com/dkubb/equalizer)
+### [Equalizer](https://github.com/dkubb/equalizer)
 
 *equalizer* is a module to define equality, equivalence and inspection methods.
 
@@ -205,7 +214,9 @@ When can this be useful?
 Think about [value objects](http://www.sitepoint.com/ddd-for-rails-developers-part-2-entities-and-values/):
 
 ```
-“A Value Object is an object that describes some characteristic or attribute but carries no concept of identity.” As there is no identity, two Value Objects are equal when all their attributes are equal. An example of a Value Object would be Money.
+A Value Object is an object that describes some characteristic or attribute but carries no concept of identity.
+As there is no identity, two Value Objects are equal when all their attributes are equal.
+An example of a Value Object would be Money.
 ```
 
 *Value objects* are heavily used in methodologies like [Domain Driven Design](https://en.wikipedia.org/wiki/Domain-driven_design) or when using *composed_of* in Rails (for a great introduction to this whole topic, check out [this article series](http://victorsavkin.com/ddd) from Victor Savkin).
@@ -228,7 +239,7 @@ def initialize(*keys)
   define_methods
   freeze
 end
-'''
+```
 
 Nothing really to see here so let's check out *define_methods*:
 
@@ -240,7 +251,7 @@ def define_methods
 end
 ```
 
-Let's focus on *define_cmp_method* and ignore the other two:
+Let's focus on *define_cmp_method* and ignore the other two methods for now:
 
 ```Ruby
 def define_cmp_method
@@ -253,24 +264,29 @@ def define_cmp_method
   private :cmp?
 end
 ```
-Actually this whole chunk of code looks more complex than it actually is:
+This whole chunk of code looks a little more complex than it actually is:
 
-We define a method called "cmp?" that takes something that will denote the actual comparison and then *other*, so the thing we are comparing it to
-We then check all keys (read: attributes) for the satisfaction of this monster:
+We define a method called *cmp?* that takes something that will denote the actual comparison and then *other*, so the thing we are comparing it to.
+
+We then check all keys (read: attributes) and if they satisfy this monster:
 
 ```Ruby
 __send__(key).public_send(comparator, other.__send__(key))
 ```
 
-- *__send__(key)* will basically just return the attribute *key* points to
+What's happening here?
+
+- ```__send__(key)``` will basically just return the attribute *key* points to
 - on this value we now call the *comparator*
+- and pass in the value of the same attribute for the object we're comparing to
 - so if we assume *==* as *comparator* for example this whole line boils down to
   ```
     attr_on_object == attr_on_other_object
   ```
-- not so complicated anymore, is it?
 
-How is this used?
+Not so complicated anymore, is it?
+
+With this out of the way, how is it used?
 
 ```Ruby
 def ==(other)
@@ -279,8 +295,8 @@ def ==(other)
 end
 ```
 
-So first we check if the objects
-Now comes the interesting part: We call *cmp?* and pass to it *__method__* which is a special identifier that Ruby sets up for when you enter a method and that gives you the method name back.
+So first we check if the objects have the same class.
+Then comes the interesting part: We call *cmp?* and pass ```__method__``` to it which is a special identifier that Ruby sets up for when you enter a method and that gives you the actual method name back.
 So we could have also written:
 
 ```Ruby
@@ -289,7 +305,7 @@ cmp?(:==, other)
 
 Why on earth would you then just not write it that way, you might ask?
 
-There are multiple reasons for this. First and foremost, it communicates intent clearer. Whoever reads this just __knows__ that you are referring to the same thing. Second, it makes it easier to refactor - in case you would change "==" to something else you could leave the rest of this method untouched.
+There are multiple reasons for this. First and foremost, it communicates intent clearer. Whoever reads this just __knows__ that you are referring to the same thing. Second, it makes it easier to refactor - in case you would change *==* to something else you could leave the rest of this method untouched.
 
 With this quick digression, let's come back to this one:
 
@@ -303,4 +319,12 @@ end
 
 Taking into account what we talked about above it's now obvious what it does: It takes the *other* object we're comparing our current object to and calls *==* for comparison of all attributes both objects have in common.
 
-TODO: Ending
+### [Parser](https://github.com/whitequark/parser)
+
+Now that is one of my favourite gem of all times. My beloved [Reek gem](https://github.com/troessner/reek) would not be what it is without the *parser* gem. Nor would 80% of all other gems in Ruby land that have something to do with abstract syntax trees.
+
+The *parser* gem is huge though. I intend to cover this in a latter blog post and will skip this for now.
+
+### Wrapping it up
+
+That's it for part of this series. In the upcoming part 2 I will be looking at the [Adamantium gem](https://github.com/dkubb/adamantium), the [ast gem](https://github.com/whitequark/ast) and the [abstract_type gem](https://github.com/dkubb/abstract_type).
