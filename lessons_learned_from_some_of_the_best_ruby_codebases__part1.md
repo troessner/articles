@@ -83,7 +83,7 @@ from (pry):2:in `include'
 
 Now it gets even more confusing - *include Foo* doesn't work, *include Foo.new* does but the class of *Foo* is still *Class* not *Module*.  What's happening here?
 
-Let's see how Rubinius actually handles this in [module.rb](https://github.com/rubinius/rubinius/blob/master/core/module.rb#L471):
+Let's see how Rubinius actually handles this in [module.rb](https://github.com/rubinius/rubinius/blob/master/core/module.rb#L471) (the behaviour below is identical to MRI Ruby):
 
 ```Ruby
 def include?(mod)
@@ -113,7 +113,7 @@ class Printer
   end
 
   def print
-    "Hello #{text}"
+    "Hello #{@text}"
   end
 end
 
@@ -179,7 +179,7 @@ end
 
 We're using the *included* callback here (note that it is __not__ *self.included* here due to  using the kind-of-class-module set up).
 
-In this callback, we're using *instance_exec* on the host class, which would be *Printer* from the example above. This effectively puts us into class scope.
+In this callback, we're using *instance_exec* on the host class, which would be *Printer* from the example above. This effectively puts us at class scope.
 
 Furthermore we pass our *@block* instance variable to *[BasicObject#instance_exec](http://ruby-doc.org/core-2.3.0/BasicObject.html#method-i-instance_exec)* which *instance_exec* then passes as block-local variable *block* to the, uhm, block (sorry, that's a lot of "block" in one sentence, I know).
 
@@ -220,11 +220,10 @@ When can this be useful?
 
 Think about [value objects](http://www.sitepoint.com/ddd-for-rails-developers-part-2-entities-and-values/):
 
-```
+>>
 A Value Object is an object that describes some characteristic or attribute but carries no concept of identity.
 As there is no identity, two Value Objects are equal when all their attributes are equal.
 An example of a Value Object would be Money.
-```
 
 *Value objects* are heavily used in methodologies like [Domain Driven Design](https://en.wikipedia.org/wiki/Domain-driven_design) or when using *composed_of* in Rails (for a great introduction to this whole topic, check out [this article series](http://victorsavkin.com/ddd) from Victor Savkin).
 
@@ -326,12 +325,10 @@ end
 
 Taking into account what we talked about above it's now obvious what it does: It takes the *other* object we're comparing our current object to and calls *==* for comparison of all attributes both objects have in common.
 
-### [Parser](https://github.com/whitequark/parser)
-
-Now that is one of my favourite gem of all times. My beloved [Reek gem](https://github.com/troessner/reek) would not be what it is without the *parser* gem. Nor would 80% of all other gems in Ruby land that have something to do with abstract syntax trees.
-
-The *parser* gem is huge though. I intend to cover this in a latter blog post and will skip this for now.
-
 ### Wrapping it up
+
+So what did all 3 gems have in common?
+
+The top level class was inheriting from *Module* so if you take only one thing away from this post it should be this neat little trick that kind of blurs the distinction between classes and modules in Ruby even further and that can help to increase the elegance of your code significantly in my mind.
 
 That's it for part of this series. In the upcoming part 2 I will be looking at the [Adamantium gem](https://github.com/dkubb/adamantium), the [ast gem](https://github.com/whitequark/ast) and the [abstract_type gem](https://github.com/dkubb/abstract_type).
