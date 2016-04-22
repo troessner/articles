@@ -88,9 +88,52 @@ def self.included(descendant)
 end
 ```
 
-The *descendant* is extending a module here, let's check this out.
+The *descendant* is extending the *AbstractMethodDeclarations* module here, thus adopting its methods as singleton methods:
 
-*AbstractMethodDeclarations* basically has those methods...
+```Ruby
+def abstract_method(*names)
+  names.each(&method(:create_abstract_instance_method))
+  self
+end
+```
+
+This is the method (or "class macro") that allows you to declare your abstract method a la:
+
+```Ruby
+abstract_method :foo, :bar
+```
+
+A bunch of interesting things going on here. First of all, we're using a neat little trick that is kind of the reverse of Ruby [Symbol#to_proc feature](https://stackoverflow.com/questions/14881125/what-does-to-proc-method-mean).
+
+This
+
+```Ruby
+names.each(&method(:create_abstract_instance_method))
+```
+
+basically means
+
+```Ruby
+names.each do |name|
+  create_abstract_instance_method name
+end
+```
+
+You can read up on how this works [here](https://andrewjgrimm.wordpress.com/2011/10/03/in-ruby-method-passes-you/).
+
+And what does *create_abstract_instance_method* do?
+
+```Ruby
+def create_abstract_instance_method(name)
+  define_method(name) do |*|
+    fail NotImplementedError, "#{self.class}##{name} is not implemented"
+  end
+end
+```
+
+It defines an abstract instance method that will do nothing but .... fail with a proper error message.
+Exactly what we need to implement abstract types.
+Furthermore there's a sister method to *abstract_method* that's called *abstract_singleton_method* which does the same thing for singleton methods.
 
 ### ast
 
