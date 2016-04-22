@@ -10,7 +10,7 @@ Let's get started with *Mutant*s [gem dependencies](https://github.com/mbj/mutan
 
 ### [Concord](https://github.com/mbj/concord)
 
-*Concord* is a nice little library that helps you turning this:
+*[Concord](https://github.com/mbj/concord)* is a nice little library that helps you turning this:
 
 ```Ruby
 class ComposedObject
@@ -102,7 +102,7 @@ This elegant trick of having a class inherit from *Module* allows us to use a cl
 
 ### [Procto](https://github.com/snusnu/procto)
 
-Turns your ruby object into a method object. The code example from the README speaks for itself so I'll just paste it here:
+*[Procto](https://github.com/snusnu/procto)* turns your ruby object into a method object. The code example from the README speaks for itself so I'll just paste it here:
 
 ```Ruby
 class Printer
@@ -193,7 +193,7 @@ Printer.call('world')
 
 ### [Equalizer](https://github.com/dkubb/equalizer)
 
-*equalizer* is a module to define equality, equivalence and inspection methods.
+*[Equalizer](https://github.com/dkubb/equalizer)* is a module to define equality, equivalence and inspection methods.
 
 An example from the README:
 
