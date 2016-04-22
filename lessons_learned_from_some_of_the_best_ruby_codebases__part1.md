@@ -38,48 +38,41 @@ What's interesting here is how we we include it:
 include Concord.new(:foo, :bar)
 ```
 
-
 Ok, something is including a module. Wait, it's not a module. We're calling *new* on it. Wat?
 How does this work?
 
 Here's what happens when you try to include something that is not "module'sque":
 
-```
-[1] pry(main)> class Foo; end
-=> nil
-[2] pry(main)> class Bar; include Foo; end
-TypeError: wrong argument type Class (expected Module)
-from (pry):2:in `include'
-[3] pry(main)> Foo.class
-=> Class
-```
+    [1] pry(main)> class Foo; end
+    => nil
+    [2] pry(main)> class Bar; include Foo; end
+    TypeError: wrong argument type Class (expected Module)
+    from (pry):2:in `include'
+    [3] pry(main)> Foo.class
+    => Class
 
 Ok, makes sense. *Foo*'s class is *Class*, not *Module*.
 
 Let's contrast this with a proper module:
 
-```
-[1] pry(main)> module Mod; end
-=> nil
-[2] pry(main)> class Foo; include Mod; end
-=> Foo
-[3] pry(main)> Mod.class
-=> Module
-```
+    [1] pry(main)> module Mod; end
+    => nil
+    [2] pry(main)> class Foo; include Mod; end
+    => Foo
+    [3] pry(main)> Mod.class
+    => Module
 
 Now let's try to emulate the code I showed you from *Mutant*:
 
-```
-[1] pry(main)> class Foo < Module; end
-=> nil
-[2] pry(main)> class Bar; include Foo; end
-TypeError: wrong argument type Class (expected Module)
-from (pry):2:in `include'
-[3] pry(main)> class Bar; include Foo.new; end
-=> Bar
-[4] pry(main)> Foo.class
-=> Class
-```
+    [1] pry(main)> class Foo < Module; end
+    => nil
+    [2] pry(main)> class Bar; include Foo; end
+    TypeError: wrong argument type Class (expected Module)
+    from (pry):2:in `include'
+    [3] pry(main)> class Bar; include Foo.new; end
+    => Bar
+    [4] pry(main)> Foo.class
+    => Class
 
 Now it gets even more confusing - *include Foo* doesn't work, *include Foo.new* does but the class of *Foo* is still *Class* not *Module*.  What's happening here?
 
