@@ -1,4 +1,4 @@
-## Lessons learned from some of the best ruby codebases out there
+## Lessons learned from some of the best ruby codebases (part 1)
 
 I recently started looking into [Mutant](https://github.com/mbj/mutant) and related gems for an upcoming presentation about abstract syntax trees I am working on at the moment.
 
