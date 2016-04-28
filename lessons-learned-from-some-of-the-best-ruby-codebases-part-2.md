@@ -135,11 +135,116 @@ It defines an abstract instance method that will do nothing but .... fail with a
 Exactly what we need to implement abstract types.
 Furthermore there's a sister method to *abstract_method* that's called *abstract_singleton_method* which does the same thing for singleton methods.
 
+### [adamantium](https://github.com/dkubb/adamantium)
+
+*adamantium* allows you to make objects immutable in a simple, unobtrusive way.
+
+It offers 3 strategies for doing so:
+
+- deep
+- flat
+- noop
+
+The default strategy is "deep". Let's look at the example from the README
+
+```Ruby
+require 'adamantium'
+require 'securerandom'
+
+class Example
+  include Adamantium
+
+  # Memoized method with deeply frozen value (default)
+  # Example:
+  #
+  # object = Example.new
+  # object.random => ["abcdef"]
+  # object.random => ["abcdef"]
+  # object.random.frozen? => true
+  # object.random[0].frozen? => true
+  #
+  def random
+    [SecureRandom.hex(6)]
+  end
+  memoize :random
+end
+```
+
+So how's this working? For the sake of brevity, let's exclude the "noop" mode and focus on the "deep" and "flat" mode.
+
+Let's start with the *included* callback for the *Adamantium* module:
+
+```Ruby
+module Adamantium
+  def self.included(descendant)
+    descendant.class_eval do
+      include Memoizable
+      extend ModuleMethods
+      extend ClassMethods if instance_of?(Class)
+    end
+  end
+  private_class_method :included
+end
+```
+
+Ok, *included* gets passed in the class it is included on called *descendant* and then re-opens this class using *class_eval*.
+We then include the *Memoizable* module (more on that later) and extend *ModuleMethods* and *ClassMethods*.
+
+Let's check out *ModuleMethods*:
+
+```Ruby
+module Adamantium
+  module ModuleMethods
+    def freezer
+      Freezer::Deep
+    end
+
+    # snip
+
+    def memoize(*methods)
+      options        = methods.last.kind_of?(Hash) ? methods.pop : {}
+      method_freezer = Freezer.parse(options) || freezer
+      methods.each { |method| memoize_method(method, method_freezer) }
+      self
+    end
+  end
+end
+```
+
+The *freezer* methods determines what strategy to use. As I already mentioned above you can see that "deep" is the default strategy. And then there's the *memoize* method you saw being used above in our example from the README.
+There's quite a lot going on in this method so let's step through it line by line:
+
+```Ruby
+options = methods.last.kind_of?(Hash) ? methods.pop : {}
+```
+
+```Ruby
+method_freezer = Freezer.parse(options) || freezer
+```
+
+```Ruby
+methods.each { |method| memoize_method(method, method_freezer) }
+```
+
+```Ruby
+self
+```
+
+Let's check out *memoize_method* to see how the actual freezing is implemented:
+
+TODO
+
+Ok, now we saw how the default strategy is applied. What about that the *flat* strategy?
+
+Let's first quickly compare the *deep* strategy with the *flat* strategy on a high level:
+
+```Ruby
+TODO example from the README
+```
+
+How is this implemented?
+
+
 ### ast
-
-
-### adamantium
-
-
 
 That's it for part of this series. In the upcoming part 3 I will be looking at the ice_nine, morpher and diff-lcs gems.
