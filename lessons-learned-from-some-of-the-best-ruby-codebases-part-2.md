@@ -230,11 +230,25 @@ methods.each { |method| memoize_method(method, method_freezer) }
 self
 ```
 
-Let's check out *memoize_method* to see how the actual freezing is implemented:
+Let's check out how the actual freezing is done:
 
-TODO
+```Ruby
+module Adamantium
+  class Freezer
+    class Deep < self
+      def self.freeze(value)
+        IceNine.deep_freeze!(value)
+      end
+    end
+  end
+end
+```
 
-Ok, now we saw how the default strategy is applied. What about that the *flat* strategy?
+Ok, so the deep freezing is delegated to *IceNine*. I'm not going into details now because I plan to cover.....
+
+TODO Inner classes from above.
+
+So we saw how the default strategy is applied. What about that the *flat* strategy?
 
 Let's first quickly compare the *deep* strategy with the *flat* strategy on a high level:
 
