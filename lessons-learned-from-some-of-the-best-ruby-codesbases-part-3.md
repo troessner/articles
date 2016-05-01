@@ -129,38 +129,21 @@ module IceNine
       end
       cache[mod] = freezer
     end
-
-    def self.find(name)
-      freezer = name.split('::').reduce(self) do |mod, const|
-        mod.const_lookup(const) or break mod
-      end
-      freezer if freezer < self  # only return a descendant freezer
-    end
   end
 end
 ```
 
-Note that this is __not__ an instance variable but a [class instance variable](http://www.railstips.org/blog/archives/2006/11/18/class-and-instance-variables-in-ruby/) which means this assignment gets executed when Ruby reads the `Freezer` class since Rubys [class bodies are executable](http://yehudakatz.com/2009/06/04/the-importance-of-executable-class-bodies/).
+The code above is terse and gets an incredible amount of work done:
 
-The code above is slightly complicated but gets an incredible amount of work done. Just talking about this code probably won't help you really grok it if you are anything like me so let's go through an example and then step through the code to see what happens.
+- We set up `@freezer_cache` as a hash. Note that `@freezer_cache` is __not__ an instance variable but a [class instance variable](http://www.railstips.org/blog/archives/2006/11/18/class-and-instance-variables-in-ruby/) which means this assignment gets executed when Ruby reads the `Freezer` class since Rubys [class bodies are executable](http://yehudakatz.com/2009/06/04/the-importance-of-executable-class-bodies/).
 
-This will be our example:
+- We pass a block to `Hash#new`. From the [Hash docs](http://ruby-doc.org/core-2.3.0/Hash.html#method-c-new): If a block is specified, it will be called with the hash object and the key, and should return the default value.
 
-```Ruby
-IceNine.deep_freeze({ foo: :bar })
-```
+- So the block parameter `cache` is the hash itself and `mod` is the class of the data structure we passed to `IceNine`
 
-TODO Go through with the example
+- We then traverse the ancestor chain up and look for a corresponding freezer. Sticking with the hash example we would immediately find the `Hash Freezer` in `lib/ice_nine/freezer/hash`.
 
-To solidify our understanding let's a different example:
-
-```Ruby
-module Foo; class Bar; end; end
-foo = Foo.new
-IceNine.deep_freeze(foo)
-```
-
-TODO Go through with the example
+I won't go into the details of how `find` looks since that is a tad more complicated and focus more on the high level here.
 
 Now, equipped with a solid understanding of how the freezer lookup works let's come back to
 
@@ -262,8 +245,6 @@ hash_2.frozen? # => true
 
 - We then freeze all subsequent attributes of the object, in the case of `Hash` they keys and the values
 
-TODO Explain Object < self
-
 Ok, so let's do a quick recap:
 
 1. We now know how a suitable freezer class is looked up
@@ -272,3 +253,119 @@ Ok, so let's do a quick recap:
 This only leaves one thing left to explain: What's up with that recursion guard?
 
 ### The recursion guard
+
+If you paid attention, you'll have noticed that `IceNine` recursively traverses any data structure you pass it in.
+
+Remember that we started out like this in `lib/ice_nine/freezer`:
+
+```Ruby
+def self.guarded_deep_freeze(object, recursion_guard)
+  recursion_guard.guard(object) do
+    Freezer[object.class].guarded_deep_freeze(object, recursion_guard)
+  end
+end
+```
+
+And we then restarted the whole cycle of getting the objects' class, determining the appropriate freezer, freezing it and so in `lib/ice_nine/freezer/hash`:
+
+```Ruby
+module IceNine
+  class Freezer
+    class Hash < Object
+      def self.freeze_key_value_pairs(hash, recursion_guard)
+        hash.each do |key, value|
+          Freezer.guarded_deep_freeze(key, recursion_guard)
+          Freezer.guarded_deep_freeze(value, recursion_guard)
+        end
+      end
+    end
+  end
+end
+```
+
+So there's the recursion that we start via the `recursion_guard`.
+
+Why does it say `guard`?
+Because you might create and pass cyclic data structures like this:
+
+```Ruby
+b = { baz: nil }
+a = { foo: b }
+# => {:foo=>{:baz=>5}}
+
+b[:baz] = a
+# => {:foo=>{:baz=>{...}}}
+
+# And now you can do this all day long:
+a[:foo][:baz]
+# => {:foo=>{:baz=>{...}}}
+a[:foo][:baz][:foo]
+# => {:baz=>{:foo=>{...}}}
+a[:foo][:baz][:foo][:baz]
+# => {:foo=>{:baz=>{...}}}
+```
+
+Without a recursion guard `IceNine` would recurse down until you'd get
+
+```
+stack level too deep (SystemStackError)
+```
+
+Let's check out
+
+```Ruby
+module IceNine
+  class RecursionGuard
+    class ObjectSet < self
+      def initialize
+        @object_ids = {}
+      end
+
+      def guard(object)
+        caller_object_id = object.__id__
+        return object if @object_ids.key?(caller_object_id)
+        @object_ids[caller_object_id] = nil
+        yield
+      end
+    end
+  end
+end
+```
+
+The code above is incredibly simple and yet incredibly powerful.
+
+First we get the object_id of the object we're looking at:
+
+```Ruby
+caller_object_id = object.__id__
+```
+
+Now the important part: If we have seen this very object already this means we're indeed traversing a cyclic structure. In this case, we just return:
+
+```Ruby
+return object if @object_ids.key?(caller_object_id)
+```
+
+If we made it until here we'er seeing this object for the first time, so we store its' object_id:
+
+```Ruby
+@object_ids[caller_object_id] = nil
+```
+
+And finally we yield to the block:
+
+```Ruby
+yield
+```
+
+### Wrapping it up
+
+So let's summarize what we learned today about `IceNine`:
+
+- it recursively traverses any data structure it gets passed
+- using a recursion guard to prevent it from recursing cyclic data structure
+- it maintains a cached mapping of what freezer to use for what data type
+- it freezes the data it has been given
+- and then goes deeper down the spiral for all children
+
+
