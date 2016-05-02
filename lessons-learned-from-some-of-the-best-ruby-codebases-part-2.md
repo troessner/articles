@@ -68,7 +68,7 @@ module IceNine
 end
 ```
 
-Ok, not much to see here, we're just delegating to `IceNine::Freezer (defined in `lib/ice_nine/freezer.rb`):
+Ok, not much to see here, we're just delegating to `IceNine::Freezer` (defined in `lib/ice_nine/freezer.rb`):
 
 ```Ruby
 module IceNine
