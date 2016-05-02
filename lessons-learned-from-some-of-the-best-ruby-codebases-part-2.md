@@ -58,7 +58,7 @@ In my example above you could see that using `IceNine` boils down to:
 IceNine.deep_freeze({ 'foo' => 'bar' })
 ```
 
-Here's the relevant part of `lib/ice_nine.rb`:
+Here's the relevant part of the `IceNine` module (defined in `lib/ice_nine.rb`):
 
 ```Ruby
 module IceNine
@@ -68,7 +68,7 @@ module IceNine
 end
 ```
 
-Ok, not much to see here, we're just delegating to `lib/ice_nine/freezer.rb`:
+Ok, not much to see here, we're just delegating to `IceNine::Freezer (defined in `lib/ice_nine/freezer.rb`):
 
 ```Ruby
 module IceNine
@@ -150,7 +150,7 @@ The code above is terse and gets a lot of work done:
 
 - So the block parameter `cache` is the hash itself and `mod` is the class of the data structure we passed to `IceNine`, so `Hash` here.
 
-- We then traverse the ancestor chain up and look for a corresponding freezer. Sticking with the hash example we would immediately find the `Hash Freezer` in `lib/ice_nine/freezer/hash` since the first link in the ancestor chain of any class is....the class itself as you can see here:
+- We then traverse the ancestor chain up and look for a corresponding freezer. Sticking with the hash example we would immediately find `IceNine::Freezer::Hash` since the first link in the ancestor chain of any class is....the class itself as you can see here:
 
 ```Ruby
 Hash.ancestors
