@@ -369,7 +369,76 @@ yield
 
 ### Making deep_freeze available to all objects
 
-`IceNine` also offers a core extension in ....TODO
+`IceNine` also offers a core extension in `lib/ice_nine/core_ext/object.rb`:
+
+```Ruby
+module IceNine
+  module CoreExt
+    module Object
+      def deep_freeze
+        IceNine.deep_freeze(self)
+      end
+    end
+  end
+end
+
+Object.instance_eval { include IceNine::CoreExt::Object }
+```
+
+First we define a separate module following the convention that modules that are mixed in into core classes are defined under the `core_ext` scope. What this module does is pretty simple, it just calls `IceNine.deep_freeze` and then passes `self` to it. What will `self` be? Modules with instance methods can not be used standalone but only as mixin. Means, mixed into a class. So `self` will be the class that we mixed it in.
+
+How are we activating this?
+
+By
+
+```Ruby
+Object.instance_eval { include IceNine::CoreExt::Object }
+```
+
+This effectively makes `deep_freeze` available to all objects in Ruby's object space.
+
+By the way it doesn't matter if you use `class_eval` or `instance_eval` here.
+
+Both
+
+```Ruby
+Object.instance_eval { include IceNine::CoreExt::Object }
+```
+
+and
+
+```Ruby
+Object.class_eval { include IceNine::CoreExt::Object }
+```
+
+have the same outcome here. This would however make a huge difference if you defined `deep_freeze` on `Object` via `def` directly.
+
+E.g. this
+
+```Ruby
+Object.class_eval do
+  def deep_freeze
+    IceNine.deep_freeze(self)
+  end
+end
+```
+
+defines `deep_freeze` on an instance level since `class_eval` just re-opens the class.
+
+This however
+
+```Ruby
+Object.instance_eval do
+  def deep_freeze
+    IceNine.deep_freeze(self)
+  end
+end
+```
+
+would __not__ work since it would create a singleton method (read: class method), not an instance method.
+
+So you should be aware of those differences.
+Most gems I have seen use the `Object.instance_eval` trick for `core_ext` and you probably should follow this pattern in your own gems.
 
 ### Wrapping it up
 
@@ -381,4 +450,4 @@ So let's summarize what we learned today about `IceNine`:
 - it freezes the data it has been given
 - and then goes deeper down the spiral for all children
 
-
+That's it for part of this series. In the upcoming part 3 I will be looking at the [Adamantium gem](https://github.com/dkubb/adamantium) and the [abstract_type gem](https://github.com/dkubb/abstract_type).
