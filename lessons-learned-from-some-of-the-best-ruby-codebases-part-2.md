@@ -4,11 +4,11 @@ Welcome to the second part of the series (you can find the first part [here](htt
 
 We'll continue to look at some other highly interesting gems [Mutant](https://github.com/mbj/mutant) uses.
 
-Initially I had planned to cover multiple gems again, but after starting to look into the [IceNine](https://github.com/dkubb/ice_nine) gem I realized that this was big enough for an own blog post.
+Initially I had planned to cover multiple gems again, but after starting to look into the [IceNine](https://github.com/dkubb/ice_nine) gem I realized that this was big enough for its own blog post.
 
 ### [IceNine](https://github.com/dkubb/ice_nine)
 
-`IceNine` is a library for deep freezing of objects:
+`IceNine` is a library for deep freezing objects:
 
 ```Ruby
 hash_1 = { 'foo' => 'bar' }
@@ -46,7 +46,7 @@ Me, I have 2 attributes that I count as essential for a functional language:
 1. [Pure functions](https://en.wikipedia.org/wiki/Functional_programming#Pure_functions)
 2. Immutable data structures
 
-I believe Ruby will never have pure functions in that sense but you can create immutable data structures in Ruby by `freezing` them. However, just calling `freeze` on an object doesn't deep-freeze it as you can in my initial code sample above.
+I believe Ruby will never have pure functions in that sense but you can create immutable data structures in Ruby by calling `freeze` on them. However, just calling `freeze` on an object doesn't deep-freeze it as you can in my initial code sample above.
 
 And that's where `IceNine` comes in. But how does it work?
 
@@ -104,14 +104,13 @@ First we need to understand:
 Freezer[object.class]
 ```
 
-So object is the object that we passed to `IceNine.deep_freeze` in the beginning.
-If this was something like this
+`object` is the object that we passed to `IceNine.deep_freeze` in the beginning:
 
 ```Ruby
 IceNine.deep_freeze({ foo: :bar })
 ```
 
-Then the `object` would be
+So the `object` would be
 
 ```Ruby
 { foo: :bar }
@@ -127,7 +126,7 @@ def self.[](mod)
 end
 ```
 
-Now this is starting to get interesting. This `@freezer_cache` is defined at the top of the file:
+Now things are starting to get interesting. This `@freezer_cache` is defined at the top of the file:
 
 ```Ruby
 module IceNine
@@ -143,17 +142,23 @@ module IceNine
 end
 ```
 
-The code above is terse and gets an incredible amount of work done:
+The code above is terse and gets a lot of work done:
 
 - We set up `@freezer_cache` as a hash. Note that `@freezer_cache` is __not__ an instance variable but a [class instance variable](http://www.railstips.org/blog/archives/2006/11/18/class-and-instance-variables-in-ruby/) which means this assignment gets executed when Ruby reads the `Freezer` class since Rubys [class bodies are executable](http://yehudakatz.com/2009/06/04/the-importance-of-executable-class-bodies/).
 
-- We pass a block to `Hash#new`, which will be called with the hash object and the key, and should return the default value (see the [Hash docs](http://ruby-doc.org/core-2.3.0/Hash.html#method-c-new))
+- We pass a block to `Hash#new`. In case we ask the cache for a key that doesn't exist this block will be called with the hash object and the key and should return the default value (see the [Hash docs](http://ruby-doc.org/core-2.3.0/Hash.html#method-c-new))
 
-- So the block parameter `cache` is the hash itself and `mod` is the class of the data structure we passed to `IceNine`
+- So the block parameter `cache` is the hash itself and `mod` is the class of the data structure we passed to `IceNine`, so `Hash` here.
 
-- We then traverse the ancestor chain up and look for a corresponding freezer. Sticking with the hash example we would immediately find the `Hash Freezer` in `lib/ice_nine/freezer/hash`.
+- We then traverse the ancestor chain up and look for a corresponding freezer. Sticking with the hash example we would immediately find the `Hash Freezer` in `lib/ice_nine/freezer/hash` since the first link in the ancestor chain of any class is....the class itself as you can see here:
 
-I won't go into the details of how `find` looks since that is a tad more complicated and focus more on the high level here.
+```Ruby
+Hash.ancestors
+# => [Hash, Enumerable, Object, PP::ObjectMixin, Kernel, BasicObject]
+```
+
+Long story short: Given a `Hash` this could would find the - surprise! - `Hash` freezer.
+Obviously this is kind of the most possible simple example here since there are a lot of edge cases where it's not that easy. I won't go into the details here though and focus more on the high level (I also won't go into the details of how `find` looks since that is a tad more complicated but you can go and check it out in `lib/ice_nine/freezer`).
 
 Now, equipped with a solid understanding of how the freezer lookup works let's come back to
 
@@ -191,7 +196,9 @@ and imagine that
 Freezer[object.class]
 ```
 
-would have returned an `IceNine::Freezer::Hash`:
+would have returned an `IceNine::Freezer::Hash` like we had done in the paragraph above.
+
+This is how `IceNine::Freezer::Hash.guarded_deep_freeze` looks like:
 
 ```Ruby
 module IceNine
@@ -227,8 +234,6 @@ As you can see above in my initial `IceNine::Freezer::Hash` snippet this class i
 ```Ruby
 module IceNine
   class Freezer
-
-    # A freezer class for handling Object instances
     class Object < self
       def self.guarded_deep_freeze(object, recursion_guard)
         return object unless object.respond_to?(:freeze)
@@ -256,8 +261,8 @@ hash_2.frozen? # => true
 
 Ok, so now we know:
 
-1. how a suitable freezer class is looked up
-2. how this class does the actual freezing
+1. how a suitable freezer class is looked up. In our examples above we used `IceNine::Freezer::Hash`
+2. how this class does the actual freezing.
 
 This only leaves one thing left to explain: What's up with that recursion guard?
 
@@ -265,7 +270,7 @@ This only leaves one thing left to explain: What's up with that recursion guard?
 
 If you paid attention, you'll have noticed that `IceNine` recursively traverses any data structure you pass it in.
 
-Remember that we started out like this in `lib/ice_nine/freezer`:
+Remember that we started out like this in `IceNine::Freezer`:
 
 ```Ruby
 def self.guarded_deep_freeze(object, recursion_guard)
@@ -275,7 +280,7 @@ def self.guarded_deep_freeze(object, recursion_guard)
 end
 ```
 
-And we then restarted the whole cycle of getting the objects' class, determining the appropriate freezer, freezing it and so in `lib/ice_nine/freezer/hash`:
+And we then restarted the whole cycle of getting the objects' class, determining the appropriate freezer, freezing it and so on in `IceNine::Freezer::Hash`:
 
 ```Ruby
 module IceNine
@@ -292,9 +297,9 @@ module IceNine
 end
 ```
 
-So there's the recursion that we start via the `recursion_guard`.
+So there's the recursion that we start via the recursion guard.
 
-Why does it say `guard`?
+Why does it say "guard"?
 Because you might create and pass cyclic data structures like this:
 
 ```Ruby
@@ -320,7 +325,7 @@ Without a recursion guard `IceNine` would recurse down until you'd get
 stack level too deep (SystemStackError)
 ```
 
-Let's check out
+Let's check out `IceNine::RecursionGuard::ObjectSet`(defined in `lib/ice_nine/support/recursion_guard`):
 
 ```Ruby
 module IceNine
@@ -341,9 +346,9 @@ module IceNine
 end
 ```
 
-The code above is incredibly simple and yet incredibly powerful.
+The code above is incredibly simple and yet incredibly powerful at the same time.
 
-First we get the object_id of the object we're looking at:
+First we get the `object_id` of the object we're looking at:
 
 ```Ruby
 caller_object_id = object.__id__
@@ -355,7 +360,7 @@ Now the important part: If we have seen this very object already this means we'r
 return object if @object_ids.key?(caller_object_id)
 ```
 
-If we made it until here we'er seeing this object for the first time, so we store its' object_id:
+If we made it until here we'er seeing this object for the first time, so we store its' `object_id`:
 
 ```Ruby
 @object_ids[caller_object_id] = nil
@@ -367,7 +372,7 @@ And finally we yield to the block:
 yield
 ```
 
-### Making deep_freeze available to all objects
+### Making `deep_freeze` available to all objects
 
 `IceNine` also offers a core extension in `lib/ice_nine/core_ext/object.rb`:
 
@@ -397,7 +402,7 @@ Object.instance_eval { include IceNine::CoreExt::Object }
 
 This effectively makes `deep_freeze` available to all objects in Ruby's object space.
 
-By the way it doesn't matter if you use `class_eval` or `instance_eval` here.
+By the way it doesn't matter if you use `class_eval` or `instance_eval` in this case.
 
 Both
 
@@ -423,7 +428,7 @@ Object.class_eval do
 end
 ```
 
-defines `deep_freeze` on an instance level since `class_eval` just re-opens the class.
+defines `deep_freeze` on an instance level since `class_eval` just re-opens the class. So we're good.
 
 This however
 
