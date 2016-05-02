@@ -2,7 +2,9 @@
 
 Welcome to the second part of the series (you can find the first part [here](https://tech.blacklane.com/2016/04/23/lessons-learned-from-some-of-the-best-ruby-codebases-part-1/)).
 
-Let's dive right into it and look at some other highly interesting gems [Mutant](https://github.com/mbj/mutant) uses.
+We'll continue to look at some other highly interesting gems [Mutant](https://github.com/mbj/mutant) uses.
+
+Initially I had planned to cover multiple gems again, but after starting to look into the [IceNine](https://github.com/dkubb/ice_nine) gem I realized that this was big enough for an own blog post.
 
 ### [IceNine](https://github.com/dkubb/ice_nine)
 
@@ -14,6 +16,14 @@ hash_1 = { 'foo' => 'bar' }
 hash_1.frozen? # => false
 hash_1['foo'].frozen? # => false
 hash_1['foo'] = 'whoopsie, got changed!' # => "whoopsie, got changed!"
+
+# Let's freeze hash_1
+
+hash_1.freeze
+hash_1.frozen? # => true
+hash_1['foo'].frozen? # => still false, so its not deeply frozen
+
+# IceNine deep freezes in contrast
 
 require 'ice_nine'
 
@@ -137,7 +147,7 @@ The code above is terse and gets an incredible amount of work done:
 
 - We set up `@freezer_cache` as a hash. Note that `@freezer_cache` is __not__ an instance variable but a [class instance variable](http://www.railstips.org/blog/archives/2006/11/18/class-and-instance-variables-in-ruby/) which means this assignment gets executed when Ruby reads the `Freezer` class since Rubys [class bodies are executable](http://yehudakatz.com/2009/06/04/the-importance-of-executable-class-bodies/).
 
-- We pass a block to `Hash#new`. From the [Hash docs](http://ruby-doc.org/core-2.3.0/Hash.html#method-c-new): If a block is specified, it will be called with the hash object and the key, and should return the default value.
+- We pass a block to `Hash#new`, which will be called with the hash object and the key, and should return the default value (see the [Hash docs](http://ruby-doc.org/core-2.3.0/Hash.html#method-c-new))
 
 - So the block parameter `cache` is the hash itself and `mod` is the class of the data structure we passed to `IceNine`
 
@@ -226,7 +236,6 @@ module IceNine
         object.freeze
         freeze_instance_variables(object, recursion_guard)
         object
-      end```
       end
     end
   end
@@ -236,7 +245,7 @@ end
 Now things should start to make sense:
 
 - We check if the object in question does support `freeze`, and if it does, we'll freeze it.
-- That is basically this part in my very first example
+- This covers the first part in my very first example
 
 ```Ruby
 IceNine.deep_freeze hash_2
@@ -245,10 +254,10 @@ hash_2.frozen? # => true
 
 - We then freeze all subsequent attributes of the object, in the case of `Hash` they keys and the values
 
-Ok, so let's do a quick recap:
+Ok, so now we know:
 
-1. We now know how a suitable freezer class is looked up
-2. And we know how this class does the actual freezing
+1. how a suitable freezer class is looked up
+2. how this class does the actual freezing
 
 This only leaves one thing left to explain: What's up with that recursion guard?
 
@@ -357,6 +366,10 @@ And finally we yield to the block:
 ```Ruby
 yield
 ```
+
+### Making deep_freeze available to all objects
+
+`IceNine` also offers a core extension in ....TODO
 
 ### Wrapping it up
 
