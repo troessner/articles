@@ -2,417 +2,452 @@
 
 Welcome to the second part of the series (you can find the first part [here](https://tech.blacklane.com/2016/04/23/lessons-learned-from-some-of-the-best-ruby-codebases-part-1/)).
 
-Let's dive right into it and look at some other highly interesting gems [Mutant](https://github.com/mbj/mutant) uses.
+We'll continue to look at some other highly interesting gems [Mutant](https://github.com/mbj/mutant) uses.
 
-### [abstract_type](https://github.com/dkubb/abstract_type)
+Initially I had planned to cover multiple gems again, but after starting to look into the [IceNine](https://github.com/dkubb/ice_nine) gem I realized that this was big enough for an own blog post.
 
-The *abstract_type* gem allows you to declare [abstract type](https://en.wikipedia.org/wiki/Abstract_type) classes and modules in an unobstrusive way:
+### [IceNine](https://github.com/dkubb/ice_nine)
 
->>
-In programming languages, an abstract type is a type in a nominative type system that cannot be instantiated directly. Abstract types are also known as existential types.An abstract type may provide no implementation, or an incomplete implementation. Often, abstract types will have one or more implementations provided separately, for example, in the form of concrete subclasses that can be instantiated. It may include abstract methods or abstract properties[2] that are shared by its subtypes.
-
-The example from the [README](https://github.com/dkubb/abstract_type) is pretty much self-explanatory:
+`IceNine` is a library for deep freezing of objects:
 
 ```Ruby
-class Foo
-  include AbstractType
+hash_1 = { 'foo' => 'bar' }
 
-  # Declare abstract instance method
-  abstract_method :bar
+hash_1.frozen? # => false
+hash_1['foo'].frozen? # => false
+hash_1['foo'] = 'whoopsie, got changed!' # => "whoopsie, got changed!"
 
-  # Declare abstract singleton method
-  abstract_singleton_method :baz
-end
+# Let's freeze hash_1
 
-Foo.new  # raises NotImplementedError: Foo is an abstract type
-Foo.baz  # raises NotImplementedError: Foo.baz is not implemented
+hash_1.freeze
+hash_1.frozen? # => true
+hash_1['foo'].frozen? # => still false, so its not deeply frozen
 
-# Subclassing to allow instantiation
-class Baz < Foo; end
+# IceNine deep freezes in contrast
 
-object = Baz.new
-object.bar  # raises NotImplementedError: Baz#bar is not implemented
+require 'ice_nine'
+
+hash_2 = { 'foo' => 'bar' }
+
+IceNine.deep_freeze hash_2
+
+hash_2.frozen? # => true
+hash_2['foo'].frozen? # => true
+hash_2['foo'] = 'whoopsie, got changed!' # => RuntimeError: can't modify frozen Hash
 ```
 
-So how does it work? Let's start with the *include* statement and then work our way to where we actually use *abstract_method* and *abstract_singleton_method*.
+What do you need this for?
 
-When you call
+In recent years, [functional programming](https://en.wikipedia.org/wiki/Functional_programming) has become all the rage and how to introduce it into languages that are actually not functional like Ruby.
 
+Depending on who you ask, everybody has a different definition of what "functional" means.
+Me, I have 2 attributes that I count as essential for a functional language:
+
+1. [Pure functions](https://en.wikipedia.org/wiki/Functional_programming#Pure_functions)
+2. Immutable data structures
+
+I believe Ruby will never have pure functions in that sense but you can create immutable data structures in Ruby by `freezing` them. However, just calling `freeze` on an object doesn't deep-freeze it as you can in my initial code sample above.
+
+And that's where `IceNine` comes in. But how does it work?
+
+### Finding the right freezer
+
+In my example above you could see that using `IceNine` boils down to:
 
 ```Ruby
-include AbstractType
+IceNine.deep_freeze({ 'foo' => 'bar' })
 ```
 
-in your class this will prompt the Ruby runtime to call the *[included](http://ruby-doc.org/core-2.3.0/Module.html#method-i-included)* callback that is at the top level of the gem:
+Here's the relevant part of `lib/ice_nine.rb`:
 
 ```Ruby
-module AbstractType
-  def self.included(descendant)
-    super
-    create_new_method(descendant)
-    descendant.extend(AbstractMethodDeclarations)
-  end
-
-  # snip
-end
-```
-
-With *create_new_method* looking like this:
-
-```Ruby
-def self.create_new_method(abstract_class)
-  abstract_class.define_singleton_method(:new) do |*args, &block|
-    if equal?(abstract_class)
-      fail NotImplementedError, "#{inspect} is an abstract type"
-    else
-      super(*args, &block)
-    end
+module IceNine
+  def self.deep_freeze(object)
+    Freezer.deep_freeze(object)
   end
 end
 ```
 
-We're dynamically overwriting *[Class.new](http://ruby-doc.org/core-2.3.0/Class.html#method-i-new)* in the class that we intend to make abstract. The important part here is that this *new* is also what will be used when we call *new* on subclasses.
-
-In the new, uhm, *new* we fail if *self* is equal to the abstract class. The equality check here is based on *[BasicObject#equal?](http://ruby-doc.org/core-2.3.0/BasicObject.html#method-i-equal-3F)* which checks for strict identity. Also note that we are not using *raise* here but *fail* instead (which is just an alias for *raise*), something that is kind of [controversial](https://stackoverflow.com/questions/31937632/fail-vs-raise-in-ruby-should-we-really-believe-the-style-guide) in the Ruby community.
-
-When we're in one of the subclasses of our abstract class this guard will fail in which case we're just delegating to the original *Class.new*.
-
-A lot of meat here for very little code. If you're confused now I'd recommend to read up on the [Ruby object model](https://thesocietea.org/2015/08/metaprogramming-in-ruby-part-1/).
-
-With this out of the way let's get back to the *included* callback:
-
+Ok, not much to see here, we're just delegating to `lib/ice_nine/freezer.rb`:
 
 ```Ruby
-def self.included(descendant)
-  super
-  create_new_method(descendant)
-  descendant.extend(AbstractMethodDeclarations)
-end
-```
-
-The *descendant* (read: "base class" this module is included in) is extending the *AbstractMethodDeclarations* module here, thus adopting its methods as singleton methods.
-
-One of those methods is the *abstract_method* we saw in the example at the beginning:
-
-```Ruby
-def abstract_method(*names)
-  names.each(&method(:create_abstract_instance_method))
-  self
-end
-```
-
-This is the method (or "class macro") that allows you to declare your abstract method a la:
-
-```Ruby
-abstract_method :foo, :bar
-```
-
-A bunch of interesting things going on here. First of all, we're using a neat little trick that is kind of the reverse of Ruby [Symbol#to_proc feature](https://stackoverflow.com/questions/14881125/what-does-to-proc-method-mean).
-
-This
-
-```Ruby
-names.each(&method(:create_abstract_instance_method))
-```
-
-basically means
-
-```Ruby
-names.each do |name|
-  create_abstract_instance_method name
-end
-```
-
-and heavily relies on *[Method#to_proc](http://ruby-doc.org/core-2.3.0/Method.html#method-i-to_proc)*. You can read up on how this works [here](https://andrewjgrimm.wordpress.com/2011/10/03/in-ruby-method-passes-you/).
-
-The *self* at the end
-
-```Ruby
-def abstract_method(*names)
-  names.each(&method(:create_abstract_instance_method))
-  self
-end
-```
-
-allows you to chain calls to *abstract_method* (of which I don't really see the point here, but I guess the author follows his own conventions in this case).
-
-And what does *create_abstract_instance_method* do?
-
-```Ruby
-def create_abstract_instance_method(name)
-  define_method(name) do |*|
-    fail NotImplementedError, "#{self.class}##{name} is not implemented"
-  end
-end
-```
-
-It defines an abstract instance method that will do nothing but .... fail with a proper error message.
-Exactly what we need to implement abstract types.
-Furthermore there's a sister method to *abstract_method* that's called *abstract_singleton_method* which does the same thing for singleton methods.
-
-### [adamantium](https://github.com/dkubb/adamantium)
-
-*adamantium* allows you to make objects immutable in a simple, unobtrusive way.
-
-It offers 3 strategies for doing so:
-
-- deep
-- flat
-- noop
-
-The default strategy is *deep*. Let's look at the example from the README
-
-```Ruby
-require 'adamantium'
-require 'securerandom'
-
-class Example
-  include Adamantium
-
-  # Memoized method with deeply frozen value (default)
-  # Example:
-  #
-  # object = Example.new
-  # object.random => ["abcdef"]
-  # object.random => ["abcdef"]
-  # object.random.frozen? => true
-  # object.random[0].frozen? => true
-  #
-  def random
-    [SecureRandom.hex(6)]
-  end
-  memoize :random
-end
-```
-
-So how's this working? For the sake of brevity, let's exclude the *noop* mode and focus on the *deep* and *flat* mode.
-
-Let's start with the *included* callback for the *Adamantium* module:
-
-```Ruby
-module Adamantium
-  def self.included(descendant)
-    descendant.class_eval do
-      include Memoizable
-      extend ModuleMethods
-      extend ClassMethods if instance_of?(Class)
-    end
-  end
-  private_class_method :included
-end
-```
-
-Ok, *included* gets passed in the class it is included on called *descendant* and then re-opens this class using *class_eval*.
-We then include the *Memoizable* module and extend *ModuleMethods* and *ClassMethods*.
-
-Let's check out *ModuleMethods*:
-
-```Ruby
-module Adamantium
-  module ModuleMethods
-    def freezer
-      Freezer::Deep
-    end
-
-    # snip
-
-    def memoize(*methods)
-      options        = methods.last.kind_of?(Hash) ? methods.pop : {}
-      method_freezer = Freezer.parse(options) || freezer
-      methods.each { |method| memoize_method(method, method_freezer) }
-      self
-    end
-  end
-end
-```
-
-The *freezer* methods determines what strategy to use. As I already mentioned above you can see that *deep* is the default strategy. And then there's the *memoize* method you saw being used above in our example from the README.
-There's quite a lot going on in this method so let's step through it line by line:
-
-```Ruby
-options = methods.last.kind_of?(Hash) ? methods.pop : {}
-```
-
-That's a neat trick right there. This allows us to write
-
-```Ruby
-memoize :whatever # or...
-memoize :whatever, option: :bar
-```
-
-and it will still work out.
-
-Note that you couldn't do this just with Ruby's default arguments:
-
-```Ruby
-def foo(*names, hashie = {}); # ...; end
-# => SyntaxError: unexpected '=', expecting ')'
-```
-
-You __could__ achieve the same using Ruby's keyword arguments like this:
-
-```Ruby
-def foo(*names, hashie: {});  # ...; end
-```
-
-but I assume this code was written with Ruby < 2 in mind which didn't support keyword arguments.
-
-Next we determine the freezer to use via the options or use the default freezer (which is *deep* like already mentioned):
-
-```Ruby
-method_freezer = Freezer.parse(options) || freezer
-```
-
-We then iterate over __all__ the methods the object in question has and freeze them via *memoize_method*
-
-```Ruby
-methods.each { |method| memoize_method(method, method_freezer) }
-```
-
-only to return *self* at the end
-
-```Ruby
-self
-```
-
-so we can chain the *memoize* calls if we like.
-
-Let's check out how the actual freezing is done:
-
-```Ruby
-module Adamantium
+module IceNine
   class Freezer
-    class Deep < self
-      def self.freeze(value)
-        IceNine.deep_freeze!(value)
+    def self.deep_freeze(object)
+      guarded_deep_freeze(object, RecursionGuard::ObjectSet.new)
+    end
+  end
+end
+```
+
+Let's ignore that recursion guard thingie for now - we'll talk about this in detail later - and go further down the spiral:
+
+```Ruby
+def self.guarded_deep_freeze(object, recursion_guard)
+  recursion_guard.guard(object) do
+    Freezer[object.class].guarded_deep_freeze(object, recursion_guard)
+  end
+end
+```
+
+There it is. That's where the magic happens.
+
+Let's dissect this line:
+
+```Ruby
+Freezer[object.class].guarded_deep_freeze(object, recursion_guard)
+```
+
+First we need to understand:
+
+```Ruby
+Freezer[object.class]
+```
+
+So object is the object that we passed to `IceNine.deep_freeze` in the beginning.
+If this was something like this
+
+```Ruby
+IceNine.deep_freeze({ foo: :bar })
+```
+
+Then the `object` would be
+
+```Ruby
+{ foo: :bar }
+```
+
+and thus `object.class` would be `Hash`.
+
+And what does the `[]` method look like?
+
+```Ruby
+def self.[](mod)
+  @freezer_cache[mod]
+end
+```
+
+Now this is starting to get interesting. This `@freezer_cache` is defined at the top of the file:
+
+```Ruby
+module IceNine
+  class Freezer
+    @freezer_cache = Hash.new do |cache, mod|
+      freezer = nil
+      mod.ancestors.each do |ancestor|
+        freezer = find(ancestor.name.to_s) and break
+      end
+      cache[mod] = freezer
+    end
+  end
+end
+```
+
+The code above is terse and gets an incredible amount of work done:
+
+- We set up `@freezer_cache` as a hash. Note that `@freezer_cache` is __not__ an instance variable but a [class instance variable](http://www.railstips.org/blog/archives/2006/11/18/class-and-instance-variables-in-ruby/) which means this assignment gets executed when Ruby reads the `Freezer` class since Rubys [class bodies are executable](http://yehudakatz.com/2009/06/04/the-importance-of-executable-class-bodies/).
+
+- We pass a block to `Hash#new`, which will be called with the hash object and the key, and should return the default value (see the [Hash docs](http://ruby-doc.org/core-2.3.0/Hash.html#method-c-new))
+
+- So the block parameter `cache` is the hash itself and `mod` is the class of the data structure we passed to `IceNine`
+
+- We then traverse the ancestor chain up and look for a corresponding freezer. Sticking with the hash example we would immediately find the `Hash Freezer` in `lib/ice_nine/freezer/hash`.
+
+I won't go into the details of how `find` looks since that is a tad more complicated and focus more on the high level here.
+
+Now, equipped with a solid understanding of how the freezer lookup works let's come back to
+
+```Ruby
+def self.guarded_deep_freeze(object, recursion_guard)
+  recursion_guard.guard(object) do
+    Freezer[object.class].guarded_deep_freeze(object, recursion_guard)
+  end
+end
+```
+
+and especially:
+
+```Ruby
+Freezer[object.class].guarded_deep_freeze(object, recursion_guard)
+```
+
+### Deep freeze
+
+We now know that
+
+```Ruby
+Freezer[object.class]
+```
+
+part so let's look at that part:
+
+```Ruby
+guarded_deep_freeze(object, recursion_guard)
+```
+
+and imagine that
+
+```Ruby
+Freezer[object.class]
+```
+
+would have returned an `IceNine::Freezer::Hash`:
+
+```Ruby
+module IceNine
+  class Freezer
+    class Hash < Object
+      def self.guarded_deep_freeze(hash, recursion_guard)
+        super
+        # snip
+        freeze_key_value_pairs(hash, recursion_guard)
       end
     end
   end
 end
 ```
 
-Ok, so the deep freezing is delegated to *IceNine*. I'm not going into details now because I plan to cover *IceNine* in one of my next blog posts.
-
-One thing I'd quickly like to talk about though is this:
+Let's see what `freeze_key_value_pairs` is all about before looking at what happens via `super`:
 
 ```Ruby
-module Adamantium
+def self.freeze_key_value_pairs(hash, recursion_guard)
+  hash.each do |key, value|
+    Freezer.guarded_deep_freeze(key, recursion_guard)
+    Freezer.guarded_deep_freeze(value, recursion_guard)
+  end
+end
+```
+
+Ok, that's pretty simple, isn't it? We iterate over all keys and values of the hash and deep freeze them as well.
+
+Now what's up with `super`?
+
+As you can see above in my initial `IceNine::Freezer::Hash` snippet this class inherits from `IceNine::Freezer::Object`:
+
+```Ruby
+module IceNine
   class Freezer
-    class Deep < self  # <- Wat?
-      # snip
-    end
-  end
-end
-```
 
-*Deep* inherits from *self*. And what is *self* here?
+    # A freezer class for handling Object instances
+    class Object < self
+      def self.guarded_deep_freeze(object, recursion_guard)
+        return object unless object.respond_to?(:freeze)
 
-```Ruby
-class Omg; puts self; class Bar < self; end; end
-# => Omg
-```
-
-So
-
-```Ruby
-class Deep < self
-```
-
-is actually a fancy way of writing
-
-```Ruby
-class Deep < Freezer
-```
-
-But why are we doing this here instead of being explicit? It's making our intention explicit without duplicating names across our module. And even if you rename *Freezer* to something else, this line doesn't change, which makes it easier to refactor and less error-prone to subtle bugs.
-
-Is it a huge deal? No. It isn't. But in a larger codebase small things like can make the difference between "bareley maintainable" and "updating functionality is a walk in the park".
-
-Before we wrap this up here let's look at one last thing:
-
-We saw how the default strategy is applied. What about that the *flat* strategy?
-
-Let's first quickly compare the *deep* strategy with the *flat* strategy on a high level:
-
-```Ruby
-class FlatExample
-  include Adamantium::Flat
-  #
-  # object = Example.new
-  # object.random => ["abcdef"]
-  # object.random => ["abcdef"]
-  # object.random.frozen? => true
-  # object.random[0].frozen? => false
-  #
-  def random
-    [SecureRandom.hex(6)]
-  end
-  memoize :random
-end
-```
-
-As you can see, you just include the *Flat* submodule of *Adamantium*.
-
-How is this implemented?
-
-Let's look at the *included* callback:
-
-```Ruby
-module Adamantium
-  module Flat
-    def freezer
-      Freezer::Flat
-    end
-
-    def self.included(descendant)
-      descendant.instance_exec(self) do |mod|
-        include Adamantium
-        extend mod
+        object.freeze
+        freeze_instance_variables(object, recursion_guard)
+        object
       end
     end
   end
 end
 ```
 
-That's pretty cool. Let me walk you through it:
+Now things should start to make sense:
+
+- We check if the object in question does support `freeze`, and if it does, we'll freeze it.
+- This covers the first part in my very first example
 
 ```Ruby
-descendant.instance_exec(self) do |mod|
-  # snip
+IceNine.deep_freeze hash_2
+hash_2.frozen? # => true
+```
+
+- We then freeze all subsequent attributes of the object, in the case of `Hash` they keys and the values
+
+Ok, so now we know:
+
+1. how a suitable freezer class is looked up
+2. how this class does the actual freezing
+
+This only leaves one thing left to explain: What's up with that recursion guard?
+
+### The recursion guard
+
+If you paid attention, you'll have noticed that `IceNine` recursively traverses any data structure you pass it in.
+
+Remember that we started out like this in `lib/ice_nine/freezer`:
+
+```Ruby
+def self.guarded_deep_freeze(object, recursion_guard)
+  recursion_guard.guard(object) do
+    Freezer[object.class].guarded_deep_freeze(object, recursion_guard)
+  end
 end
 ```
 
-We're calling *instance_exec* on the descendant and pass *self* in. What's *self* now?
-It's the module constant, so...*Adamantium::Flat*.
-We then include *Adamantium*. That is something we already covered above in this article. So bussiness as usual.
-But then we extend *mod*, so *Adamantium::Flat*. Why? Because this basically overwrites the *freezer* methods that we imported in our class by doing
+And we then restarted the whole cycle of getting the objects' class, determining the appropriate freezer, freezing it and so in `lib/ice_nine/freezer/hash`:
 
 ```Ruby
-include Adamantium
-```
-
-so that this now returns the *flat* strategy
-
-```Ruby
-def freezer
-  Freezer::Flat
+module IceNine
+  class Freezer
+    class Hash < Object
+      def self.freeze_key_value_pairs(hash, recursion_guard)
+        hash.each do |key, value|
+          Freezer.guarded_deep_freeze(key, recursion_guard)
+          Freezer.guarded_deep_freeze(value, recursion_guard)
+        end
+      end
+    end
+  end
 end
 ```
 
-not the "deep" strategy
+So there's the recursion that we start via the `recursion_guard`.
+
+Why does it say `guard`?
+Because you might create and pass cyclic data structures like this:
 
 ```Ruby
-def freezer
-  Freezer::Deep
+b = { baz: nil }
+a = { foo: b }
+# => {:foo=>{:baz=>5}}
+
+b[:baz] = a
+# => {:foo=>{:baz=>{...}}}
+
+# And now you can do this all day long:
+a[:foo][:baz]
+# => {:foo=>{:baz=>{...}}}
+a[:foo][:baz][:foo]
+# => {:baz=>{:foo=>{...}}}
+a[:foo][:baz][:foo][:baz]
+# => {:foo=>{:baz=>{...}}}
+```
+
+Without a recursion guard `IceNine` would recurse down until you'd get
+
+```
+stack level too deep (SystemStackError)
+```
+
+Let's check out
+
+```Ruby
+module IceNine
+  class RecursionGuard
+    class ObjectSet < self
+      def initialize
+        @object_ids = {}
+      end
+
+      def guard(object)
+        caller_object_id = object.__id__
+        return object if @object_ids.key?(caller_object_id)
+        @object_ids[caller_object_id] = nil
+        yield
+      end
+    end
+  end
 end
 ```
 
-anymore.
+The code above is incredibly simple and yet incredibly powerful.
 
-So long story short, this is just a very advanced configuration mechanism. Granted, it might seem a little complicated but at the same time it completely separates the modules from each other making it easier to update one without updating the other.
+First we get the object_id of the object we're looking at:
+
+```Ruby
+caller_object_id = object.__id__
+```
+
+Now the important part: If we have seen this very object already this means we're indeed traversing a cyclic structure. In this case, we just return:
+
+```Ruby
+return object if @object_ids.key?(caller_object_id)
+```
+
+If we made it until here we'er seeing this object for the first time, so we store its' object_id:
+
+```Ruby
+@object_ids[caller_object_id] = nil
+```
+
+And finally we yield to the block:
+
+```Ruby
+yield
+```
+
+### Making deep_freeze available to all objects
+
+`IceNine` also offers a core extension in `lib/ice_nine/core_ext/object.rb`:
+
+```Ruby
+module IceNine
+  module CoreExt
+    module Object
+      def deep_freeze
+        IceNine.deep_freeze(self)
+      end
+    end
+  end
+end
+
+Object.instance_eval { include IceNine::CoreExt::Object }
+```
+
+First we define a separate module following the convention that modules that are mixed in into core classes are defined under the `core_ext` scope. What this module does is pretty simple, it just calls `IceNine.deep_freeze` and then passes `self` to it. What will `self` be? Modules with instance methods can not be used standalone but only as mixin. Means, mixed into a class. So `self` will be the class that we mixed it in.
+
+How are we activating this?
+
+By
+
+```Ruby
+Object.instance_eval { include IceNine::CoreExt::Object }
+```
+
+This effectively makes `deep_freeze` available to all objects in Ruby's object space.
+
+By the way it doesn't matter if you use `class_eval` or `instance_eval` here.
+
+Both
+
+```Ruby
+Object.instance_eval { include IceNine::CoreExt::Object }
+```
+
+and
+
+```Ruby
+Object.class_eval { include IceNine::CoreExt::Object }
+```
+
+have the same outcome here. This would however make a huge difference if you defined `deep_freeze` on `Object` via `def` directly.
+
+E.g. this
+
+```Ruby
+Object.class_eval do
+  def deep_freeze
+    IceNine.deep_freeze(self)
+  end
+end
+```
+
+defines `deep_freeze` on an instance level since `class_eval` just re-opens the class.
+
+This however
+
+```Ruby
+Object.instance_eval do
+  def deep_freeze
+    IceNine.deep_freeze(self)
+  end
+end
+```
+
+would __not__ work since it would create a singleton method (read: class method), not an instance method.
+
+So you should be aware of those differences.
+Most gems I have seen use the `Object.instance_eval` trick for `core_ext` and you probably should follow this pattern in your own gems.
 
 ### Wrapping it up
 
-That's it for part of this series. Both gems we looked at in this article are pretty small, but packed with a lot of features.
+So let's summarize what we learned today about `IceNine`:
 
-In the upcoming part 3 I will be looking at the [ast](https://github.com/whitequark/ast) gem and the [ice_nine](https://github.com/dkubb/ice_nine).
+- it recursively traverses any data structure it gets passed
+- using a recursion guard to prevent it from recursing cyclic data structure
+- it maintains a cached mapping of what freezer to use for what data type
+- it freezes the data it has been given
+- and then goes deeper down the spiral for all children
+
+That's it for part of this series. In the upcoming part 3 I will be looking at the [Adamantium gem](https://github.com/dkubb/adamantium) and the [abstract_type gem](https://github.com/dkubb/abstract_type).
