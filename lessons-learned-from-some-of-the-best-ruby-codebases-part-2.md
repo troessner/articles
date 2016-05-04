@@ -48,7 +48,15 @@ Me, I have 2 attributes that I count as essential for a functional language:
 
 I believe Ruby will never have pure functions in that sense but you can create immutable data structures in Ruby by calling `freeze` on them. However, just calling `freeze` on an object doesn't deep-freeze it as you can in my initial code sample above.
 
-And that's where `IceNine` comes in. But how does it work?
+And that's where `IceNine` comes in. 
+
+Immutable data structures might not be applicable everywhere and all the time but quite often they offer significant benefits over mutable data structures, for instance:
+
+- It is way easier to reason about a data structure when you know that it will always have a guaranteed state
+- It's less prone to bugs. Quite often the weirdest bugs occur because data has changed in a way that you hadn't foreseen
+- It makes it easier to write concurrent code since immutable data structures eliminate a huge range of common pitfalls when writing concurrent code
+
+With the rationale out of the way, let's check out how it works!
 
 ### Finding the right freezer
 
