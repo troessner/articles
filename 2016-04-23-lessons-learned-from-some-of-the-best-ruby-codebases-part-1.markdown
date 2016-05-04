@@ -352,4 +352,4 @@ So what did all 3 gems have in common?
 
 The top level class was inheriting from *Module* so if you take only one thing away from this post it should be this neat little trick that kind of blurs the distinction between classes and modules in Ruby even further and that can help to increase the elegance of your code significantly in my mind.
 
-That's it for part of this series. In the upcoming part 2 I will be looking at the [Adamantium gem](https://github.com/dkubb/adamantium), the [ast gem](https://github.com/whitequark/ast) and the [abstract_type gem](https://github.com/dkubb/abstract_type).
+That's it for part of this series. In the upcoming part 2 I will be looking at the [IceNine](https://github.com/dkubb/ice_nine) gem.
