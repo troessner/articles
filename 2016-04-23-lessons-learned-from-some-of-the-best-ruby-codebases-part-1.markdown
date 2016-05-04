@@ -119,7 +119,7 @@ Interesting side note: `Concord` has a limit of 3 arguments. Intentionally hardc
 Concord.new(:a, :b, :c, :d)
 ```
 
-The idea is that because `Concord` creates a positional arguments interface constructor, the limit of 3 guarantees you do not overuse Concord.
+The idea is that because `Concord` creates a positional arguments interface constructor, the limit of 3 guarantees you do not overuse `Concord`.
 
 ### [Procto](https://github.com/snusnu/procto)
 
