@@ -1,4 +1,4 @@
-<!-- Uncomment below before publishing via octopress -->
+<!-- Uncomment below and remove the official heading before publishing via octopress -->
 <!--
 ---
 layout: post
