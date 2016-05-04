@@ -1,3 +1,17 @@
+<!-- Uncomment below before publishing via octopress -->
+<!--
+---
+layout: post
+title: Lessons learned from some of the best ruby codebases out there (part 2)
+date: 2016-05-04
+comments: true
+categories: ruby
+keywords: ruby, gems, mutant
+description: Lessons learned from some of the best ruby codebases out there (part 2)
+author: Timo Rößner
+---
+-->
+
 ## Lessons learned from some of the best ruby codebases out there (part 2)
 
 Welcome to the second part of the series (you can find the first part [here](https://tech.blacklane.com/2016/04/23/lessons-learned-from-some-of-the-best-ruby-codebases-part-1/)).
@@ -5,6 +19,8 @@ Welcome to the second part of the series (you can find the first part [here](htt
 We'll continue to look at some other highly interesting gems [Mutant](https://github.com/mbj/mutant) uses.
 
 Initially I had planned to cover multiple gems again, but after starting to look into the [IceNine](https://github.com/dkubb/ice_nine) gem I realized that this was big enough for its own blog post.
+
+<!--more-->
 
 ### [IceNine](https://github.com/dkubb/ice_nine)
 
@@ -36,7 +52,7 @@ hash_2['foo'].frozen? # => true
 hash_2['foo'] = 'whoopsie, got changed!' # => RuntimeError: can't modify frozen Hash
 ```
 
-What do you need this for?
+### What do you need this for?
 
 In recent years, [functional programming](https://en.wikipedia.org/wiki/Functional_programming) has become all the rage and how to introduce it into languages that are actually not functional like Ruby.
 
@@ -48,7 +64,7 @@ Me, I have 2 attributes that I count as essential for a functional language:
 
 I believe Ruby will never have pure functions in that sense but you can create immutable data structures in Ruby by calling `freeze` on them. However, just calling `freeze` on an object doesn't deep-freeze it as you can in my initial code sample above.
 
-And that's where `IceNine` comes in. 
+And that's where `IceNine` comes in.
 
 Immutable data structures might not be applicable everywhere and all the time but quite often they offer significant benefits over mutable data structures, for instance:
 

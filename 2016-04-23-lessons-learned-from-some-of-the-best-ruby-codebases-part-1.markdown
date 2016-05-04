@@ -1,4 +1,16 @@
-## Lessons learned from some of the best ruby codebases (part 1)
+<!-- Uncomment below before publishing via octopress -->
+<!--
+---
+layout: post
+title: Lessons learned from some of the best Ruby codebases (part 1)
+date: 2016-04-23 00:45:49 +0200
+comments: true
+categories: ruby
+keywords: ruby, gems, mutant
+description: Lessons learned from some of the best Ruby codebases (part 1)
+author: Timo Rößner
+---
+-->
 
 I recently started looking into [Mutant](https://github.com/mbj/mutant) and related gems for an upcoming presentation about abstract syntax trees I am working on at the moment.
 
@@ -7,6 +19,8 @@ While browsing the source code of *Mutant* and of the gems that *Mutant* uses I 
 I intend to make this a series with the first part of this series not covering *Mutant* itself but the gems it uses.
 
 Let's get started with *Mutant*s [gem dependencies](https://github.com/mbj/mutant/blob/master/mutant.gemspec).
+
+<!--more-->
 
 ### [Concord](https://github.com/mbj/concord)
 
@@ -43,36 +57,42 @@ How does this work?
 
 Here's what happens when you try to include something that is not "module'sque":
 
-    [1] pry(main)> class Foo; end
-    => nil
-    [2] pry(main)> class Bar; include Foo; end
-    TypeError: wrong argument type Class (expected Module)
-    from (pry):2:in `include'
-    [3] pry(main)> Foo.class
-    => Class
+```
+[1] pry(main)> class Foo; end
+=> nil
+[2] pry(main)> class Bar; include Foo; end
+TypeError: wrong argument type Class (expected Module)
+from (pry):2:in `include'
+[3] pry(main)> Foo.class
+=> Class
+```
 
 Ok, makes sense. *Foo*'s class is *Class*, not *Module*.
 
 Let's contrast this with a proper module:
 
-    [1] pry(main)> module Mod; end
-    => nil
-    [2] pry(main)> class Foo; include Mod; end
-    => Foo
-    [3] pry(main)> Mod.class
-    => Module
+```
+[1] pry(main)> module Mod; end
+=> nil
+[2] pry(main)> class Foo; include Mod; end
+=> Foo
+[3] pry(main)> Mod.class
+=> Module
+```
 
 Now let's try to emulate the code I showed you from *Mutant*:
 
-    [1] pry(main)> class Foo < Module; end
-    => nil
-    [2] pry(main)> class Bar; include Foo; end
-    TypeError: wrong argument type Class (expected Module)
-    from (pry):2:in `include'
-    [3] pry(main)> class Bar; include Foo.new; end
-    => Bar
-    [4] pry(main)> Foo.class
-    => Class
+```
+[1] pry(main)> class Foo < Module; end
+=> nil
+[2] pry(main)> class Bar; include Foo; end
+TypeError: wrong argument type Class (expected Module)
+from (pry):2:in `include'
+[3] pry(main)> class Bar; include Foo.new; end
+=> Bar
+[4] pry(main)> Foo.class
+=> Class
+```
 
 Now it gets even more confusing - *include Foo* doesn't work, *include Foo.new* does but the class of *Foo* is still *Class* not *Module*.  What's happening here?
 
