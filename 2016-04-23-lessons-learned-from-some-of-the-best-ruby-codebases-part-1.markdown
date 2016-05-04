@@ -111,7 +111,15 @@ There it is. If the argument is not a module __or__ if it's a class we raise.
 
 Now we understand why *include Foo* doesn't work - because it's class is *Class* - but *include Foo.new* does not raise - because its class is *Foo*, not *Class*.
 
-This elegant trick of having a class inherit from *Module* allows us to use a class in a kind-of module context and to use a module in a kind-of class context.
+This elegant trick of having a class inherit from *Module* allows us to use a class in a kind-of module context and to use a module in a kind-of class context. To put it differently, this allows a module to have an encapsulated context (its instance variables), that does __not__ leak into the ivars of the class that includes that module.
+
+Interesting side note: `Concord` has a limit of 3 arguments. Intentionally hardcoded. It'll not accept
+
+```Ruby
+Concord.new(:a, :b, :c, :d)
+```
+
+The idea is that because `Concord` creates a positional arguments interface constructor, the limit of 3 guarantees yuo do not overuse Concord.
 
 ### [Procto](https://github.com/snusnu/procto)
 
