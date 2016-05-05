@@ -12,9 +12,9 @@ author: Timo Rößner
 ---
 -->
 
-## Lessons learned from some of the best ruby codebases out there (part 2)
+## Lessons learned from some of the best ruby codebases out there (part 3)
 
-Welcome to the second part of the series (you can find the first part [here](https://tech.blacklane.com/2016/04/23/lessons-learned-from-some-of-the-best-ruby-codebases-part-1/)).
+Welcome to the third part of the series (you can find the first part [here](https://tech.blacklane.com/2016/04/23/lessons-learned-from-some-of-the-best-ruby-codebases-part-1/) and the second part [TODO]).
 
 In this part I will again focus on some other highly interesting gems [Mutant](https://github.com/mbj/mutant) uses in particluar the abstract_type](https://github.com/dkubb/abstract_type) gem and the [adamantium](https://github.com/dkubb/adamantium) gem.
 
