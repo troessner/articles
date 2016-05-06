@@ -21,7 +21,7 @@ There are way too many significant changes to list them all so I restrict this l
 
 #### Support
 
-Parsing with the [`parser`](https://github.com/whitequark/parser) gem allows us to support all major ruby versions:
+Parsing with the [`parser`](https://github.com/whitequark/parser) gem allows us to support all major Ruby versions:
 
 1.9.3
 2.0

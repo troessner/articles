@@ -123,7 +123,7 @@ The idea is that because `Concord` creates a positional arguments interface cons
 
 ### [Procto](https://github.com/snusnu/procto)
 
-*[Procto](https://github.com/snusnu/procto)* turns your ruby object into a method object. The code example from the README speaks for itself so I'll just paste it here:
+*[Procto](https://github.com/snusnu/procto)* turns your Ruby object into a method object. The code example from the README speaks for itself so I'll just paste it here:
 
 ```Ruby
 class Printer

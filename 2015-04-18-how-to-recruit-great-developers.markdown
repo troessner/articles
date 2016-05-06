@@ -26,9 +26,9 @@ Ok, sounds great, so how do we get there?
 
 __Be polyglot__
 
-A lot of companies are focused on one language only. E.g. you started out with ruby and now you are doomed to write ruby forever. This deters good developers. Nobody wants to be locked in the golden ruby cage forever.
-You should drop the "we are doing ruby and you have to know ruby" restriction completely and embrace all modern, sexy languages.
-Not to mention that you then can tap into the huge reservoir of great developers out there who haven't written a single line of ruby in their life.
+A lot of companies are focused on one language only. E.g. you started out with Ruby and now you are doomed to write Ruby forever. This deters good developers. Nobody wants to be locked in the golden ruby cage forever.
+You should drop the "we are doing Ruby and you have to know Ruby" restriction completely and embrace all modern, sexy languages.
+Not to mention that you then can tap into the huge reservoir of great developers out there who haven't written a single line of Ruby in their life.
 But in order to do that, you need the appropriate technical architecture. Having a microservice architecture allows you to be polyglot since every microservice is completely independent from each other. Having one monolithic app would probably not work.
 Of course this still needs to be at least loosely monitored since certain technologies probably don't make sense for you (e.g. Java Enterprise when you're a start-up) or are outdated in the sense that most good developers moved to a different eco system years ago like PHP or Perl (I love Perl, but let's face it, Perl 6 put the final nail in the coffin).
 And of course the teams must commit to maintain and operate it.
@@ -112,7 +112,7 @@ This is a complicated topic and would require thoughtful planning. I have seen q
 
 ### Wrapping it up
 
-Get your team culture right. Invest some money. Probably a lot. Build up the best team possible.
-Take (early) google, twitter and Zappos as role models. And then go beyond what they did.
+I believe that getting your team culture right should be paramount. Invest some money. Probably a lot. And try to build up the best team possible.
+Early google, twitter and Zappos and many many more can serve role models. And then we can go beyond what they did.
 
-And then your recruiting problem will solve itself.
+And finally, the recruiting problem will solve itself.

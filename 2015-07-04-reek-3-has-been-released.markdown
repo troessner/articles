@@ -1,6 +1,6 @@
-My beloved Reek gem has come quite a long way. During the last months we refactored so much of the source code that it almost feels like a new and shiny gem.
+My beloved `Reek` gem has come quite a long way. During the last months we refactored so much of the source code that it almost feels like a new and shiny gem.
 
-Right after the release of Reek 2 we started to work on [Reek3](https://github.com/troessner/reek/issues/401) which we released a couple of days ago.
+Right after the release of `Reek` 2 we started to work on [`Reek` 3](https://github.com/troessner/reek/issues/401) which we released a couple of days ago.
 
 ### A stable API
 
@@ -26,7 +26,7 @@ Klazz#m has unused parameter 'b' (UnusedParameters)
 Klazz#m has unused parameter 'c' (UnusedParameters)
 ```
 
-Getting a stable API out is something that hopefully means a lot for projects who make use of Reek programmatically like [Rubycritic](https://github.com/whitesmith/rubycritic).
+Getting a stable API out is something that hopefully means a lot for projects who make use of `Reek` programmatically like [Rubycritic](https://github.com/whitesmith/rubycritic).
 
 The API is still rather small so you can quickly read up on everything you need to know in 5 minutes [here](https://github.com/troessner/reek/blob/master/docs/API.md).
 
@@ -42,11 +42,11 @@ exclude_paths:
   - app/controllers
 ```
 
-to your Reek config and that's it - Reek will ignore those directories when scanning.
+to your `Reek` config and that's it - `Reek` will ignore those directories when scanning.
 
 ### Singleton methods
 
-We fixed one of the most annoying bugs that has been around for years. Until now, Reek would not recognise singleton methods if they were defined with the class << self syntax, meaning that this:
+We fixed one of the most annoying bugs that has been around for years. Until now, `Reek` would not recognise singleton methods if they were defined with the class << self syntax, meaning that this:
 
 ```Ruby
 class C
@@ -63,10 +63,10 @@ would incorrectly report [UtilityFunction](https://github.com/troessner/reek/blo
 
 ### Compatibility
 
-We dropped support ruby 1.9. Time to move on.
+We dropped support Ruby 1.9. Time to move on.
 
 What's next?
 
-- An engine for [CodeClimate](https://codeclimate.com/) to make it even easier to use Reek
-- A [rails-friendly Reek mode](https://github.com/troessner/reek/issues/529)
+- An engine for [CodeClimate](https://codeclimate.com/) to make it even easier to use `Reek`
+- A [rails-friendly `Reek` mode](https://github.com/troessner/reek/issues/529)
 - We have quite a few awesome ideas I'd love [to get going](https://github.com/troessner/reek/issues/556)

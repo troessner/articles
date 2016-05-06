@@ -33,6 +33,6 @@ Of course there are a couple of exceptions though where pair programming makes n
 
 ### Wrapping it up
 
-I guess with pair programming it's like with everything in life: Don't make up rules just for the sake of having them and follow them without questioning them.
+I guess with pair programming it's like with everything in life: We shouldn't make up rules just for the sake of having them and follow them without questioning them.
 
-Use pair programming judiciously - quite often you can achieve the same thing better with pull requests.
+I believe we should use pair programming judiciously - quite often we can achieve the same thing better with pull requests.

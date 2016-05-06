@@ -2,17 +2,17 @@
 <!--
 ---
 layout: post
-title: Lessons learned from some of the best ruby codebases out there (part 2)
+title: Lessons learned from some of the best Ruby codebases out there (part 2)
 date: 2016-05-04
 comments: true
 categories: ruby
 keywords: ruby, gems, mutant
-description: Lessons learned from some of the best ruby codebases out there (part 2)
+description: Lessons learned from some of the best Ruby codebases out there (part 2)
 author: Timo Rößner
 ---
 -->
 
-## Lessons learned from some of the best ruby codebases out there (part 2)
+## Lessons learned from some of the best Ruby codebases out there (part 2)
 
 Welcome to the second part of the series (you can find the first part [here](https://tech.blacklane.com/2016/04/23/lessons-learned-from-some-of-the-best-ruby-codebases-part-1/)).
 
