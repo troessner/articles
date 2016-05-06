@@ -27,29 +27,29 @@ Initially I had planned to cover multiple gems again, but after starting to look
 `IceNine` is a library for deep freezing objects:
 
 ```Ruby
-hash_1 = { 'foo' => 'bar' }
+hash_1 = { 'key' => 'foo' }
 
 hash_1.frozen? # => false
-hash_1['foo'].frozen? # => false
-hash_1['foo'] = 'whoopsie, got changed!' # => "whoopsie, got changed!"
+hash_1['key'].frozen? # => false
+hash_1['key'] = 'bar' # => "bar"
 
 # Let's freeze hash_1
 
+hash_1 = { 'key' => 'foo' }
+
 hash_1.freeze
 hash_1.frozen? # => true
-hash_1['foo'].frozen? # => still false, so its not deeply frozen
+hash_1['key'][0..2] = 'bar' # This works, so the hash is not deep frozen
 
 # IceNine deep freezes in contrast
 
 require 'ice_nine'
 
-hash_2 = { 'foo' => 'bar' }
+hash_2 = { 'key' => 'foo' }
 
 IceNine.deep_freeze hash_2
-
 hash_2.frozen? # => true
-hash_2['foo'].frozen? # => true
-hash_2['foo'] = 'whoopsie, got changed!' # => RuntimeError: can't modify frozen Hash
+hash_2['key'][0..2] = 'bar' # => RuntimeError: can't modify frozen String
 ```
 
 ### What do you need this for?
