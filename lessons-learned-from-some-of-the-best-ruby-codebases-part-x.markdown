@@ -12,9 +12,7 @@ author: Timo Rößner
 ---
 -->
 
-## Lessons learned from some of the best Ruby codebases out there (part 3)
-
-Welcome to the third part of the series (you can find the first part [here](https://tech.blacklane.com/2016/04/23/lessons-learned-from-some-of-the-best-ruby-codebases-part-1/) and the second part [TODO]).
+Welcome to the third part of the series (you can find the first part [here](https://tech.blacklane.com/2016/04/23/lessons-learned-from-some-of-the-best-ruby-codebases-part-1/) and the second part [here](https://tech.blacklane.com/2016/05/04/lessons-learned-from-some-of-the-best-ruby-codebases-part-2/)).
 
 In this part I will again focus on some other highly interesting gems [Mutant](https://github.com/mbj/mutant) uses in particluar the abstract_type](https://github.com/dkubb/abstract_type) gem and the [adamantium](https://github.com/dkubb/adamantium) gem.
 
@@ -50,7 +48,7 @@ object = Baz.new
 object.bar  # raises NotImplementedError: Baz#bar is not implemented
 ```
 
-So how does it work? Let's start with the *include* statement and then work our way to where we actually use *abstract_method* and *abstract_singleton_method*.
+So how does it work? Let's start with the `include` statement and then work our way to where we actually use `abstract_method` and `abstract_singleton_method`.
 
 When you call
 
@@ -59,7 +57,7 @@ When you call
 include AbstractType
 ```
 
-in your class this will prompt the Ruby runtime to call the *[included](http://ruby-doc.org/core-2.3.0/Module.html#method-i-included)* callback that is at the top level of the gem:
+in your class this will prompt the Ruby runtime to call the `[included](http://ruby-doc.org/core-2.3.0/Module.html#method-i-included)` callback that is at the top level of the gem:
 
 ```Ruby
 module AbstractType
@@ -73,7 +71,7 @@ module AbstractType
 end
 ```
 
-With *create_new_method* looking like this:
+With `create_new_method` looking like this:
 
 ```Ruby
 def self.create_new_method(abstract_class)
@@ -87,15 +85,15 @@ def self.create_new_method(abstract_class)
 end
 ```
 
-We're dynamically overwriting *[Class.new](http://ruby-doc.org/core-2.3.0/Class.html#method-i-new)* in the class that we intend to make abstract. The important part here is that this *new* is also what will be used when we call *new* on subclasses.
+We're dynamically overwriting `[Class.new](http://ruby-doc.org/core-2.3.0/Class.html#method-i-new)` in the class that we intend to make abstract. The important part here is that this *new* is also what will be used when we call *new* on subclasses.
 
-In the new, uhm, *new* we fail if *self* is equal to the abstract class. The equality check here is based on *[BasicObject#equal?](http://ruby-doc.org/core-2.3.0/BasicObject.html#method-i-equal-3F)* which checks for strict identity. Also note that we are not using *raise* here but *fail* instead (which is just an alias for *raise*), something that is kind of [controversial](https://stackoverflow.com/questions/31937632/fail-vs-raise-in-ruby-should-we-really-believe-the-style-guide) in the Ruby community.
+In the new, uhm, `new` we fail if `self` is equal to the abstract class. The equality check here is based on `[BasicObject#equal?](http://ruby-doc.org/core-2.3.0/BasicObject.html#method-i-equal-3F)` which checks for strict identity. Also note that we are not using `raise` here but `fail` instead (which is just an alias for `raise`), something that is kind of [controversial](https://stackoverflow.com/questions/31937632/fail-vs-raise-in-ruby-should-we-really-believe-the-style-guide) in the Ruby community.
 
-When we're in one of the subclasses of our abstract class this guard will fail in which case we're just delegating to the original *Class.new*.
+When we're in one of the subclasses of our abstract class this guard will fail in which case we're just delegating to the original `Class.new`.
 
 A lot of meat here for very little code. If you're confused now I'd recommend to read up on the [Ruby object model](https://thesocietea.org/2015/08/metaprogramming-in-ruby-part-1/).
 
-With this out of the way let's get back to the *included* callback:
+With this out of the way let's get back to the `included` callback:
 
 
 ```Ruby
@@ -106,9 +104,9 @@ def self.included(descendant)
 end
 ```
 
-The *descendant* (read: "base class" this module is included in) is extending the *AbstractMethodDeclarations* module here, thus adopting its methods as singleton methods.
+The *descendant* (read: "base class" this module is included in) is extending the `AbstractMethodDeclarations` module here, thus adopting its methods as singleton methods.
 
-One of those methods is the *abstract_method* we saw in the example at the beginning:
+One of those methods is the `abstract_method` we saw in the example at the beginning:
 
 ```Ruby
 def abstract_method(*names)
@@ -139,9 +137,9 @@ names.each do |name|
 end
 ```
 
-and heavily relies on *[Method#to_proc](http://ruby-doc.org/core-2.3.0/Method.html#method-i-to_proc)*. You can read up on how this works [here](https://andrewjgrimm.wordpress.com/2011/10/03/in-ruby-method-passes-you/).
+and heavily relies on `[Method#to_proc](http://ruby-doc.org/core-2.3.0/Method.html#method-i-to_proc)`. You can read up on how this works [here](https://andrewjgrimm.wordpress.com/2011/10/03/in-ruby-method-passes-you/).
 
-The *self* at the end
+The `self` at the end
 
 ```Ruby
 def abstract_method(*names)
@@ -150,9 +148,9 @@ def abstract_method(*names)
 end
 ```
 
-allows you to chain calls to *abstract_method* (of which I don't really see the point here, but I guess the author follows his own conventions in this case).
+allows you to chain calls to `abstract_method` (of which I don't really see the point here, but I guess the author follows his own conventions in this case).
 
-And what does *create_abstract_instance_method* do?
+And what does `create_abstract_instance_method` do?
 
 ```Ruby
 def create_abstract_instance_method(name)
@@ -164,7 +162,7 @@ end
 
 It defines an abstract instance method that will do nothing but .... fail with a proper error message.
 Exactly what we need to implement abstract types.
-Furthermore there's a sister method to *abstract_method* that's called *abstract_singleton_method* which does the same thing for singleton methods.
+Furthermore there's a sister method to *abstract_method* that's called `abstract_singleton_method` which does the same thing for singleton methods.
 
 ### [adamantium](https://github.com/dkubb/adamantium)
 
@@ -203,7 +201,7 @@ end
 
 So how's this working? For the sake of brevity, let's exclude the *noop* mode and focus on the *deep* and *flat* mode.
 
-Let's start with the *included* callback for the *Adamantium* module:
+Let's start with the `included` callback for the `Adamantium` module:
 
 ```Ruby
 module Adamantium
@@ -218,10 +216,10 @@ module Adamantium
 end
 ```
 
-Ok, *included* gets passed in the class it is included on called *descendant* and then re-opens this class using *class_eval*.
-We then include the *Memoizable* module and extend *ModuleMethods* and *ClassMethods*.
+Ok, `included` gets passed in the class it is included on called *descendant* and then re-opens this class using `class_eval`.
+We then include the *Memoizable* module and extend `ModuleMethods` and `ClassMethods`.
 
-Let's check out *ModuleMethods*:
+Let's check out `ModuleMethods`:
 
 ```Ruby
 module Adamantium
@@ -242,7 +240,7 @@ module Adamantium
 end
 ```
 
-The *freezer* methods determines what strategy to use. As I already mentioned above you can see that *deep* is the default strategy. And then there's the *memoize* method you saw being used above in our example from the README.
+The `freezer` methods determines what strategy to use. As I already mentioned above you can see that `deep` is the default strategy. And then there's the *memoize* method you saw being used above in our example from the README.
 There's quite a lot going on in this method so let's step through it line by line:
 
 ```Ruby
@@ -291,7 +289,7 @@ only to return *self* at the end
 self
 ```
 
-so we can chain the *memoize* calls if we like.
+so we can chain the `memoize` calls if we like.
 
 Let's check out how the actual freezing is done:
 
@@ -321,7 +319,7 @@ module Adamantium
 end
 ```
 
-*Deep* inherits from *self*. And what is *self* here?
+`Deep` inherits from `self`. And what is `self` here?
 
 ```Ruby
 class Omg; puts self; class Bar < self; end; end
@@ -367,7 +365,7 @@ class FlatExample
 end
 ```
 
-As you can see, you just include the *Flat* submodule of *Adamantium*.
+As you can see, you just include the `Flat` submodule of `Adamantium`.
 
 How is this implemented?
 
@@ -398,16 +396,16 @@ descendant.instance_exec(self) do |mod|
 end
 ```
 
-We're calling *instance_exec* on the descendant and pass *self* in. What's *self* now?
-It's the module constant, so...*Adamantium::Flat*.
-We then include *Adamantium*. That is something we already covered above in this article. So bussiness as usual.
+We're calling `instance_exec` on the descendant and pass `self` in. What's `self` now?
+It's the module constant, so...`Adamantium::Flat`.
+We then include `Adamantium`. That is something we already covered above in this article. So bussiness as usual.
 But then we extend *mod*, so *Adamantium::Flat*. Why? Because this basically overwrites the *freezer* methods that we imported in our class by doing
 
 ```Ruby
 include Adamantium
 ```
 
-so that this now returns the *flat* strategy
+so that this now returns the `flat` strategy
 
 ```Ruby
 def freezer
