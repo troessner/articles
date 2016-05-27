@@ -199,9 +199,69 @@ Note that there's also a sister method to `abstract_method` that's called `abstr
 
 `Adamantium` allows you to make objects immutable in a simple, unobtrusive way.
 
-Does sound a lot like the [IceNine](https://github.com/dkubb/ice_nine) gem I covered in the [last part of the series](https://tech.blacklane.com/2016/05/04/lessons-learned-from-some-of-the-best-ruby-codebases-part-2/), doesn't it?
+Sounds a lot like the [IceNine](https://github.com/dkubb/ice_nine) gem I covered in the [last part of the series](https://tech.blacklane.com/2016/05/04/lessons-learned-from-some-of-the-best-ruby-codebases-part-2/), doesn't it?
 
 Well, it kind of is and it kind of isn't. `Adamantium` uses `IceNine` under the hood for the actual freezing. The real value of `Adamantium` comes from offering high level strategies that you can easily apply to your objects where `IceNine` is more of the functional base library.
+
+Why would you need immutable objects?
+
+Well, with the resurgence of functional programming these days people talk a lot about "immutable data". Immutable data structures are one of the core tenets of functional programming and something that is notoriously hard to get right in Ruby.
+
+Imagine you have a bank account model like this in Ruby:
+
+```Ruby
+class Account
+  attr_reader :balance, :interest
+
+  def initialize
+    @balance = 10 # every new customer gets 10 euro upon account creation
+    @interest = 1.05
+  end
+
+  def yearly_interest_credit
+    @balance = balance * interest
+  end
+end
+```
+
+In its current form, every other piece of code in your application could mutate it like this:
+
+```Ruby
+account = Account.new
+# => #<Account:0x007fe7d1611e88 @balance=0>
+account.balance
+# => 10
+account.instance_variable_set :@interest, 100
+
+account.yearly_interest_credit
+account.balance
+# => 1000 # Whoopsie
+```
+
+`Adamantium` to the rescue!
+
+```Ruby
+require 'adamantium'
+
+class Account
+  include Adamantium
+  attr_reader :balance, :interest
+  memoize :interest
+  # snip
+end
+```
+
+Now watch what happens when I try my shenanigans from before again:
+
+```Ruby
+account = Account.new
+# => #<Account:0x007fe7d1611e88 @balance=0>
+account.balance
+# => 10
+account.instance_variable_set :@interest, 100
+# RuntimeError: can't modify frozen #<Class:#<Account:0x007ff259889390>>
+# from (pry):20:in `instance_variable_set'
+```
 
 Basically `Adamantium` offers 3 strategies for freezing your objects:
 
