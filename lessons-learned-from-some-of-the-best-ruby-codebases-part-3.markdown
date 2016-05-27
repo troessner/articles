@@ -25,36 +25,55 @@ The `Abstract Type` gem allows you to declare [abstract type](https://en.wikiped
 >>
 In programming languages, an abstract type is a type in a nominative type system that cannot be instantiated directly. Abstract types are also known as existential types.An abstract type may provide no implementation, or an incomplete implementation. Often, abstract types will have one or more implementations provided separately, for example, in the form of concrete subclasses that can be instantiated. It may include abstract methods or abstract properties[2] that are shared by its subtypes.
 
-The example from the [README](https://github.com/dkubb/abstract_type) is pretty much self-explanatory (slightly adjusted):
+When would you use an abstract type?
+
+Think about your typical web shop. You might have a base user class with some common methods:
 
 ```Ruby
-require 'abstract_type'
+class User
+  def full_name
+    "#{first_name} + #{last_name}"
+  end
+end
+```
 
-class Foo
+And then you have 2 other, more concrete classes like this:
+
+```Ruby
+class RegisteredUser
+  def login
+    # Login via email / password
+  end
+end
+
+class GuestUser
+  def login
+    # login via ephemeral link
+  end
+end
+```
+
+You never intend to actually instantiate an object of a `User`, only of `RegisteredUser` and `GuestUser`, so `User` is an abstract type (this is also called the [template method pattern](https://en.wikipedia.org/wiki/Template_method_pattern)).
+However in its current state every other user of your classes, e.g. your fellow programmer sitting next to you, could instantiate this class accidently and introduce a subtle bug in your application since this object would probably be usable in some senses but in other not.
+
+With `Abstract Type` you would fix this like this:
+
+```Ruby
+class User
   include AbstractType
 
   # Declare abstract instance method
-  abstract_method :bar
+  abstract_method :login
 
-  # Declare abstract singleton method
-  abstract_singleton_method :baz
+  def full_name
+    "#{first_name} + #{last_name}"
+  end
 end
 
-# Foo is declared abstract, so you can't instantiate it
-Foo.new  # raises NotImplementedError: Foo is an abstract type
-Foo.baz  # raises NotImplementedError: Foo.baz is not implemented
-
-# Subclassing to allow instantiation
-class Baz < Foo
-  def bar; end
-  def self.baz; end
-end
-
-# Instantiation now works
-object = Baz.new
-object.bar  # -> works
-Baz.baz     # -> works
+User.new  # raises NotImplementedError: User is an abstract type
 ```
+
+This will not only prevent bugs like above but also - and for me this is even more important - communicates your intention clearly. There's no guessing here. It's immediately clear that `User` is not supposed to be instantiated.
 
 So how does it work? Let's start with the `include` statement and then work our way to `abstract_method` and `abstract_singleton_method`.
 
