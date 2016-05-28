@@ -81,7 +81,7 @@ Excellent question!
 
 Ruby being, well, Ruby, there are of course multiple ways to do think. You could use [allocate](http://ruby-doc.org/core-2.2.3/Class.html#method-i-allocate) for instance:
 
-```
+```Ruby
 user = User.new  # raises NotImplementedError: User is an abstract type
 # Ok, let's go with `allocate`
 user = User.allocate
