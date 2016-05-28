@@ -14,7 +14,7 @@ author: Timo Rößner
 
 Welcome to the third part of the series - you can find the first part [here](https://tech.blacklane.com/2016/04/23/lessons-learned-from-some-of-the-best-ruby-codebases-part-1/) and the second part [here](https://tech.blacklane.com/2016/05/04/lessons-learned-from-some-of-the-best-ruby-codebases-part-2/).
 
-In this part I will again focus on some other highly interesting gems [Mutant](https://github.com/mbj/mutant) uses, in particluar the [Abstract Type](https://github.com/dkubb/abstract_type) gem and the [Adamantium](https://github.com/dkubb/adamantium) gem.
+In this part I will again focus on some other highly interesting gems [Mutant](https://github.com/mbj/mutant) uses, in particular the [Abstract Type](https://github.com/dkubb/abstract_type) gem and the [Adamantium](https://github.com/dkubb/adamantium) gem.
 
 <!--more-->
 
@@ -23,7 +23,7 @@ In this part I will again focus on some other highly interesting gems [Mutant](h
 The `Abstract Type` gem allows you to declare [abstract type](https://en.wikipedia.org/wiki/Abstract_type) classes and modules in an unobstrusive way:
 
 >>
-In programming languages, an abstract type is a type in a nominative type system that cannot be instantiated directly. Abstract types are also known as existential types.An abstract type may provide no implementation, or an incomplete implementation. Often, abstract types will have one or more implementations provided separately, for example, in the form of concrete subclasses that can be instantiated. It may include abstract methods or abstract properties[2] that are shared by its subtypes.
+In programming languages, an abstract type is a type in a nominative type system that cannot be instantiated directly. Abstract types are also known as existential types.An abstract type may provide no implementation, or an incomplete implementation. Often, abstract types will have one or more implementations provided separately, for example, in the form of concrete subclasses that can be instantiated. It may include abstract methods or abstract properties that are shared by its subtypes.
 
 When would you use an abstract type?
 
@@ -40,13 +40,13 @@ end
 And then you have 2 other, more concrete classes like this:
 
 ```Ruby
-class RegisteredUser
+class RegisteredUser < User
   def login
     # Login via email / password
   end
 end
 
-class GuestUser
+class GuestUser < User
   def login
     # login via ephemeral link
   end
@@ -54,7 +54,7 @@ end
 ```
 
 You never intend to actually instantiate an object of a `User`, only of `RegisteredUser` and `GuestUser`, so `User` is an abstract type (this is also called the [template method pattern](https://en.wikipedia.org/wiki/Template_method_pattern)).
-However in its current state every other user of your classes, e.g. your fellow programmer sitting next to you, could instantiate this class accidently and introduce a subtle bug in your application since this object would probably be usable in some senses but in other not.
+However in its current state every other user of your classes, e.g. your fellow programmer sitting next to you, could instantiate this class accidentally and introduce a subtle bug in your application since this object would probably be usable in some senses but in other not.
 
 With `Abstract Type` you would fix this like this:
 
@@ -75,7 +75,22 @@ User.new  # raises NotImplementedError: User is an abstract type
 
 This will not only prevent bugs like above but also - and for me this is even more important - communicates your intention clearly. There's no guessing here. It's immediately clear that `User` is not supposed to be instantiated.
 
-So how does it work? Let's start with the `include` statement and then work our way to `abstract_method` and `abstract_singleton_method`.
+At this point you might think "But wait a sec, if you can't instantiate a user, what's the point of that `abstract_method` call?".
+
+Excellent question!
+
+Ruby being, well, Ruby, there are of course multiple ways to do think. You could use [allocate](http://ruby-doc.org/core-2.2.3/Class.html#method-i-allocate) for instance:
+
+```
+user = User.new  # raises NotImplementedError: User is an abstract type
+# Ok, let's go with `allocate`
+user = User.allocate
+# => #<User:0x007feab3af8e30>
+user.login
+# NotImplementedError: User#login is not implemented
+```
+
+So how does it work? Let's start with the `include` statement and then work our way to `abstract_method`.
 
 When you call
 
@@ -205,7 +220,7 @@ Well, it kind of is and it kind of isn't. `Adamantium` uses `IceNine` under the 
 
 Why would you need immutable objects?
 
-Well, with the resurgence of functional programming these days people talk a lot about "immutable data". Immutable data structures are one of the core tenets of functional programming and something that is notoriously hard to get right in Ruby.
+With the resurgence of functional programming these days people talk a lot about "immutable data". Immutable data structures are one of the core tenets of functional programming and something that is notoriously hard to get right in Ruby.
 
 Imagine you have a bank account model like this in Ruby:
 
@@ -214,11 +229,11 @@ class Account
   attr_reader :balance, :interest
 
   def initialize
-    @balance = 10 # every new customer gets 10 euro upon account creation
+    @balance = 10 # every new customer gets 10 Euro upon account creation
     @interest = 1.05
   end
 
-  def yearly_interest_credit
+  def apply_yearly_interest
     @balance = balance * interest
   end
 end
@@ -233,7 +248,7 @@ account.balance
 # => 10
 account.instance_variable_set :@interest, 100
 
-account.yearly_interest_credit
+account.apply_yearly_interest
 account.balance
 # => 1000 # Whoopsie
 ```
@@ -457,7 +472,7 @@ class Deep < Freezer
 
 But why are we doing this here instead of being explicit? It's making our intention explicit without duplicating names across our module. And even if you rename `Freezer` to something else, this line doesn't change, which makes it easier to refactor and less error-prone to subtle bugs.
 
-Is it a huge deal? No. It isn't. But in a larger codebase small things like can make the difference between "bareley maintainable" and "updating functionality is a walk in the park".
+Is it a huge deal? No. It isn't. But in a larger code base small things like can make the difference between "barely maintainable" and "updating functionality is a walk in the park".
 
 Before we wrap this up here let's look at one last thing:
 
@@ -515,7 +530,7 @@ end
 
 We're calling `instance_exec` on the descendant and pass `self` in. What's `self` now?
 It's the module constant, so...`Adamantium::Flat`.
-We then include `Adamantium`. That is something we already covered above in this article. So bussiness as usual.
+We then include `Adamantium`. That is something we already covered above in this article. So business as usual.
 But then we extend `mod`, so `Adamantium::Flat`. Why? Because this basically overwrites the `freezer` methods that we imported in our class by doing
 
 ```Ruby
@@ -543,6 +558,13 @@ anymore.
 So long story short, this is just a very advanced configuration mechanism. Granted, it might seem a little complicated but at the same time it completely separates the modules from each other making it easier to update one without updating the other.
 
 ### Wrapping it up
+
+What we discussed today:
+
+* Use `AbstractType` for base classes  you do not intend to instantiate
+* The most popular application for abstract types is probably the [template method pattern](https://en.wikipedia.org/wiki/Template_method_pattern)
+* Immutable data can prevent subtle bugs and makes it easier to reason about code if you know that the underlying data can not change
+* `Adamantium` offers high level strategies for making your objects immutable
 
 That's it for part of this series. Both gems we looked at in this article are pretty small, but packed with a lot of features.
 
