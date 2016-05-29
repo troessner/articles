@@ -32,7 +32,7 @@ Think about your typical web shop. You might have a base user class with some co
 ```Ruby
 class User
   def full_name
-    "#{first_name} + #{last_name}"
+    "#{first_name} #{last_name}"
   end
 end
 ```
@@ -79,7 +79,7 @@ At this point you might think "But wait a sec, if you can't instantiate a user, 
 
 Excellent question!
 
-Ruby being, well, Ruby, there are of course multiple ways to do think. You could use [allocate](http://ruby-doc.org/core-2.2.3/Class.html#method-i-allocate) for instance:
+Ruby being, well, Ruby, there are of course multiple ways to instantiate objects. You could use [allocate](http://ruby-doc.org/core-2.2.3/Class.html#method-i-allocate) for example:
 
 ```Ruby
 user = User.new  # raises NotImplementedError: User is an abstract type
