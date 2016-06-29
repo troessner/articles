@@ -9,8 +9,8 @@ class Greeter
     @phrase = phrase
   end
 
-  def say_hello(options)
-    "#{@phrase} #{options[:name]}" if @enabled
+  def say_hello(name)
+    "#{@phrase} #{name}" if @enabled
   end
 end
 ```
@@ -19,7 +19,7 @@ and turns it into something like this:
 
 ```Ruby
 if true
-  "#{@phrase}#{" "}#{options[:name]}"
+  "#{@phrase}#{" "}#{name}"
 end
 ```
 
@@ -27,7 +27,7 @@ or
 
 ```Ruby
 if @enabled
-  "#{@phrase}#{" "}#{options.fetch(:name)}"
+  "#{@phrase}#{" "}#{name}"
 end
 ```
 
@@ -104,7 +104,7 @@ This is how a surviving mutant would be indicated:
    def say_hello(options)
   -  if @enabled
   +  if true
-       "#{@phrase}#{" "}#{options[:name]}"
+       "#{@phrase}#{" "}#{name}"
      end
    end
 ```
@@ -410,18 +410,39 @@ end
 
 Step by step:
 
-* `super`: That might seem odd to the innocent reader. Remember, `Mutant` makes heavy usage of the `[Concord](https://github.com/mbj/concord)` gem.
-`Concord` works like this:
+* `super`: That might seem odd to the innocent reader. Remember, `Mutant` makes heavy usage of the [Concord](https://github.com/mbj/concord) gem.
+`Concord` is a useful tool to cut down boilerplate code.
+
+This means you can use it to transform this:
 
 ```Ruby
-TODO
+class ComposedObject
+  attr_reader :foo, :bar
+  protected :foo; :bar
+
+  def initialize(foo, bar)
+    @foo = foo
+    @bar = bar
+  end
+end
 ```
 
-So now you should understand why `super` is there. This will basically ...TODO
+into this:
+
+```Ruby
+class ComposedObject
+  include Concord.new(:foo, :bar)
+end
+```
+
+which is a lot easier on the eyes.
+
+So now you should understand why `super` is there. This will basically that the `initialize` provided by `Concord` will be called as well.
+Try to remember this, this is a pattern you will see throughout the `Mutant` codebase.
 
 * `Parser.new`: `Mutant` uses the awesome `[parser](https://github.com/whitequark/parser)` gem for producing ASTs from source code and has its own thin wrapper around. That thin wrapper just maintains a cache, so subjects on the same file share the (immutable) AST.
 
-* `infect`: Infection is the process where `Mutant` processes includes and requires, and "infects" the ruby VM with the "subjects under tests", its the point where the software that is under mutation test gets loaded.
+* `infect`: Infection is the process where `Mutant processes includes and requires, and "infects" the ruby VM with the "subjects under tests", its the point where the software that is under mutation test gets loaded.
 
 ```Ruby
 module Mutant
@@ -593,36 +614,422 @@ bundle exec mutant --include lib/\
 ```
 
 So given we fire up `mutant` like that, how does `subjects` look like?
-
-TODO below
+`matched_subjects` returns an array of [Enumerable<Subject>], let's check out how this looks in our console:
 
 ```
- first subject: [#<Mutant::Subject::Method::Instance context=#<Mutant::Context scope=Greeter source_path=#<Pathname:/Users/timo/dev/hello_world/lib/hello_world/greeter.rb>> node=s(:def, :initialize,
+[
+# The `subjects` array has 2 entries:
+# First subject:
+
+#<Mutant::Subject::Method::Instance 
+  context=
+    #<Mutant::Context 
+      scope=Greeter
+      source_path=#<Pathname:/Users/timo/dev/hello_world/lib/hello_world/greeter.rb>>
+  node=s(:def, :initialize,
+    s(:args,
+      s(:arg, :phrase)),
+        s(:ivasgn, :@phrase,
+          s(:lvar, :phrase)))
+
+>, # end of first subject
+
+# Second subject:
+
+#<Mutant::Subject::Method::Instance
+  context=
+    #<Mutant::Context
+      scope=Greeter
+      source_path=#<Pathname:/Users/timo/dev/hello_world/lib/hello_world/greeter.rb>>
+  node=s(:def, :say_hello,
+         s(:args,
+          # ...snip
+    > # end of second subject
+]
+```
+
+Just by reading through it you should see be able to get a feeling for what's happening, but let's go through it step by step:
+
+```
+Mutant::Subject::Method::Instance
+```
+
+The subject class. As you can see it has 2 attributes:
+
+1.) A [context](https://github.com/mbj/mutant/blob/master/lib/mutant/context.rb) which contains:
+  * a [scope](https://github.com/mbj/mutant/blob/master/lib/mutant/scope.rb) called `Greeter`. This should look familiar to you now, doesn't it? That's the class from above we're actually testing.
+  * a `source_path`: Again, no magic here, you can see the path to the "greeter.rb" on my local file system
+
+2.) A [node](https://github.com/mbj/mutant/blob/master/lib/mutant/mutator/node.rb): Now even without knowing **anything** about [S-expressions](https://en.wikipedia.org/wiki/S-expression) and [abstract syntax trees](https://en.wikipedia.org/wiki/Abstract_syntax_tree) just by looking at:
+
+```
+  node=s(:def, :initialize,
+```
+
+and in the second subject:
+
+```
+node=s(:def, :say_hello,
+```
+
+you can kind of figure out that both nodes correspond to the methods in our `Greeter` class:
+
+```Ruby
+class Greeter
+  def initialize(phrase)
+    @enabled = true
+    @phrase = phrase
+  end
+
+  def say_hello(name)
+    "#{@phrase} #{name}" if @enabled
+  end
+end
+```
+
+Alright, so this doesn't look so complex anymore, now does it?
+
+* We have a class with 2 instance methods
+* `Mutant` takes this class and turns it into 2 subjects
+* Where each subject contains a node consisting of S-Expressions that corresponds to one of our instance methods.
+
+### Mutations
+
+Ok, so now we have talked about subjects a lot. What about the mutations?
+
+If you recall the `env` method in `Env::Bootstrap` from above:
+
+```Ruby
+  def env
+    subjects = matched_subjects
+    Env.new(
+      actor_env:        Actor::Env.new(Thread),
+      config:           config,
+      integration:      @integration,
+      matchable_scopes: matchable_scopes,
+      mutations:        subjects.flat_map(&:mutations),
+      parser:           parser,
+      selector:         Selector::Expression.new(@integration),
+      subjects:         subjects
+    )
+  end
+```
+
+you see this line:
+
+```Ruby
+      mutations:        subjects.flat_map(&:mutations),
+```
+
+So apparently the mutations are an attribute of a single subject.
+
+Let's check out the [Subject](https://github.com/mbj/mutant/blob/master/lib/mutant/subject.rb) class:
+
+```Ruby
+module Mutant
+  class Subject
+    # Mutations for this subject
+    #
+    # @return [Enumerable<Mutation>]
+    # @return [undefined]
+    def mutations
+      [neutral_mutation].concat(
+        Mutator.mutate(node).map do |mutant|
+          Mutation::Evil.new(self, wrap_node(mutant))
+        end
+      )
+    end
+    memoize :mutations
+  end
+end
+```
+
+Let's dissect this:
+
+```Ruby
+[neutral_mutation].concat # ... evil_mutations
+```
+
+Ok, so we're returning an array of a neutral mutation and then all of the evil ones.
+
+This
+
+```Ruby
+Mutator.mutate(node).
+```
+
+is now the interesting part we need to dive into:
+
+```Ruby
+module Mutant
+  # Generator for mutations
+  class Mutator
+    # Lookup and invoke dedicated AST mutator
+    #
+    # @param node [Parser::AST::Node]
+    # @param parent [nil,Mutant::Mutator::Node]
+    #
+    # @return [Set<Parser::AST::Node>]
+    def self.mutate(node, parent = nil)
+      self::REGISTRY.lookup(node.type).call(node, parent)
+    end
+  end
+end
+```
+
+The [Registry](https://github.com/mbj/mutant/blob/master/lib/mutant/registry.rb) is conceptually quite simple. Just think of it as the place in `Mutant` where you basically say "I want to associate this mutator with this type of AST node".
+
+So this:
+
+```Ruby
+self::REGISTRY.lookup(node.type)
+```
+
+will basically just check if for a given node type there is a mutator defined. And if there is this one will be returned as you can see here:
+
+```Ruby
+module Mutant
+  # Registry for mapping AST types to classes
+  class Registry
+    include Concord.new(:contents)
+
+    def lookup(type)
+      contents.fetch(type) do
+        fail RegistryError, "No entry for: #{type.inspect}"
+      end
+    end
+  end
+end
+```
+
+This all sounds very vague so let's check out a the concrete example from above in pry. We'll insert a break point here in the `Mutator`:
+
+```Ruby
+module Mutant
+  class Mutator
+    def self.mutate(node, parent = nil)
+binding.pry
+      self::REGISTRY.lookup(node.type).call(node, parent)
+    end
+  end
+end
+```
+
+`Mutator.mutate` will be called recursively to traverse the given node - I'm omitting the details here for the sake of simplicity.
+
+So let me show you a sample run.
+
+But first: Remember our initial example we started out with?
+
+That was this one:
+
+```
+  evil:Greeter#say_hello:/Users/timo/dev/ast_talk_samples/lib/mutant/greeter.rb:7:80e67
+  @@ -1,6 +1,6 @@
+   def say_hello(name)
+  -  if @enabled
+  +  if true
+       "#{@phrase}#{" "}#{name}"
+     end
+   end
+```
+
+Now let's what we encounter in our `pry` session.
+
+The first `pry` session that pops up looks like this:
+
+```
+[1] pry(Mutant::Mutator)> node
+=> s(:def, :say_hello,
   s(:args,
-    s(:arg, :phrase)),
-  s(:ivasgn, :@phrase,
-    s(:lvar, :phrase)))>, #<Mutant::Subject::Method::Instance context=#<Mutant::Context scope=Greeter source_path=#<Pathname:/Users/timo/dev/hello_world/lib/hello_world/greeter.rb>> node=s(:def, :say_hello,
+    # snip
+[2] pry(Mutant::Mutator)> node.type
+=> :def
+```
+
+Ok, we're starting with the whole method.
+
+Next:
+
+```
+[1] pry(Mutant::Mutator)> node
+=> s(:args,
+  s(:arg, :name))
+[2] pry(Mutant::Mutator)> node.type
+=> :args
+```
+
+Ok, now we're handling the arguments. I'm gonna fast-forward:
+
+```
+[1] pry(Mutant::Mutator)> node
+=> s(:if,
+  s(:ivar, :@enabled),
+    # snip
+[2] pry(Mutant::Mutator)> node.type
+=> :if
+```
+
+There it is! Now we're talking. That's where we're dealing with my example from above.
+So we have the ":if" node - who's handling that?
+
+If you check out the `mutator/node` [directory](https://github.com/mbj/mutant/tree/master/lib/mutant/mutator/node) you'll see all the node mutators that are available. Including the one that handles the [":if" node](https://github.com/mbj/mutant/blob/master/lib/mutant/mutator/node/if.rb).
+
+But let's not concern ourselves with the details of the single mutators but first finish off `Mutator.mutate`. So what does this method actually return?
+
+Let's use the console again.
+First keep in mind what the original node looked like:
+
+```Ruby
+s(:def, :say_hello,
   s(:args,
     s(:arg, :name)),
-  s(:dstr,
-    s(:begin,
-      s(:ivar, :@phrase)),
-    s(:str, " "),
-    s(:begin,
-      s(:lvar, :name))))>]
+  s(:if,
+    s(:ivar, :@enabled),
+    s(:dstr,
+      s(:begin,
+        s(:ivar, :@phrase)),
+      s(:str, " "),
+      s(:begin,
+        s(:lvar, :name))), nil))
 ```
 
-Alright, so we have:
+Now let's take samples of what `Mutator.mutate(node)` returns:
+
+```
+[18] pry(#<Mutant::Subject::Method::Instance>)> Mutator.mutate(node).to_a.sample
+
+ => s(:def, :say_hello,
+  s(:args,
+    s(:arg, :name)),
+  s(:if,
+    s(:ivar, :@enabled),
+    s(:dstr,
+      s(:begin,
+        s(:send, nil, :phrase)),
+      s(:str, " "),
+      s(:begin,
+        s(:lvar, :name))), nil))
+```
+
+Interesting. See the difference to the original node?
+
+The original:
+
+```
+    s(:dstr,
+      s(:begin,
+        s(:ivar, :@phrase)),
+```
+
+The mutation:
+
+```
+    s(:dstr,
+      s(:begin,
+        s(:send, nil, :phrase)),
+```
+
+This means `Mutant` replaced accessing an instance variable
+
+```Ruby
+"#{@phrase} ...."
+```
+
+with a method call:
+
+```Ruby
+"#{phrase} ...."
+```
+
+```
+s(:send, nil, :phrase)
+```
+
+means "Send the message `phrase` to `self`." The "nil" argument denotes that there is no explicit receiver, so `self` is the implicit one.
+
+But you don't have to take my word for it: Using the `ruby-parse` executable that comes along with the `Parser` gem we can quickly check
+
+```Ruby
+($) ruby-parse -e '"#{@phrase}"'
+
+(dstr
+  (begin
+    (ivar :@phrase)))
+
+($) ruby-parse -e '"#{phrase}"'
+
+(dstr
+  (begin
+    (send nil :phrase)))
+```
+
+Ok, another roll of the dice:
+
+```
+[18] pry(#<Mutant::Subject::Method::Instance>)> Mutator.mutate(node).to_a.sample
+
+=> s(:def, :say_hello,
+  s(:args,
+    s(:arg, :name)),
+  s(:if,
+    s(:true),
+    s(:dstr,
+      s(:begin,
+        s(:ivar, :@phrase)),
+      s(:str, " "),
+      s(:begin,
+        s(:lvar, :name))), nil))
+```
+
+There it is! That's the mutation from our original example: 
+
+```Ruby
+if true
+  "#{@phrase}#{" "}#{name}"
+end
+```
+
+### Mutating single nodes
+
+Alright, time for a recap. So far we have:
 
 * A [configuration](https://github.com/mbj/mutant/blob/master/lib/mutant.rb#L191)
 * An [environment](https://github.com/mbj/mutant/blob/master/lib/mutant/env.rb)
 * A [bootstrapping process](https://github.com/mbj/mutant/blob/master/lib/mutant/env/bootstrap.rb), that ties them together
 * [Subjects](https://github.com/mbj/mutant/blob/master/lib/mutant/subject.rb) that we intend to test
-* [Mutations](https://github.com/mbj/mutant/blob/master/lib/mutant/mutation.rb) for those subjects
+* [A static mutator](https://github.com/mbj/mutant/blob/master/lib/mutant/mutator.rb) that takes the method nodes within those subjects
+* And applies [mutations](https://github.com/mbj/mutant/blob/master/lib/mutant/mutation.rb) to those subjects
+
+The missing piece now is the logic that actually applies the mutation to the nodes. Let's focus on our good, old ":if" node from and check out the corresponding mutator:
+
+TODO: Explain https://github.com/mbj/mutant/blob/master/lib/mutant/mutator/node/if.rb
+
+### The Runner
+
+It was a long ride to get here but we're almost done.
 
 What's missing? Right, running our specs against those mutations!
 
-### The Runner
+This is where the [Runner](https://github.com/mbj/mutant/blob/master/lib/mutant/runner.rb) comes onto the scene.
+
+Remember how our investigation started?
+
+With this piece of code in the CLI module:
+
+```Ruby
+module Mutant
+  class CLI
+    def self.run(arguments)
+      Runner.call(
+        Env::Bootstrap.call(
+          call(arguments)
+        )
+      ).success?
+    end
+  end
+end
+```
 
 ### The big picture
 
@@ -639,4 +1046,8 @@ mainloop -> report
 
 ### Wrapping it up
 
-TODO
+Don't say I didn't warn you before, it was a long article indeed.
+I hope you did learn something from reading it, I for sure did learn a lot browsing `Mutants` awesome codebase.
+
+In case you're not using mutation testing right now I urge you to check it out.
+Applied properly, it will not only improve your specs a lot, it will also force you to focus more on maintainability and conciseness when coding.
