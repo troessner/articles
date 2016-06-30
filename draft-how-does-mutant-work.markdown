@@ -18,16 +18,20 @@ end
 and turns it into something like this:
 
 ```Ruby
-if true
-  "#{@phrase}#{" "}#{name}"
+def say_hello(name)
+  if true
+    "#{@phrase}#{" "}#{name}"
+  end
 end
 ```
 
 or 
 
 ```Ruby
-if @enabled
-  "#{@phrase}#{" "}#{name}"
+def say_hello(name)
+  if false
+    "#{@phrase}#{" "}#{name}"
+  end
 end
 ```
 
@@ -81,7 +85,7 @@ We're telling `Mutant` to:
 * include the "lib/" directory
 * require "hello_world.rb"
 * use RSpec as test integration
-* use the "Greeter*" namespace to find its test subjects We'll come back to the test subjects so please ignore this for now
+* use the "Greeter*" namespace to find its test subjects. We'll cover the "subjects" topic later on extensively
 
 `Mutant` will then spit out part of its configuration first:
 
@@ -121,11 +125,11 @@ While doing research for my presentation, I wrote an introductory series of arti
 
 Ok. Ready? Then let's roll.
 
-### Our entry point: bin/mutant
+### Start with the binary
 
 The great thing about gems with a binary is that it's a lot easier to start exploring them - just start at the binary.
 
-Let's look at bin/mutant:
+Let's look at `bin/mutant`:
 
 ```Ruby
 require 'mutant'
@@ -211,9 +215,28 @@ include Adamantium::Flat, Equalizer.new(:config), Procto.call(:config)
 
 * `Adamantium::Flat`: This makes instances of this class immutable using the [Adamantium gem](https://github.com/dkubb/adamantium) (for a low level introduction check out [this blog post](https://troessner.svbtle.com/lessons-learned-from-some-of-the-best-ruby-codebases-out-there-part-3)))
 * `Equalizer.new(:config)`: This defines equality, equivalency and hash methods automatically for whatever `config` returns and is based on the [Equalizer](https://github.com/dkubb/equalizer) gem
-* `Procto.call(:config)`: [Procto](https://github.com/snusnu/procto) turns your Ruby object into a method object. Please check out [this blog post](https://troessner.svbtle.com/lessons-learned-from-some-of-the-best-ruby-codebases-out-there-part-3)) to read up on it.
+* `Procto.call(:config)`: [Procto](https://github.com/snusnu/procto) turns your Ruby object into a method object. 
+It basically works like this:
 
-It is important that you memorize this, at least the `Procto` pattern because `Mutant` makes heavy use of those gems in almost every module.
+```Ruby
+class Printer
+  include Procto.call(:print)
+
+  def initialize(text)
+    @text = text
+  end
+
+  def print
+    "Hello #{@text}"
+  end
+end
+
+Printer.call('world') # => "Hello world"
+```
+
+Please check out [this blog post](https://troessner.svbtle.com/lessons-learned-from-some-of-the-best-ruby-codebases-out-there-part-1)) to read up on it.
+
+While you can still understand this article without knoowing about `Equalizer` or `Adamantium` you need at least to understand and memorize the `Procto` pattern because `Mutant` makes heavy use of this gem in almost every module.
 
 Now to `run`:
 
@@ -236,8 +259,6 @@ Narrowing it down further this is the line we're interested in:
 Runner.call(Env::Bootstrap.call(call(arguments))).success?
 ```
 
-That line does pack quite a punch, doesn't it?
-
 Let me reformat this line to make clearer what's happening here:
 
 ```Ruby
@@ -248,7 +269,7 @@ Runner.call(
 ).success?
 ```
 
-Starting from the inside
+Starting from the inside - this:
 
 ```Ruby
   call(arguments)
@@ -262,17 +283,23 @@ CLI.new(arguments).config
 
 This is the part that `Procto` provides.
 
-So:
+So this
 
-* we're getting back a config based on our CLI arguments
+```Ruby
+Runner.call(
+  Env::Bootstrap.call(
+    call(arguments)
+  )
+).success?
+```
+
+means:
+
+* we're getting back a configuration based on our CLI arguments
 * then pass that to `Env::Bootstrap.call`
 * pass whatever comes back from that to our Runner
 
-**This leads us to 2 questions:**
-
-1.) What is the `config` and what is `Env::Bootstrap`?
-
-2.) What does the `Runner` do with this environment?
+What does the configuration look like?
 
 ### Configuration
 
@@ -289,7 +316,7 @@ end
 Ok, nice and easy. First we'll set the configuration to our defaults, then we're parsing the cli arguments and overwrite our configuration based on this.
 
 What does the default configuration look like?
-For that you'll have to check out the top level library file, so lib/mutant.rb:
+For that you'll have to check out the top level library file, so lib/`mutant.rb`:
 
 
 ```Ruby
@@ -365,10 +392,10 @@ Runner.call(
 Now that we know what 
 
 ```Ruby
-call(arguments) # -> This part we just discussed.
+call(arguments)
 ```
 
-does, let's look at:
+does (returning a `Configuration` object), let's look at:
 
 ```Ruby
 Env::Bootstrap.call(
@@ -376,27 +403,44 @@ Env::Bootstrap.call(
 )
 ```
 
-Again, this is `Procto` at work.
+What does
 
 ```Ruby
 Env::Bootstrap.call configuration
 ```
 
-means
-
-```Ruby
- # "some_method" is what we configure when including Procto
-Env::Bootstrap.new(configuration).some_method
-```
-
-So let's check out the class declaration of Env::Bootstrap with a focus on the initializer:
+mean?
+Again, this is `Procto` at work as you can see in the class declaration:
 
 ```Ruby
 module Mutant
   class Env
     class Bootstrap
-      include Procto.call(:env) # -> That's the "some_method" from above
+      include Procto.call(:env)
+      # ...snip
+    end
+  end
+end
+```
 
+So
+
+```Ruby
+Env::Bootstrap.call configuration
+```
+
+translates to:
+
+```Ruby
+Env::Bootstrap.new(configuration).env
+```
+
+Let's check out the class declaration of Env::Bootstrap with a focus on the initializer:
+
+```Ruby
+module Mutant
+  class Env
+    class Bootstrap
       def initialize(*)
         super
         @parser = Parser.new
@@ -408,9 +452,13 @@ module Mutant
 end
 ```
 
-Step by step:
+We'll go through the initializer step by step:
 
-* `super`: That might seem odd to the innocent reader. Remember, `Mutant` makes heavy usage of the [Concord](https://github.com/mbj/concord) gem.
+```Ruby
+super
+```
+
+That might seem odd to the innocent reader. `Mutant` makes heavy usage of the [Concord](https://github.com/mbj/concord) gem.
 `Concord` is a useful tool to cut down boilerplate code.
 
 This means you can use it to transform this:
@@ -437,12 +485,21 @@ end
 
 which is a lot easier on the eyes.
 
-So now you should understand why `super` is there. This will basically that the `initialize` provided by `Concord` will be called as well.
+Now you should understand why `super` is there. This will ensure that the `initialize` provided by `Concord` will be called as well.
 Try to remember this, this is a pattern you will see throughout the `Mutant` codebase.
 
-* `Parser.new`: `Mutant` uses the awesome `[parser](https://github.com/whitequark/parser)` gem for producing ASTs from source code and has its own thin wrapper around. That thin wrapper just maintains a cache, so subjects on the same file share the (immutable) AST.
+```Ruby
+@parser = Parser.new
+```
 
-* `infect`: Infection is the process where `Mutant processes includes and requires, and "infects" the ruby VM with the "subjects under tests", its the point where the software that is under mutation test gets loaded.
+`Mutant` uses the awesome `[parser](https://github.com/whitequark/parser)` gem for producing ASTs from source code and has its own thin wrapper around. That thin wrapper just maintains a cache, so subjects on the same file share the (immutable) AST.
+
+```Ruby
+infect
+```
+
+Infection is the process where `Mutant processes includes and requires, and "infects" the ruby VM with the "subjects under tests".
+To put it differently, its the point where the software that is under mutation test gets loaded.
 
 ```Ruby
 module Mutant
@@ -498,7 +555,24 @@ I won't go into detail regarding the last line:
 
 Let's just say that this set up the integration with test framework of our choice.
 
-* `initialize_matchable_scopes`:
+Now we're coming to the last line in our initializer:
+
+```Ruby
+module Mutant
+  class Env
+    class Bootstrap
+      def initialize(*)
+        super
+        @parser = Parser.new
+        infect
+        initialize_matchable_scopes
+      end
+    end
+  end
+end
+```
+
+So `initialize_matchable_scopes`:
 
 ```Ruby
   def initialize_matchable_scopes
@@ -511,7 +585,7 @@ Let's just say that this set up the integration with test framework of our choic
   end
 ```
 
-This will walk through the ObjectSpace and get **all** the modules. You can easily check what happens here in `pry`:
+This will walk through the ObjectSpace and get **all** the modules that have been required so far. You can easily check what happens here in `pry`:
 
 ```Ruby
 ObjectSpace.each_object(Module).to_a.sample 3
@@ -524,7 +598,18 @@ ObjectSpace.each_object(Module).to_a.sample 3
 => [RubyToken::TkfLBRACK, PryStackExplorer, Psych::Visitors::DepthFirst]
 ```
 
-So `initialize_matchable_scopes` will take all the modules it can find and try to create an expression out of it:
+So `initialize_matchable_scopes` will take all the modules it can find and try to create an expression out of it
+
+```Ruby
+  def initialize_matchable_scopes
+    scopes = ObjectSpace.each_object(Module).each_with_object([]) do |scope, aggregate|
+      expression = expression(scope) || next
+      # ... snip
+    end
+  end
+```
+
+With
 
 ```Ruby
   def expression(scope) # <- "scope" is one of the modules from ObjectSpace
@@ -538,6 +623,12 @@ So `initialize_matchable_scopes` will take all the modules it can find and try t
     config.expression_parser.try_parse(name)
   end
 ```
+
+What does this `expression` look like?
+
+Let's check it out in `pry`:
+
+TODO
 
 Ok, we went through a lot - let's look at the big picture again:
 
@@ -600,8 +691,18 @@ you can see that we actually call `env` on our `Env::Bootstrap` object:
   end
 ```
 
-Ok, there's a lot that's happening here. 
-Let's go through it step by step:
+This now brings us to the topic of `subjects`.
+
+### Subjects
+
+Let's go through the `env` method step by step:
+
+```Ruby
+  def env
+    subjects = matched_subjects
+    # snip
+  end
+```
 
 First we'll get all "matched subjects", which means all the subjects you want to mutation tests. I won't go into detail how the `matched_subjects` method works because that would probably deserve another blog post so let's just assume it returns your modules and classes you would like to mutation test. 
 
@@ -614,7 +715,7 @@ bundle exec mutant --include lib/\
 ```
 
 So given we fire up `mutant` like that, how does `subjects` look like?
-`matched_subjects` returns an array of [Enumerable<Subject>], let's check out how this looks in our console:
+`matched_subjects` returns an array of [`Enumerable<Subject>`], let's check out how this looks in our console:
 
 ```
 [
@@ -625,7 +726,7 @@ So given we fire up `mutant` like that, how does `subjects` look like?
   context=
     #<Mutant::Context 
       scope=Greeter
-      source_path=#<Pathname:/Users/timo/dev/hello_world/lib/hello_world/greeter.rb>>
+      source_path=#<Pathname:.../hello_world/lib/hello_world/greeter.rb>>
   node=s(:def, :initialize,
     s(:args,
       s(:arg, :phrase)),
@@ -640,7 +741,7 @@ So given we fire up `mutant` like that, how does `subjects` look like?
   context=
     #<Mutant::Context
       scope=Greeter
-      source_path=#<Pathname:/Users/timo/dev/hello_world/lib/hello_world/greeter.rb>>
+      source_path=#<Pathname:.../hello_world/lib/hello_world/greeter.rb>>
   node=s(:def, :say_hello,
          s(:args,
           # ...snip
@@ -656,11 +757,28 @@ Mutant::Subject::Method::Instance
 
 The subject class. As you can see it has 2 attributes:
 
-1.) A [context](https://github.com/mbj/mutant/blob/master/lib/mutant/context.rb) which contains:
+1.) A [context](https://github.com/mbj/mutant/blob/master/lib/mutant/context.rb)
+
+```
+  context=
+    #<Mutant::Context 
+      scope=Greeter
+      source_path=#<Pathname:.../hello_world/lib/hello_world/greeter.rb>>
+```
+
+which contains:
   * a [scope](https://github.com/mbj/mutant/blob/master/lib/mutant/scope.rb) called `Greeter`. This should look familiar to you now, doesn't it? That's the class from above we're actually testing.
   * a `source_path`: Again, no magic here, you can see the path to the "greeter.rb" on my local file system
 
-2.) A [node](https://github.com/mbj/mutant/blob/master/lib/mutant/mutator/node.rb): Now even without knowing **anything** about [S-expressions](https://en.wikipedia.org/wiki/S-expression) and [abstract syntax trees](https://en.wikipedia.org/wiki/Abstract_syntax_tree) just by looking at:
+2.) A [node](https://github.com/mbj/mutant/blob/master/lib/mutant/mutator/node.rb)
+
+```
+  node=s(:def, :say_hello,
+         s(:args,
+          # ...snip
+```
+
+ Now even without knowing **anything** about [S-expressions](https://en.wikipedia.org/wiki/S-expression) and [abstract syntax trees](https://en.wikipedia.org/wiki/Abstract_syntax_tree) just by looking at:
 
 ```
   node=s(:def, :initialize,
@@ -687,7 +805,17 @@ class Greeter
 end
 ```
 
-Alright, so this doesn't look so complex anymore, now does it?
+This
+
+```
+s(:def, :say_hello,
+  s(:args,
+    # ...snip
+```
+
+is the abstract syntax tree for this code in form of S-expressions. If this is new to you please read up on this topic [here](TODO).
+
+__Alright, so this doesn't look so complex anymore, now does it?__
 
 * We have a class with 2 instance methods
 * `Mutant` takes this class and turns it into 2 subjects
@@ -718,7 +846,7 @@ If you recall the `env` method in `Env::Bootstrap` from above:
 you see this line:
 
 ```Ruby
-      mutations:        subjects.flat_map(&:mutations),
+mutations:        subjects.flat_map(&:mutations),
 ```
 
 So apparently the mutations are an attribute of a single subject.
@@ -819,23 +947,6 @@ end
 
 So let me show you a sample run.
 
-But first: Remember our initial example we started out with?
-
-That was this one:
-
-```
-  evil:Greeter#say_hello:/Users/timo/dev/ast_talk_samples/lib/mutant/greeter.rb:7:80e67
-  @@ -1,6 +1,6 @@
-   def say_hello(name)
-  -  if @enabled
-  +  if true
-       "#{@phrase}#{" "}#{name}"
-     end
-   end
-```
-
-Now let's what we encounter in our `pry` session.
-
 The first `pry` session that pops up looks like this:
 
 ```
@@ -870,7 +981,22 @@ Ok, now we're handling the arguments. I'm gonna fast-forward:
 => :if
 ```
 
-There it is! Now we're talking. That's where we're dealing with my example from above.
+There it is! Now we're talking. That's where we're dealing our initial example from above - remember?
+
+That was this one:
+
+```
+  evil:Greeter#say_hello:/Users/timo/dev/ast_talk_samples/lib/mutant/greeter.rb:7:80e67
+  @@ -1,6 +1,6 @@
+   def say_hello(name)
+  -  if @enabled
+  +  if true
+       "#{@phrase}#{" "}#{name}"
+     end
+   end
+```
+
+
 So we have the ":if" node - who's handling that?
 
 If you check out the `mutator/node` [directory](https://github.com/mbj/mutant/tree/master/lib/mutant/mutator/node) you'll see all the node mutators that are available. Including the one that handles the [":if" node](https://github.com/mbj/mutant/blob/master/lib/mutant/mutator/node/if.rb).
@@ -948,7 +1074,7 @@ s(:send, nil, :phrase)
 
 means "Send the message `phrase` to `self`." The "nil" argument denotes that there is no explicit receiver, so `self` is the implicit one.
 
-But you don't have to take my word for it: Using the `ruby-parse` executable that comes along with the `Parser` gem we can quickly check
+You can quickly check this out yourself using the `ruby-parse` executable that comes along with the `Parser` gem (so `gem install parser`):
 
 ```Ruby
 ($) ruby-parse -e '"#{@phrase}"'
@@ -1011,11 +1137,9 @@ It was a long ride to get here but we're almost done.
 
 What's missing? Right, running our specs against those mutations!
 
-This is where the [Runner](https://github.com/mbj/mutant/blob/master/lib/mutant/runner.rb) comes onto the scene.
+This is where the [Runner](https://github.com/mbj/mutant/blob/master/lib/mutant/runner.rb) comes into play.
 
-Remember how our investigation started?
-
-With this piece of code in the CLI module:
+Remember that our investigation how `Mutant` works started With this piece of code in the CLI module:
 
 ```Ruby
 module Mutant
