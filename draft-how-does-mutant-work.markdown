@@ -1155,18 +1155,130 @@ module Mutant
 end
 ```
 
+The `Runner.call` part should be something familiar for you now. Let's check out the rest of the code:
+
+
+```Ruby
+module Mutant
+  # Runner baseclass
+  class Runner
+    include Adamantium::Flat, Concord.new(:env), Procto.call(:result)
+
+    def initialize(*)
+      super # You know that pattern as well - Concord.
+
+      reporter.start(env)
+
+      run_mutation_analysis
+    end
+  end
+end
+```
+
+Let's ignore the `reporter` related code here and in the following since that basically does what you think it does: It collects the results and handles outputting those results.
+
+The interesting part is the `run_mutation_analysis` at the end:
+
+
+```Ruby
+def run_mutation_analysis
+  @result = run_driver(Parallel.async(mutation_test_config))
+  reporter.report(result)
+end
+```
+
+`Mutant` uses the [Parallel](https://github.com/grosser/parallel) gem.
+`Parallel.async` will run a given configuration asynchronously and return a corresponding driver.
+
+What does the configuration look like?
+
+```Ruby
+# Configuration for parallel execution engine
+#
+# @return [Parallel::Config]
+def mutation_test_config
+  Parallel::Config.new(
+    env:       env.actor_env,
+    jobs:      config.jobs,
+    processor: env.method(:kill),
+    sink:      Sink.new(env),
+    source:    Parallel::Source::Array.new(env.mutations)
+  )
+end
+```
+with the interesting line being:
+
+```Ruby
+source:    Parallel::Source::Array.new(env.mutations)
+```
+
+See the `env.mutations` at the end? `env` is what we pass in to the `Runner` via the constructor using `Concord`:
+
+```Ruby
+class Runner
+  include Concord.new(:env)
+
+  def initialize(*)
+    super
+    # snip
+  end
+end
+```
+
+So that's how we pass the mutations we want to run our tests against to `Parallel`.
+
+Let's go back to `run_mutation_analysis`:
+
+```Ruby
+def run_mutation_analysis
+  @result = run_driver(Parallel.async(mutation_test_config))
+  reporter.report(result)
+end
+```
+
+What does `run_driver` look like?
+
+```Ruby
+# Run driver
+#
+# @param [Driver] driver
+#
+# @return [Object]
+#   the last returned status payload
+def run_driver(driver)
+  status = nil
+  sleep  = env.config.kernel.method(:sleep)
+
+  loop do
+    status = driver.status
+    reporter.progress(status)
+    break if status.done
+    sleep.call(reporter.delay)
+  end
+
+  driver.stop
+
+  status.payload
+end
+```    
+
+Ok, that's conceptually simple: 
+
+* The `driver` that was returned by `Parallel.async(mutation_test_config)` is running our specs asynchronously and in parallel
+* We loop continuously over the `driver` and check its status
+* As soon as the `driver` is done, i.e. all mutants have either been killed or have survived, we return the result to the reporter and exit
+
 ### The big picture
 
 TODO: Take the ascii art below and put it into a diagram
 
-bin -> 
-   cli -> config
-config ->
-   bootstrap -> env
-      (infection; matching)
-env -> runner
-runner -> mainloop
-mainloop -> report
+configuration + environment
+              |
+     subjects + nodes
+              |
+          mutations
+              |
+      runnner + specs
 
 ### Wrapping it up
 
