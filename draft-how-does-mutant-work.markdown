@@ -103,7 +103,7 @@ And the it will run your tests against the code mutations. Failing tests kill th
 This is how a surviving mutant would be indicated:
 
 ```
-  evil:Greeter#say_hello:/Users/timo/dev/ast_talk_samples/lib/mutant/greeter.rb:7:80e67
+  evil:Greeter#say_hello:/Users/timo/dev/hello_world/lib/mutant/greeter.rb:7:80e67
   @@ -1,6 +1,6 @@
    def say_hello(options)
   -  if @enabled
@@ -986,7 +986,7 @@ There it is! Now we're talking. That's where we're dealing our initial example f
 That was this one:
 
 ```
-  evil:Greeter#say_hello:/Users/timo/dev/ast_talk_samples/lib/mutant/greeter.rb:7:80e67
+  evil:Greeter#say_hello:/Users/timo/dev/hello_world/lib/mutant/greeter.rb:7:80e67
   @@ -1,6 +1,6 @@
    def say_hello(name)
   -  if @enabled
@@ -1108,7 +1108,17 @@ Ok, another roll of the dice:
         s(:lvar, :name))), nil))
 ```
 
-There it is! That's the mutation from our original example: 
+There it is! 
+
+```Ruby
+  s(:if,
+    s(:true),
+    s(:dstr,
+      s(:begin,
+        s(:ivar, :@phrase))
+```
+
+That's the mutation from our original example. 
 
 ```Ruby
 if true
