@@ -374,7 +374,7 @@ What I like here is how configurable `Mutant`. You can even inject another $LOAD
 
 But the configurability is actually just a sideeffect here. The main goal is to stop relying on IO globals read from a global scope and injecting them explicitly.
 
-This lists the IO dependencies of each unit much more explicit. Makes testing easier, and allows to write a testing tool that works without message expectations (one target of mine in the near future).
+This lists the IO dependencies of each unit much more explicit. Makes testing easier, and allows to write a testing tool that works without message expectations (one target of the author in the near future).
 
 ### Environment
 
@@ -853,7 +853,7 @@ you see this line:
 mutations:        subjects.flat_map(&:mutations),
 ```
 
-So apparently the mutations are an attribute of a single subject.
+Each `Subject` can yield N mutations, `Mutant expands these in one step here for better progress reports.
 
 Let's check out the [Subject](https://github.com/mbj/mutant/blob/master/lib/mutant/subject.rb) class:
 
@@ -1247,6 +1247,14 @@ if true
   "#{@phrase}#{" "}#{name}"
 end
 ```
+
+__A note regarding performance:__
+
+Generating the mutations is very fast (also due mutants engine design), so there is no need to stream them (As was done in earlier designs).
+
+The time consuming parts of boot are the infection, and test framework setup, depending on amount of infection also matching can be really slow.
+
+Mutation generation itself is just a small fraction of the overall bootup time.
 
 ### Mutating single nodes
 
