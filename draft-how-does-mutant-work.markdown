@@ -742,9 +742,13 @@ So given we fire up `mutant` like that, how does `subjects` look like?
     #<Mutant::Context
       scope=Greeter
       source_path=#<Pathname:.../hello_world/lib/hello_world/greeter.rb>>
-  node=s(:def, :say_hello,
-         s(:args,
-          # ...snip
+  node= s(:def, :say_hello,
+          s(:args,
+            s(:arg, :name)),
+          s(:if,
+            s(:ivar, :@enabled),
+            s(:dstr,          
+              # ...snip
     > # end of second subject
 ]
 ```
@@ -821,7 +825,7 @@ __Alright, so this doesn't look so complex anymore, now does it?__
 * `Mutant` takes this class and turns it into 2 subjects
 * Where each subject contains a node consisting of S-Expressions that corresponds to one of our instance methods.
 
-### Mutations
+### Mutator
 
 Ok, so now we have talked about subjects a lot. What about the mutations?
 
@@ -872,21 +876,139 @@ module Mutant
 end
 ```
 
-Let's dissect this:
-
-```Ruby
-[neutral_mutation].concat # ... evil_mutations
-```
-
-Ok, so we're returning an array of a neutral mutation and then all of the evil ones.
-
 This
 
 ```Ruby
 Mutator.mutate(node).
 ```
 
-is now the interesting part we need to dive into:
+is the interesting part into which we're going to dive soon.
+But let me give you a high level overview of what happens here first:
+
+```Ruby
+def mutations
+  [neutral_mutation].concat(
+    Mutator.mutate(node).map do |mutant|
+      Mutation::Evil.new(self, wrap_node(mutant))
+    end
+  )
+end
+```
+
+`Mutator.mutate(node)` takes a given node like this (re-using our example from above):
+
+```
+s(:def, :say_hello,
+  s(:args,         
+  # ...snip
+```
+
+creates multiple mutations out of this node and returns a `Set` of `Parser::AST::Node`.
+We then iterate over this `Set` and create an "evil" `Mutation` out of each `Parser::AST::Node`. An evil `Mutation` is a mutation for which we expect a test to fail. Or to put it the other way round: If no test fails for this mutation we have a surviving mutant.
+
+Finally, we'll add all of the evil mutations to the neutral mutation and all of this makes up the collection of mutations for one specific subject.
+
+__2 questions now:__
+
+1.) How does a `Mutation` look like and what is that with "evil" and "neutral"?
+2.) How does the `Mutator` work in detail?
+
+### Mutation
+
+Let's check out a `Mutation` first:
+
+```Ruby
+class Mutation
+  include AbstractType
+  include Concord::Public.new(:subject, :node)
+
+  def self.success?(test_result)
+    self::TEST_PASS_SUCCESS.equal?(test_result.passed)
+  end
+end
+```
+
+`Mutation` itself is an abstract base class (notice the `include AbstractType`, you can read up on this [here](https://troessner.svbtle.com/lessons-learned-from-some-of-the-best-ruby-codebases-out-there-part-3)), so it won't be instantiated directly.
+As you can see it has basically just 2 attributes:
+
+```Ruby
+include Concord::Public.new(:subject, :node)
+```
+
+As you've learned above already, this is just a nice shortcut for
+
+```Ruby
+class Subject
+  attr_accessor :subject, :node
+
+  def initialize(subject, node)
+    self.subject = subject
+    self.node    = node
+  end
+end
+```
+
+Ok, so the attribute set up is nice and easy:
+
+* `subject`: A reference back to the `Subject`. In Domain Driven Design terms this would be the link back to the root of the aggregate.
+* `node`: The mutated node. So basically a mutation of
+
+```
+s(:def, :say_hello,
+  s(:args,
+    s(:arg, :name)),
+  s(:if,
+    s(:ivar, :@enabled),        
+  # ...snip
+```
+
+This gets passed directly down from the `Mutator` so we'll talk about some detailed examples later on when we discuss the `Mutator` in detail.
+
+What else is interesting?
+
+The `success?` method:
+
+```Ruby
+def self.success?(test_result)
+  self::TEST_PASS_SUCCESS.equal?(test_result.passed)
+end
+```
+
+This is the method that `Mutant` uses to check what the expectation for running tests against a mutation is and is basically configured in the instantiatable subclasses:
+
+```Ruby
+class Evil < self
+  TEST_PASS_SUCCESS = false
+end # Evil
+
+# Neutral mutation that should not cause mutations to fail tests
+class Neutral < self
+  TEST_PASS_SUCCESS = true
+end # Neutral
+```
+
+As you can see, the expectation for "neutral" mutations is true while the expectation for "evil" mutations is false. 
+
+TODO: 
+* What is that with the neutral mutation? 
+* Why do we need that?
+* Where is the predicate method actually used? In the Runner?
+
+### The mutator under the microscope
+
+Let's recall the `Subject#mutations` method from above:
+
+```Ruby
+    def mutations
+      [neutral_mutation].concat(
+        Mutator.mutate(node).map do |mutant|
+          Mutation::Evil.new(self, wrap_node(mutant))
+        end
+      )
+    end
+```
+
+We talked about "neutral" and "evil" mutations, now it's time to look into how `Mutator#mutate` works under the hood:
 
 ```Ruby
 module Mutant
