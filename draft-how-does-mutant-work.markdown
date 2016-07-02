@@ -1311,7 +1311,6 @@ Let's ignore the `reporter` related code here and in the following since that ba
 
 The interesting part is the `run_mutation_analysis` at the end:
 
-
 ```Ruby
 def run_mutation_analysis
   @result = run_driver(Parallel.async(mutation_test_config))
@@ -1319,7 +1318,6 @@ def run_mutation_analysis
 end
 ```
 
-`Mutant` uses the [Parallel](https://github.com/grosser/parallel) gem.
 `Parallel.async` will run a given configuration asynchronously and return a corresponding driver.
 
 What does the configuration look like?
@@ -1338,6 +1336,7 @@ def mutation_test_config
   )
 end
 ```
+
 with the interesting line being:
 
 ```Ruby
@@ -1357,7 +1356,7 @@ class Runner
 end
 ```
 
-So that's how we pass the mutations we want to run our tests against to `Parallel`.
+So that's how we pass the mutations we want to run our tests against to the parallel runner.
 
 Let's go back to `run_mutation_analysis`:
 
@@ -1392,13 +1391,17 @@ def run_driver(driver)
 
   status.payload
 end
-```    
+```
 
 Ok, that's conceptually simple: 
 
 * The `driver` that was returned by `Parallel.async(mutation_test_config)` is running our specs asynchronously and in parallel
 * We loop continuously over the `driver` and check its status
 * As soon as the `driver` is done, i.e. all mutants have either been killed or have survived, we return the result to the reporter and exit
+
+When it comes to how `Mutant` does finally run your tests against mutations in parallel I barely touched the surface. `Mutant` uses its own framework for parallelism and implements its own actor model on top of that.
+
+Explaining that would be the topic of an own blog post. If you want to check this out for yourself I'd recommend to look into the [parallel namespace](https://github.com/mbj/mutant/tree/master/lib/mutant/parallel) and the [actor namespace](https://github.com/mbj/mutant/tree/master/lib/mutant/actor).
 
 ### The big picture
 
