@@ -612,7 +612,7 @@ So `initialize_matchable_scopes` will take all the modules it can find and try t
 With
 
 ```Ruby
-  def expression(scope) # <- "scope" is one of the modules from ObjectSpace
+  def expression(scope) # `scope` is one of the modules from ObjectSpace, e.g. Gem::Ext::BuildError, so a constant.
     name = scope.name # redacted for simplicity.
 
     unless name.instance_of?(String)
@@ -620,15 +620,13 @@ With
       return
     end
 
+    # config.expression_parser is a Mutant::Expression::Parser
+    # by default. 
+    # `try_parse` will return something like this
+    # #<Mutant::Expression::Namespace::Exact scope_name="Gem::Ext::BuildError">
     config.expression_parser.try_parse(name)
   end
 ```
-
-What does this `expression` look like?
-
-Let's check it out in `pry`:
-
-TODO
 
 Ok, we went through a lot - let's look at the big picture again:
 
@@ -782,13 +780,15 @@ which contains:
           # ...snip
 ```
 
- Now even without knowing **anything** about [S-expressions](https://en.wikipedia.org/wiki/S-expression) and [abstract syntax trees](https://en.wikipedia.org/wiki/Abstract_syntax_tree) just by looking at:
+representing an [abstract syntax trees (AST)](https://en.wikipedia.org/wiki/Abstract_syntax_tree) consisting of [S-expressions](https://en.wikipedia.org/wiki/S-expression). If this is new territory for you I urge you to check out the two links above before continuing here.
+
+But even without knowing **anything** about ASTs or S-expressions by looking at this
 
 ```
   node=s(:def, :initialize,
 ```
 
-and in the second subject:
+or this
 
 ```
 node=s(:def, :say_hello,
@@ -817,7 +817,7 @@ s(:def, :say_hello,
     # ...snip
 ```
 
-is the abstract syntax tree for this code in form of S-expressions. If this is new to you please read up on this topic [here](TODO).
+is the abstract syntax tree for this code in form of S-expressions.
 
 __Alright, so this doesn't look so complex anymore, now does it?__
 
@@ -1407,7 +1407,7 @@ Ok, that's conceptually simple:
 * We loop continuously over the `driver` and check its status
 * As soon as the `driver` is done, i.e. all mutants have either been killed or have survived, we return the result to the reporter and exit
 
-When it comes to how `Mutant` does finally run your tests against mutations in parallel I barely touched the surface. `Mutant` uses its own framework for parallelism and implements its own actor model on top of that.
+When it comes to how `Mutant` does finally run your tests against mutations in parallel I barely touched the surface. `Mutant` uses its own actor model and implements its own framework for parallelism on top of that.
 
 Explaining that would be the topic of an own blog post. If you want to check this out for yourself I'd recommend to look into the [parallel namespace](https://github.com/mbj/mutant/tree/master/lib/mutant/parallel) and the [actor namespace](https://github.com/mbj/mutant/tree/master/lib/mutant/actor).
 
