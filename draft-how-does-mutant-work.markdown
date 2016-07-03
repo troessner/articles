@@ -1,5 +1,7 @@
 As part of a [presentation](https://github.com/troessner/talks/blob/master/exploiting_rubys_ast_a_love_story_in_three_chapters/presentation.html) I'm hoping to give at the end of this year about abstract syntax trees and how you can leverage them I started to look into how the [Mutant](https://github.com/mbj/mutant) gem works. `Mutant` is the by far most advanced gem for doing mutation testing in Ruby. I was (and still am) amazed how incredibly well built Mutant is on all levels, ranging from the "big picture" architecture down to the "nuts and bolts" source code.
 
+### Mutation testing in a nutshell
+
 But let's quickly talk about what mutation testing is first. Mutation testing takes code like this:
 
 ```Ruby
@@ -121,7 +123,25 @@ When it comes to mutation testing I learned one thing. It's complex. Really comp
 I did learn a lot from reading it's source and I'd like to share this with you.
 Beware though, this is going to be a long ride - but at the end, it'll be worth your while.
 
-While doing research for my presentation, I wrote an introductory series of articles about the gems `Mutant` uses ([part 1](https://troessner.svbtle.com/lessons-learned-from-some-of-the-best-ruby-codebases-out-there-part-1), [part 2](https://troessner.svbtle.com/lessons-learned-from-some-of-the-best-ruby-codebases-out-there-part-2) and [part 3](https://troessner.svbtle.com/lessons-learned-from-some-of-the-best-ruby-codebases-out-there-part-3)). It probably makes sense if you check the series out first to be able to fully follow everything down below.
+### Prerequisites for this article
+
+While doing research for my presentation, I wrote an introductory series of articles about the gems `Mutant` uses:
+
+* [part 1](https://troessner.svbtle.com/lessons-learned-from-some-of-the-best-ruby-codebases-out-there-part-1): The [Concord](https://github.com/mbj/concord) gem and the [Procto](https://github.com/snusnu/procto) gem
+* [part 2](https://troessner.svbtle.com/lessons-learned-from-some-of-the-best-ruby-codebases-out-there-part-2): The [IceNine](https://github.com/dkubb/ice_nine) gem
+* [part 3](https://troessner.svbtle.com/lessons-learned-from-some-of-the-best-ruby-codebases-out-there-part-3)): The abstract type](https://en.wikipedia.org/wiki/Abstract_type) and the Adamantium](https://github.com/dkubb/adamantium) gem
+
+ You do not need to read part 2 and 3 to fully understand everything down below but you **should** read [part 1](https://troessner.svbtle.com/lessons-learned-from-some-of-the-best-ruby-codebases-out-there-part-1) as I will refer to `Concord` and `Procto` quite often.
+
+`Mutant` creates its mutations by utilizing the [abstract syntax tree (AST)](https://en.wikipedia.org/wiki/Abstract_syntax_tree) consisting of [S-expressions](https://en.wikipedia.org/wiki/S-expression) that the ruby parser generates from your source code.
+
+Where are ASTs positioned in Ruby compile / interpret cycle?
+
+![Ruby compile / interpret cycle](http://i.imgur.com/T5LAaqc.jpg)
+
+If this is new territory for you I urge you to check out the links above before continuing to get the most out of the rest of the article.
+
+Additionally it might make sense to read Pat Shaughnessy's [awesome article](http://patshaughnessy.net/2012/6/18/the-start-of-a-long-journey-how-ruby-parses-and-compiles-your-code) about how Ruby parses your code.
 
 Ok. Ready? Then let's roll.
 
@@ -780,7 +800,7 @@ which contains:
           # ...snip
 ```
 
-representing an [abstract syntax trees (AST)](https://en.wikipedia.org/wiki/Abstract_syntax_tree) consisting of [S-expressions](https://en.wikipedia.org/wiki/S-expression). If this is new territory for you I urge you to check out the two links above before continuing here.
+representing an [abstract syntax trees (AST)](https://en.wikipedia.org/wiki/Abstract_syntax_tree) consisting of [S-expressions](https://en.wikipedia.org/wiki/S-expression).
 
 But even without knowing **anything** about ASTs or S-expressions by looking at this
 
