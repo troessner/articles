@@ -904,13 +904,36 @@ s(:def, :say_hello,
 ```
 
 creates multiple mutations out of this node and returns a `Set` of `Parser::AST::Node`.
-We then iterate over this `Set` and create an "evil" `Mutation` out of each `Parser::AST::Node`. An evil `Mutation` is a mutation for which we expect a test to fail. Or to put it the other way round: If no test fails for this mutation we have a surviving mutant.
+We then iterate over this `Set` and create an evil `Mutation` out of each `Parser::AST::Node`. An evil `Mutation` is a mutation for which we expect a test to fail. Or to put it the other way round: If no test fails for this mutation we have a surviving mutant.
 
-Finally, we'll add all of the evil mutations to the neutral mutation and all of this makes up the collection of mutations for one specific subject.
+Finally, we'll add all of the evil mutations to a "neutral" mutation and all of this makes up the collection of mutations for one specific subject.
+
+Now what's up with that neutral mutation?
+
+A neutral mutation means that you're taking the original node without mutating it:
+
+
+```Ruby
+def neutral_mutation
+  Mutation::Neutral.new(self, node)
+end
+```
+
+With `Mutation::Neutral` being:
+
+```Ruby
+# Neutral mutation that should not cause mutations to fail tests
+class Neutral < self
+  TEST_PASS_SUCCESS = true
+end
+```
+
+As you can see, in `neutral_mutation` we're basically just passing the original node with `Mutation::Neutral` having the expectation that the test pass on this one.
+The purpose of the neutral mutation is kind of a sanity check to make sure that your original code doesn't break your existing specs.
 
 __2 questions now:__
 
-1.) How does a `Mutation` look like and what is that with "evil" and "neutral"?
+1.) How does a `Mutation` look like?
 2.) How does the `Mutator` work in detail?
 
 ### Mutation
@@ -988,11 +1011,6 @@ end # Neutral
 ```
 
 As you can see, the expectation for "neutral" mutations is true while the expectation for "evil" mutations is false. 
-
-TODO: 
-* What is that with the neutral mutation? 
-* Why do we need that?
-* Where is the predicate method actually used? In the Runner?
 
 ### The mutator under the microscope
 
