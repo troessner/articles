@@ -1305,9 +1305,182 @@ Alright, time for a recap. So far we have:
 * [A static mutator](https://github.com/mbj/mutant/blob/master/lib/mutant/mutator.rb) that takes the method nodes within those subjects
 * And applies [mutations](https://github.com/mbj/mutant/blob/master/lib/mutant/mutation.rb) to those subjects
 
-The missing piece now is the logic that actually applies the mutation to the nodes. Let's focus on our good, old ":if" node from and check out the corresponding mutator:
+The missing piece now is the logic that actually applies the mutation to the nodes. Let's focus on our good, old ":if" node from above and have again a look at `Mutator#mutate`:
 
-TODO: Explain https://github.com/mbj/mutant/blob/master/lib/mutant/mutator/node/if.rb
+```Ruby
+class Mutator
+  def self.mutate(node, parent = nil)
+    self::REGISTRY.lookup(node.type).call(node, parent)
+  end
+end
+```
+
+So in case our `node.type` is `:if` the `lookup` method will return `Mutator::Node::If` defined in `mutator/node/if.rb`
+
+This means that this:
+
+```Ruby
+self::REGISTRY.lookup(node.type).call(node, parent)
+```
+
+boils down to:
+
+```Ruby
+Mutator::Node::If.call(node, parent)
+```
+
+Since `Mutator` uses `Procto` like this:
+
+```Ruby
+include Procto.call(:output)
+```
+
+this basically means:
+
+```Ruby
+if_node = Mutator::Node::If.new(node, parent)
+if_node.output
+```
+
+So let's check out the `if` mutator:
+
+```Ruby
+class Mutator
+  class Node
+    # Mutator for if nodes
+    class If < self
+
+      handle(:if)
+
+      def dispatch
+        emit_singletons
+        mutate_condition
+        mutate_if_branch
+        mutate_else_branch
+      end
+
+      def mutate_condition
+        # snip
+        emit_type(N_TRUE,  if_branch, else_branch)
+        emit_type(N_FALSE, if_branch, else_branch)
+      end
+    end
+  end
+end
+```
+
+Let's go through it step by step:
+
+```Ruby
+handle(:if)
+```
+
+Remember the `Registry` from above in the `Mutator`?
+
+```Ruby
+def self.mutate(node, parent = nil)
+  self::REGISTRY.lookup(node.type).call(node, parent)
+end
+```
+
+This
+
+```Ruby
+handle(:if)
+```
+
+is the part that registers the "if node" mutator at the global registry to handle ... "if" nodes (make no mistake: other mutators do handle multiple types, so this is not a fixed 1:1 relation).
+
+Next up is the `dispatch` method. That is kind of the workhorse of the all of the mutators and is going to be called via `Mutator#initialize`:
+
+```Ruby
+def dispatch
+  emit_singletons
+  mutate_condition
+  mutate_if_branch
+  mutate_else_branch
+end
+```
+
+Let's focus on the mutant we have been talking about from the very start: 
+
+```
+  evil:Greeter#say_hello:/Users/timo/dev/hello_world/lib/mutant/greeter.rb:7:80e67
+  @@ -1,6 +1,6 @@
+   def say_hello(options)
+  -  if @enabled
+  +  if true
+       "#{@phrase}#{" "}#{name}"
+     end
+   end
+```
+
+For this mutation we can ignore all method calls in `dispatch` except for `mutate_condition`:
+
+```Ruby
+def dispatch
+  emit_singletons # <- Ignore me.
+  mutate_condition
+  mutate_if_branch # <- Ignore me.
+  mutate_else_branch # <- Ignore me.
+end
+```
+
+So let's dive into `mutate_condition`:
+
+```Ruby
+def mutate_condition
+  # snip
+  emit_type(N_TRUE,  if_branch, else_branch)
+  emit_type(N_FALSE, if_branch, else_branch)
+end
+```
+
+What is `N_TRUE`?
+
+It's defined in `ast/nodes`:
+
+```Ruby
+N_TRUE = s(:true)
+```
+
+You probably see by now where I'm going with this: This is the place where our `if true` mutation is generated.
+
+Let's check out `emit_type` to understand the call in question:
+
+```Ruby
+# mutator/node.rb
+
+def emit_type(*children)
+  emit(::Parser::AST::Node.new(node.type, children))
+end
+
+# mutator.rb
+
+def emit(object)
+  return unless new?(object)
+
+  output << object
+end
+```
+
+So basically a call like
+
+```Ruby
+emit_type(N_TRUE,  if_branch, else_branch)
+```
+
+will just re-create the existing if/else branch but the S-expression for the condition will be replace with `s(:true)`.
+
+**Let's summarize this:**
+
+- We pass the original AST to `Mutator#mutate`
+- We then traverse this tree from top to down
+- For every node in this tree for which we have a registered mutator we call this very mutator
+- We then mutate this specific node, create a copy of our original abstract syntax tree and insert the mutated node into it
+- Finally we return all of those copies back to `Mutator#mutate`
+
+With that out of the way, let's talk about the last part of the assembly line: Taking all of what we just talked about and run it against our specs.
 
 ### The Runner
 
@@ -1453,13 +1626,16 @@ Explaining that would be the topic of an own blog post. If you want to check thi
 
 TODO: Take the ascii art below and put it into a diagram
 
-configuration + environment
-              |
-     subjects + nodes
-              |
-          mutations
-              |
-      runnner + specs
+           mutant executable
+                  |
+      configuration + environment
+            /     |           \
+ subject X     subject X     subject Y
+  + node a     + node b       + node c
+                  |
+              mutations
+             /      \
+        runnner     specs
 
 ### Wrapping it up
 
