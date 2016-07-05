@@ -1,5 +1,12 @@
 As part of a [presentation](https://github.com/troessner/talks/blob/master/exploiting_rubys_ast_a_love_story_in_three_chapters/presentation.html) I'm hoping to give at the end of this year about abstract syntax trees and how you can leverage them I started to look into how the [Mutant](https://github.com/mbj/mutant) gem works. `Mutant` is the by far most advanced gem for doing mutation testing in Ruby. I was (and still am) amazed how incredibly well built Mutant is on all levels, ranging from the "big picture" architecture down to the "nuts and bolts" source code.
 
+When it comes to mutation testing I learned one thing. It's complex. Really complex. And as a consequence, `Mutant` is complex. 
+I did learn a lot from reading it's source and I'd like to share this with you.
+
+**Beware though, this is going to be a long ride.**
+
+ This article will probably take you at least half an hour of an hour. But at the end, it'll hopefully be worth your while.
+
 ### Mutation testing in a nutshell
 
 But let's quickly talk about what mutation testing is first. Mutation testing takes code like this:
@@ -118,10 +125,6 @@ This is how a surviving mutant would be indicated:
 This means `Mutant` replaced the `@enabled` with an unconditional `true` and none of our tests broke.
 
 Please keep the example project and `Mutant` call from above in the back of your head, I'll refer to this throughout the article.
-
-When it comes to mutation testing I learned one thing. It's complex. Really complex. And as a consequence, `Mutant` is complex. 
-I did learn a lot from reading it's source and I'd like to share this with you.
-Beware though, this is going to be a long ride - but at the end, it'll be worth your while.
 
 ### Prerequisites for this article
 
@@ -1624,6 +1627,10 @@ Explaining that would be the topic of an own blog post. If you want to check thi
 
 ### The big picture
 
+You made it!
+
+Let's have a look at a diagram to finish the article.
+
 TODO: Take the ascii art below and put it into a diagram
 
            mutant executable
@@ -1636,6 +1643,24 @@ TODO: Take the ascii art below and put it into a diagram
               mutations
              /      \
         runnner     specs
+
+You can see all the entities we talked about before. Subjects, mutations, mutators and so on. Hopefully this will reinforce what we learned today.
+
+### What I left out
+
+Well, a lot. I didn't go into details about
+
+* how mutated nodes are re-inserted into the AST
+* how `Mutant` actually generates Ruby code back out of ASTs for generating its warnings and for running the specs (hint: It uses the [Unparser](https://github.com/mbj/mutant) gem under the hood)
+* how `Mutant` runs the right specs against the mutations
+
+I also didn't talk about awesome `Mutant` features like the `since` flag:
+
+```
+--since REVISION             Only select subjects touched since REVISION
+```
+
+or how you can use the `--jobs` flag to play around with the degree of parallelism.
 
 ### Wrapping it up
 
