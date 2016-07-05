@@ -1,21 +1,22 @@
-As part of a [presentation](https://github.com/troessner/talks/blob/master/exploiting_rubys_ast_a_love_story_in_three_chapters/presentation.html) I'm hoping to give at the end of this year about abstract syntax trees and how you can leverage them I started to look into how the [Mutant](https://github.com/mbj/mutant) gem works. `Mutant` is the by far most advanced gem for doing mutation testing in Ruby. I was (and still am) amazed how incredibly well built Mutant is on all levels, ranging from the "big picture" architecture down to the "nuts and bolts" source code.
+As part of a [presentation](https://github.com/troessner/talks/blob/master/exploiting_rubys_ast_a_love_story_in_three_chapters/presentation.html) I'm hoping to give at the end of this year about abstract syntax trees and how you can leverage them I started to look into how the [Mutant](https://github.com/mbj/mutant) gem works. `Mutant` is the by far most advanced gem for doing mutation testing in Ruby. I was (and still am) amazed how incredibly well built it is on all levels, ranging from the "big picture" architecture down to the "nuts and bolts" source code.
 
 When it comes to mutation testing I learned one thing. It's complex. Really complex. And as a consequence, `Mutant` is complex. 
-I did learn a lot from reading it's source and I'd like to share this with you.
+
+I did learn a lot from reading its source and I'd like to share this with you.
 
 **Beware though, this is going to be a long ride.**
 
- This article will probably take you at least half an hour of an hour. But at the end, it'll hopefully be worth your while.
+ This article will probably take you at least half an hour to an hour. But at the end, it'll hopefully be worth your while.
 
 ### Mutation testing in a nutshell
 
-But let's quickly talk about what mutation testing is first. Mutation testing takes code like this:
+Let's quickly talk about what mutation testing is first. Mutation testing takes code like this:
 
 ```Ruby
 class Greeter
-  def initialize(phrase)
-    @enabled = true
+  def initialize(phrase, enabled = true)
     @phrase = phrase
+    @enabled = enabled
   end
 
   def say_hello(name)
@@ -44,7 +45,7 @@ def say_hello(name)
 end
 ```
 
-Mutant then runs your tests against each mutation. The tests might look like this:
+`Mutant` then runs your tests against each mutation. The tests might look like this:
 
 ```Ruby
 # cat spec/greeter_spec.rb
@@ -64,7 +65,7 @@ RSpec.describe Greeter do
 end
 ```
 
-So let's say the `Greeter` class from above is part of a gem called "hello_world" which, following RubyGems conventions, has a folder called "hello_world" in "lib/" and in this folder the `Greeter` class file like this:
+So let's say the `Greeter` class from above is part of a gem called "hello_world" which follows RubyGems conventions so it basically looks like this:
 
 ```
 ├── Gemfile
@@ -79,7 +80,13 @@ So let's say the `Greeter` class from above is part of a gem called "hello_world
     └── spec_helper.rb
 ```
 
-Ypu can find the sample application [here](https://github.com/troessner/hello_world) in case you want to check it out for yourself.
+Ypu can find the sample application [here](https://github.com/troessner/hello_world) in case you want to check it out for yourself via:
+
+```
+git clone git@github.com:troessner/hello_world.git
+cd hello_world
+bundle
+```
 
 This is how you'd call `Mutant` to mutation test this:
 
@@ -98,17 +105,20 @@ We're telling `Mutant` to:
 
 `Mutant` will then spit out part of its configuration first:
 
-```Ruby
-  Mutant configuration:
-  Matcher:         #<Mutant::Matcher::Config match_expressions: [Greeter*]>
-  Integration:     Mutant::Integration::Rspec
-  Expect Coverage: 100.00%
-  Jobs:            4
-  Includes:        ["lib/"]
-  Subjects:        2                   
+```
+Mutant configuration:
+
+Matcher:         #<Mutant::Matcher::Config match_expressions: [Greeter*]>
+Integration:     Mutant::Integration::Rspec
+Expect Coverage: 100.00%
+Jobs:            4
+Includes:        ["lib/"]
+Requires:        ["hello_world"]
+Subjects:        2
 ```
 
-And the it will run your tests against the code mutations. Failing tests kill the mutants while surviving mutants show a lack of test coverage.
+And then `Mutant` will run your tests against the code mutations. Failing tests kill the mutants while surviving mutants show a lack of test coverage or that your code is not concise enough.
+
 This is how a surviving mutant would be indicated:
 
 ```
@@ -124,7 +134,7 @@ This is how a surviving mutant would be indicated:
 
 This means `Mutant` replaced the `@enabled` with an unconditional `true` and none of our tests broke.
 
-Please keep the example project and `Mutant` call from above in the back of your head, I'll refer to this throughout the article.
+Please keep the example project and `Mutant` call from above in the back of your head - I'll refer to this example throughout the article.
 
 ### Prerequisites for this article
 
@@ -132,7 +142,7 @@ While doing research for my presentation, I wrote an introductory series of arti
 
 * [part 1](https://troessner.svbtle.com/lessons-learned-from-some-of-the-best-ruby-codebases-out-there-part-1): The [Concord](https://github.com/mbj/concord) gem and the [Procto](https://github.com/snusnu/procto) gem
 * [part 2](https://troessner.svbtle.com/lessons-learned-from-some-of-the-best-ruby-codebases-out-there-part-2): The [IceNine](https://github.com/dkubb/ice_nine) gem
-* [part 3](https://troessner.svbtle.com/lessons-learned-from-some-of-the-best-ruby-codebases-out-there-part-3)): The abstract type](https://en.wikipedia.org/wiki/Abstract_type) and the Adamantium](https://github.com/dkubb/adamantium) gem
+* [part 3](https://troessner.svbtle.com/lessons-learned-from-some-of-the-best-ruby-codebases-out-there-part-3)): The [abstract type](https://en.wikipedia.org/wiki/Abstract_type) gem and the Adamantium](https://github.com/dkubb/adamantium) gem
 
  You do not need to read part 2 and 3 to fully understand everything down below but you **should** read [part 1](https://troessner.svbtle.com/lessons-learned-from-some-of-the-best-ruby-codebases-out-there-part-1) as I will refer to `Concord` and `Procto` quite often.
 
@@ -142,7 +152,9 @@ Where are ASTs positioned in Ruby compile / interpret cycle?
 
 ![Ruby compile / interpret cycle](http://i.imgur.com/T5LAaqc.jpg)
 
-If this is new territory for you I urge you to check out the links above before continuing to get the most out of the rest of the article.
+As you can see above, the ASTs generated out of so called tokens and are used by the Compiler to generate Bytecode instructions that are then executed by the Ruby interpreter.
+
+If this is new territory for you I urge you to check out the links above before continuing to get the most out of this article.
 
 Additionally it might make sense to read Pat Shaughnessy's [awesome article](http://patshaughnessy.net/2012/6/18/the-start-of-a-long-journey-how-ruby-parses-and-compiles-your-code) about how Ruby parses your code.
 
@@ -150,7 +162,7 @@ Ok. Ready? Then let's roll.
 
 ### Start with the binary
 
-The great thing about gems with a binary is that it's a lot easier to start exploring them - just start at the binary.
+The great thing about gems with a binary is that it's a lot easier to start exploring them - just start with the binary.
 
 Let's look at `bin/mutant`:
 
@@ -189,21 +201,13 @@ namespace =
 Kernel.exit(namespace::CLI.run(ARGV))
 ```
 
-Ok, that looks friggin complicated already. Let's keep things simple and ignore everything that relates to the, uhm, "zombie". This would warrant a blog post of its own. 
+Ok, that looks friggin complicated already. Let's keep things simple and ignore everything that relates to the, uhm, "zombie". This would warrant a blog post of its own.
+
 Here's our new executable:
 
 ```Ruby
 require 'mutant'
 
-namespace = Mutant
-
-Kernel.exit(namespace::CLI.run(ARGV))
-```
-
-That looks a lot easier to understand. So we're basically just using the regular `Mutant` namespace in case we didn't do the zombie thing so basically it boils down to the last line looking like this:
-
-
-```Ruby
 Kernel.exit(Mutant::CLI.run(ARGV))
 ```
 
@@ -216,16 +220,14 @@ which translates to:
 Let's check out `Mutant::CLI.run`:
 
 ```Ruby
-module Mutant
-  class CLI
-    include Adamantium::Flat, Equalizer.new(:config), Procto.call(:config)
+class CLI
+  include Procto.call(:config)
 
-    def self.run(arguments)
-      Runner.call(Env::Bootstrap.call(call(arguments))).success?
-    rescue Error => exception
-      $stderr.puts(exception.message)
-      false
-    end
+  def self.run(arguments)
+    Runner.call(Env::Bootstrap.call(call(arguments))).success?
+  rescue Error => exception
+    $stderr.puts(exception.message)
+    false
   end
 end
 ```
@@ -233,12 +235,12 @@ end
 The `include` line is what we need to understand first:
 
 ```Ruby
-include Adamantium::Flat, Equalizer.new(:config), Procto.call(:config)
+include Procto.call(:config)
 ```
 
-* `Adamantium::Flat`: This makes instances of this class immutable using the [Adamantium gem](https://github.com/dkubb/adamantium) (for a low level introduction check out [this blog post](https://troessner.svbtle.com/lessons-learned-from-some-of-the-best-ruby-codebases-out-there-part-3)))
-* `Equalizer.new(:config)`: This defines equality, equivalency and hash methods automatically for whatever `config` returns and is based on the [Equalizer](https://github.com/dkubb/equalizer) gem
-* `Procto.call(:config)`: [Procto](https://github.com/snusnu/procto) turns your Ruby object into a method object. 
+
+`Procto.call(:config)`: [Procto](https://github.com/snusnu/procto) turns your Ruby object into a method object.
+
 It basically works like this:
 
 ```Ruby
@@ -257,32 +259,26 @@ end
 Printer.call('world') # => "Hello world"
 ```
 
-Please check out [this blog post](https://troessner.svbtle.com/lessons-learned-from-some-of-the-best-ruby-codebases-out-there-part-1)) to read up on it.
-
-While you can still understand this article without knoowing about `Equalizer` or `Adamantium` you need at least to understand and memorize the `Procto` pattern because `Mutant` makes heavy use of this gem in almost every module.
-
 Now to `run`:
 
 ```Ruby
-module Mutant
-  class CLI
-    def self.run(arguments)
-      Runner.call(Env::Bootstrap.call(call(arguments))).success?
-    rescue Error => exception
-      $stderr.puts(exception.message)
-      false
-    end
+class CLI
+  def self.run(arguments)
+    Runner.call(Env::Bootstrap.call(call(arguments))).success?
+  rescue Error => exception
+    $stderr.puts(exception.message)
+    false
   end
 end
 ```
 
-Narrowing it down further this is the line we're interested in:
+Let's ignore the exception since that is irrelevant for our scope. So it boils down to:
 
 ```Ruby
 Runner.call(Env::Bootstrap.call(call(arguments))).success?
 ```
 
-Let me reformat this line to make clearer what's happening here:
+Let me reformat this line to make it clearer what's happening here:
 
 ```Ruby
 Runner.call(
@@ -295,7 +291,7 @@ Runner.call(
 Starting from the inside - this:
 
 ```Ruby
-  call(arguments)
+call(arguments)
 ```
 
 translates to:
@@ -304,7 +300,7 @@ translates to:
 CLI.new(arguments).config
 ```
 
-This is the part that `Procto` provides.
+since we're inside the `CLI` class and coming from `Procto` again.
 
 So this
 
@@ -316,10 +312,10 @@ Runner.call(
 ).success?
 ```
 
-means:
+translates to:
 
 * we're getting back a configuration based on our CLI arguments
-* then pass that to `Env::Bootstrap.call`
+* we then pass that to `Env::Bootstrap.call`
 * pass whatever comes back from that to our Runner
 
 What does the configuration look like?
@@ -336,34 +332,30 @@ def initialize(arguments)
 end
 ```
 
-Ok, nice and easy. First we'll set the configuration to our defaults, then we're parsing the cli arguments and overwrite our configuration based on this.
+Ok, nice and easy. First we'll set the configuration to our defaults, then we're parsing the cli arguments and overwrite our default configuration based on this.
 
 What does the default configuration look like?
-For that you'll have to check out the top level library file, so lib/`mutant.rb`:
+
+For that you'll have to check out the top level library file, so `lib/mutant.rb`:
 
 
 ```Ruby
-module Mutant
-  # Reopen class to initialize constant to avoid dep circle
-  class Config
-    DEFAULT = new(
-      debug:             false,
-      expected_coverage: Rational(1),
-      # snip
-      fail_fast:         false,
-      includes:          EMPTY_ARRAY,
-      # snip
-      kernel:            Kernel,
-      load_path:         $LOAD_PATH,
-      matcher:           Matcher::Config::DEFAULT,
-      open3:             Open3,
-      pathname:          Pathname,
-      requires:          EMPTY_ARRAY,
-      reporter:          Reporter::CLI.build($stdout),
-      zombie:            false
-    )
-  end # Config
-end # Mutant
+class Config
+  DEFAULT = new(
+    debug:             false,
+    expected_coverage: Rational(1),
+    # snip
+    fail_fast:         false,
+    includes:          EMPTY_ARRAY,
+    # snip
+    kernel:            Kernel,
+    load_path:         $LOAD_PATH,
+    pathname:          Pathname,
+    requires:          EMPTY_ARRAY,
+    reporter:          Reporter::CLI.build($stdout),
+    zombie:            false
+  )
+end
 ```
 
 I did remove a lot of the config object above to keep it readable. I just want to highlight a couple of lines I find interesting:
@@ -382,18 +374,19 @@ Kills: 178
 You can make it pass like this:
 
 ```
-bundle exec mutant --expected-coverage 179/197 # plus the rest of your cli arguments
+bundle exec mutant --expected-coverage 178/197 # plus the rest of your cli arguments
 ```
 
 Back to the config:
 
 ```Ruby
+kernel:            Kernel,
 load_path:         $LOAD_PATH,
-requires:          EMPTY_ARRAY,
 pathname:          Pathname,
+requires:          EMPTY_ARRAY,
 ```
 
-What I like here is how configurable `Mutant`. You can even inject another $LOAD_PATH, additional requires or another Pathname'esque library.
+What I like here is how configurable `Mutant`. You can even inject another Kernel module, $LOAD_PATH or another Pathname'esque library.
 
 But the configurability is actually just a sideeffect here. The main goal is to stop relying on IO globals read from a global scope and injecting them explicitly.
 
@@ -436,12 +429,10 @@ mean?
 Again, this is `Procto` at work as you can see in the class declaration:
 
 ```Ruby
-module Mutant
-  class Env
-    class Bootstrap
-      include Procto.call(:env)
-      # ...snip
-    end
+class Env
+  class Bootstrap
+    include Procto.call(:env)
+    # ...snip
   end
 end
 ```
@@ -461,15 +452,13 @@ Env::Bootstrap.new(configuration).env
 Let's check out the class declaration of Env::Bootstrap with a focus on the initializer:
 
 ```Ruby
-module Mutant
-  class Env
-    class Bootstrap
-      def initialize(*)
-        super
-        @parser = Parser.new
-        infect
-        initialize_matchable_scopes
-      end
+class Env
+  class Bootstrap
+    def initialize(*)
+      super
+      @parser = Parser.new
+      infect
+      initialize_matchable_scopes
     end
   end
 end
@@ -484,10 +473,10 @@ super
 That might seem odd to the innocent reader. `Mutant` makes heavy usage of the [Concord](https://github.com/mbj/concord) gem.
 `Concord` is a useful tool to cut down boilerplate code.
 
-This means you can use it to transform this:
+You can use [Concord] to transform this:
 
 ```Ruby
-class ComposedObject
+class Dummy
   attr_reader :foo, :bar
   protected :foo; :bar
 
@@ -501,7 +490,7 @@ end
 into this:
 
 ```Ruby
-class ComposedObject
+class Dummy
   include Concord.new(:foo, :bar)
 end
 ```
@@ -521,19 +510,19 @@ Try to remember this, this is a pattern you will see throughout the `Mutant` cod
 infect
 ```
 
-Infection is the process where `Mutant processes includes and requires, and "infects" the ruby VM with the "subjects under tests".
+Infection is the process where `Mutant` processes includes and requires and "infects" the ruby VM with the "subjects under tests".
 To put it differently, its the point where the software that is under mutation test gets loaded.
 
+Let's look at `infect` in detail:
+
 ```Ruby
-module Mutant
-  class Env
-    class Bootstrap
-      def infect
-        config.includes.each(&config.load_path.method(:<<))
-        config.requires.each(&config.kernel.method(:require))
-        @integration = config.integration.new(config).setup
-      end    
-    end
+class Env
+  class Bootstrap
+    def infect
+      config.includes.each(&config.load_path.method(:<<))
+      config.requires.each(&config.kernel.method(:require))
+      @integration = config.integration.new(config).setup
+    end    
   end
 end
 ```
@@ -545,7 +534,7 @@ config.includes.each(&config.load_path.method(:<<))
 ```
 
 uses a neat little `Method#to_proc` feature you can read up on [here](https://andrewjgrimm.wordpress.com/2011/10/03/in-ruby-method-passes-you/). 
-This line is identical to writing it like this:
+It is basically identical to writing it like this:
 
 ```Ruby
 config.includes.each do |include|
@@ -553,49 +542,38 @@ config.includes.each do |include|
 end
 ```
 
-but the first version is arguably more concise. So technicalities aside, this will whatever you passed to `Mutant` in your CLI call via the ``--include` flag like shown in the beginning:
+but the first version is arguably more concise. So technicalities aside, this will update the `load_path` with whatever you passed to `Mutant` in your CLI call via the ``--include` flag like shown in the beginning:
 
 ```Ruby
-  bundle exec mutant\
-    --include lib\
-    --require reek\
-    --use rspec 'Reek*'
+bundle exec mutant\
+  --include lib\
+  --require hello_world\
+  --use rspec 'Reek*'
 ```
 
-The next line in `infect`
+In analog fashion, the next line in `infect`
 
 ```Ruby
 config.requires.each(&config.kernel.method(:require))
 ```
 
-does something similar but for our `requires`.
+does require everything that we passed to `Mutant` via the `--require` flag, so our `hello_word.rb` file in `lib/` in this case.
 
-I won't go into detail regarding the last line:
+The last line
 
 ```Ruby
 @integration = config.integration.new(config).setup
 ```
 
-Let's just say that this set up the integration with test framework of our choice.
+sets up the integration with test framework of our choice. As of right now there is only one valid option and that is `RSpec`.
 
 Now we're coming to the last line in our initializer:
 
 ```Ruby
-module Mutant
-  class Env
-    class Bootstrap
-      def initialize(*)
-        super
-        @parser = Parser.new
-        infect
-        initialize_matchable_scopes
-      end
-    end
-  end
-end
+initialize_matchable_scopes
 ```
 
-So `initialize_matchable_scopes`:
+Let's look at this one in detail:
 
 ```Ruby
   def initialize_matchable_scopes
