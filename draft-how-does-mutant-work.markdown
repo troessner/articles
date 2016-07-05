@@ -545,10 +545,9 @@ end
 but the first version is arguably more concise. So technicalities aside, this will update the `load_path` with whatever you passed to `Mutant` in your CLI call via the ``--include` flag like shown in the beginning:
 
 ```Ruby
-bundle exec mutant\
-  --include lib\
-  --require hello_world\
-  --use rspec 'Reek*'
+bundle exec mutant --include lib/\
+                   --require hello_world\
+                   --use rspec  "Greeter*"
 ```
 
 In analog fashion, the next line in `infect`
