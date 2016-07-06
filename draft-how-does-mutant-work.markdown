@@ -80,7 +80,7 @@ So let's say the `Greeter` class from above is part of a gem called "hello_world
     └── spec_helper.rb
 ```
 
-Ypu can find the sample application [here](https://github.com/troessner/hello_world) in case you want to check it out for yourself via:
+You can find the sample application [here](https://github.com/troessner/hello_world) in case you want to check it out for yourself via:
 
 ```
 git clone git@github.com:troessner/hello_world.git
@@ -152,7 +152,7 @@ Where are ASTs positioned in Ruby compile / interpret cycle?
 
 ![Ruby compile / interpret cycle](http://i.imgur.com/T5LAaqc.jpg)
 
-As you can see above, the ASTs generated out of so called tokens and are used by the Compiler to generate Bytecode instructions that are then executed by the Ruby interpreter.
+As you can see above, the ASTs generated out of so called tokens and are used by the Compiler to generate bytecode instructions that are then executed by the Ruby interpreter.
 
 If this is new territory for you I urge you to check out the links above before continuing to get the most out of this article.
 
@@ -332,7 +332,7 @@ def initialize(arguments)
 end
 ```
 
-Ok, nice and easy. First we'll set the configuration to our defaults, then we're parsing the cli arguments and overwrite our default configuration based on this.
+Ok, nice and easy. First we'll set the configuration to our defaults, then we're parsing the CLI arguments and overwrite our default configuration based on this.
 
 What does the default configuration look like?
 
@@ -358,7 +358,7 @@ class Config
 end
 ```
 
-I did remove a lot of the config object above to keep it readable. I just want to highlight a couple of lines I find interesting:
+I did remove a lot of the `config` object above to keep it readable. I just want to highlight a couple of lines I find interesting:
 
 ```Ruby
 expected_coverage: Rational(1)
@@ -374,10 +374,10 @@ Kills: 178
 You can make it pass like this:
 
 ```
-bundle exec mutant --expected-coverage 178/197 # plus the rest of your cli arguments
+bundle exec mutant --expected-coverage 178/197 # plus the rest of your CLI arguments
 ```
 
-Back to the config:
+Back to the configuration:
 
 ```Ruby
 kernel:            Kernel,
@@ -388,7 +388,7 @@ requires:          EMPTY_ARRAY,
 
 What I like here is how configurable `Mutant`. You can even inject another Kernel module, $LOAD_PATH or another Pathname'esque library.
 
-But the configurability is actually just a sideeffect here. The main goal is to stop relying on IO globals read from a global scope and injecting them explicitly.
+But the configurability is actually just a side effect here. The main goal is to stop relying on IO globals read from a global scope and injecting them explicitly.
 
 This lists the IO dependencies of each unit much more explicit. Makes testing easier, and allows to write a testing tool that works without message expectations (one target of the author in the near future).
 
@@ -449,7 +449,7 @@ translates to:
 Env::Bootstrap.new(configuration).env
 ```
 
-Let's check out the class declaration of Env::Bootstrap with a focus on the initializer:
+Let's check out the class declaration of `Env::Bootstrap` with a focus on the initializer:
 
 ```Ruby
 class Env
@@ -473,7 +473,7 @@ super
 That might seem odd to the innocent reader. `Mutant` makes heavy usage of the [Concord](https://github.com/mbj/concord) gem.
 `Concord` is a useful tool to cut down boilerplate code.
 
-You can use [Concord] to transform this:
+You can use `Concord` to transform this:
 
 ```Ruby
 class Dummy
@@ -498,7 +498,7 @@ end
 which is a lot easier on the eyes.
 
 Now you should understand why `super` is there. This will ensure that the `initialize` provided by `Concord` will be called as well.
-Try to remember this, this is a pattern you will see throughout the `Mutant` codebase.
+Try to remember this, this is a pattern you will see throughout the `Mutant` code base.
 
 ```Ruby
 @parser = Parser.new
@@ -614,18 +614,18 @@ With
 ```Ruby
   def expression(scope) # `scope` is one of the modules from ObjectSpace, e.g. Gem::Ext::BuildError, so a constant.
     name = scope.name # redacted for simplicity.
+    # snip
 
-    unless name.instance_of?(String)
-      # snip: give proper warning to the user
-      return
-    end
-
-    # config.expression_parser is a Mutant::Expression::Parser
-    # by default. 
-    # `try_parse` will return something like this
-    # #<Mutant::Expression::Namespace::Exact scope_name="Gem::Ext::BuildError">
     config.expression_parser.try_parse(name)
   end
+```
+
+`config.expression_parser` returns a `Mutant::Expression::Parser` by default. 
+
+`try_parse` will then return something like this
+
+```
+#<Mutant::Expression::Namespace::Exact scope_name="Gem::Ext::BuildError">
 ```
 
 Ok, we went through a lot - let's look at the big picture again:
@@ -689,7 +689,7 @@ you can see that we actually call `env` on our `Env::Bootstrap` object:
   end
 ```
 
-This now brings us to the topic of `subjects`.
+This now brings us to the topic of "subjects".
 
 ### Subjects
 
@@ -712,8 +712,8 @@ bundle exec mutant --include lib/\
                    --use rspec  "Greeter*"
 ```
 
-So given we fire up `mutant` like that, how does `subjects` look like?
-`matched_subjects` returns an array of [`Enumerable<Subject>`], let's check out how this looks in our console:
+So given we fire up `Mutant` like that, how does `subjects` look like?
+`matched_subjects` returns an array of `Enumerable<Subject>`, let's check out how this looks in our console:
 
 ```
 [
@@ -757,7 +757,7 @@ Just by reading through it you should see be able to get a feeling for what's ha
 Mutant::Subject::Method::Instance
 ```
 
-The subject class. As you can see it has 2 attributes:
+The `Subject` class. As you can see it has 2 attributes:
 
 1.) A [context](https://github.com/mbj/mutant/blob/master/lib/mutant/context.rb)
 
@@ -827,7 +827,7 @@ __Alright, so this doesn't look so complex anymore, now does it?__
 
 ### Mutator
 
-Ok, so now we have talked about subjects a lot. What about the mutations?
+Ok, so now we have talked about "subjects" a lot. What about the "mutations"?
 
 If you recall the `env` method in `Env::Bootstrap` from above:
 
@@ -912,7 +912,6 @@ Now what's up with that neutral mutation?
 
 A neutral mutation means that you're taking the original node without mutating it:
 
-
 ```Ruby
 def neutral_mutation
   Mutation::Neutral.new(self, node)
@@ -934,6 +933,7 @@ The purpose of the neutral mutation is kind of a sanity check to make sure that 
 __2 questions now:__
 
 1.) How does a `Mutation` look like?
+
 2.) How does the `Mutator` work in detail?
 
 ### Mutation
@@ -1208,6 +1208,8 @@ with a method call:
 "#{phrase} ...."
 ```
 
+This:
+
 ```
 s(:send, nil, :phrase)
 ```
@@ -1265,14 +1267,6 @@ if true
   "#{@phrase}#{" "}#{name}"
 end
 ```
-
-__A note regarding performance:__
-
-Generating the mutations is very fast (also due mutants engine design), so there is no need to stream them (As was done in earlier designs).
-
-The time consuming parts of boot are the infection, and test framework setup, depending on amount of infection also matching can be really slow.
-
-Mutation generation itself is just a small fraction of the overall bootup time.
 
 ### Mutating single nodes
 
@@ -1438,8 +1432,7 @@ end
 # mutator.rb
 
 def emit(object)
-  return unless new?(object)
-
+  # snip
   output << object
 end
 ```
@@ -1608,18 +1601,7 @@ You made it!
 
 Let's have a look at a diagram to finish the article.
 
-TODO: Take the ascii art below and put it into a diagram
-
-           mutant executable
-                  |
-      configuration + environment
-            /     |           \
- subject X     subject X     subject Y
-  + node a     + node b       + node c
-                  |
-              mutations
-             /      \
-        runnner     specs
+![Mutant overview](http://imgur.com/QRJ2E0C)
 
 You can see all the entities we talked about before. Subjects, mutations, mutators and so on. Hopefully this will reinforce what we learned today.
 
@@ -1642,7 +1624,7 @@ or how you can use the `--jobs` flag to play around with the degree of paralleli
 ### Wrapping it up
 
 Don't say I didn't warn you before, it was a long article indeed.
-I hope you did learn something from reading it, I for sure did learn a lot browsing `Mutants` awesome codebase.
+I hope you did learn something from reading it, I for sure did learn a lot browsing `Mutants` awesome code base.
 
 In case you're not using mutation testing right now I urge you to check it out.
 Applied properly, it will not only improve your specs a lot, it will also force you to focus more on maintainability and conciseness when coding.
