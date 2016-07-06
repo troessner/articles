@@ -143,8 +143,8 @@ While doing research for my presentation, I wrote an introductory series of arti
 * [part 1](https://troessner.svbtle.com/lessons-learned-from-some-of-the-best-ruby-codebases-out-there-part-1): The [Concord](https://github.com/mbj/concord) gem and the [Procto](https://github.com/snusnu/procto) gem
 * [part 2](https://troessner.svbtle.com/lessons-learned-from-some-of-the-best-ruby-codebases-out-there-part-2): The [IceNine](https://github.com/dkubb/ice_nine) gem
 * [part 3](https://troessner.svbtle.com/lessons-learned-from-some-of-the-best-ruby-codebases-out-there-part-3)): The [abstract type](https://en.wikipedia.org/wiki/Abstract_type) gem and the Adamantium](https://github.com/dkubb/adamantium) gem
-
- You do not need to read part 2 and 3 to fully understand everything down below but you **should** read [part 1](https://troessner.svbtle.com/lessons-learned-from-some-of-the-best-ruby-codebases-out-there-part-1) as I will refer to `Concord` and `Procto` quite often.
+ 
+You do not need to read part 2 and 3 to fully understand everything down below but you **should** read [part 1](https://troessner.svbtle.com/lessons-learned-from-some-of-the-best-ruby-codebases-out-there-part-1) as I will refer to `Concord` and `Procto` quite often.
 
 `Mutant` creates its mutations by utilizing the [abstract syntax tree (AST)](https://en.wikipedia.org/wiki/Abstract_syntax_tree) consisting of [S-expressions](https://en.wikipedia.org/wiki/S-expression) that the ruby parser generates from your source code.
 
@@ -1162,10 +1162,10 @@ s(:def, :say_hello,
 
 Now let's take samples of what `Mutator.mutate(node)` returns:
 
-```
-[18] pry(#<Mutant::Subject::Method::Instance>)> Mutator.mutate(node).to_a.sample
+```Ruby
+# [18] pry(#<Mutant::Subject::Method::Instance>)> Mutator.mutate(node).to_a.sample
 
- => s(:def, :say_hello,
+ s(:def, :say_hello,
   s(:args,
     s(:arg, :name)),
   s(:if,
@@ -1182,18 +1182,18 @@ Interesting. See the difference to the original node?
 
 The original:
 
-```
-    s(:dstr,
-      s(:begin,
-        s(:ivar, :@phrase)),
+```Ruby
+s(:dstr,
+  s(:begin,
+    s(:ivar, :@phrase)),
 ```
 
 The mutation:
 
-```
-    s(:dstr,
-      s(:begin,
-        s(:send, nil, :phrase)),
+```Ruby
+s(:dstr,
+  s(:begin,
+    s(:send, nil, :phrase)),
 ```
 
 This means `Mutant` replaced accessing an instance variable
@@ -1218,7 +1218,7 @@ means "Send the message `phrase` to `self`." The "nil" argument denotes that the
 
 You can quickly check this out yourself using the `ruby-parse` executable that comes along with the `Parser` gem (so `gem install parser`):
 
-```Ruby
+```
 ($) ruby-parse -e '"#{@phrase}"'
 
 (dstr
@@ -1234,8 +1234,8 @@ You can quickly check this out yourself using the `ruby-parse` executable that c
 
 Ok, another roll of the dice:
 
-```
-[18] pry(#<Mutant::Subject::Method::Instance>)> Mutator.mutate(node).to_a.sample
+```Ruby
+#[18] pry(#<Mutant::Subject::Method::Instance>)> Mutator.mutate(node).to_a.sample
 
 => s(:def, :say_hello,
   s(:args,
@@ -1253,11 +1253,11 @@ Ok, another roll of the dice:
 There it is! 
 
 ```Ruby
-  s(:if,
-    s(:true),
-    s(:dstr,
-      s(:begin,
-        s(:ivar, :@phrase))
+s(:if,
+  s(:true),
+  s(:dstr,
+    s(:begin,
+      s(:ivar, :@phrase))
 ```
 
 That's the mutation from our original example. 
@@ -1601,7 +1601,7 @@ You made it!
 
 Let's have a look at a diagram to finish the article.
 
-![Mutant overview](http://imgur.com/QRJ2E0C)
+![Mutant overview](http://i.imgur.com/QRJ2E0C.png)
 
 You can see all the entities we talked about before. Subjects, mutations, mutators and so on. Hopefully this will reinforce what we learned today.
 
