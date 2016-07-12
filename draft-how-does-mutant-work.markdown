@@ -142,7 +142,7 @@ While doing research for my presentation, I wrote an introductory series of arti
 
 * [part 1](https://troessner.svbtle.com/lessons-learned-from-some-of-the-best-ruby-codebases-out-there-part-1): The [Concord](https://github.com/mbj/concord) gem and the [Procto](https://github.com/snusnu/procto) gem
 * [part 2](https://troessner.svbtle.com/lessons-learned-from-some-of-the-best-ruby-codebases-out-there-part-2): The [IceNine](https://github.com/dkubb/ice_nine) gem
-* [part 3](https://troessner.svbtle.com/lessons-learned-from-some-of-the-best-ruby-codebases-out-there-part-3)): The [abstract type](https://en.wikipedia.org/wiki/Abstract_type) gem and the Adamantium](https://github.com/dkubb/adamantium) gem
+* [part 3](https://troessner.svbtle.com/lessons-learned-from-some-of-the-best-ruby-codebases-out-there-part-3): The [abstract type](https://en.wikipedia.org/wiki/Abstract_type) gem and the [Adamantium](https://github.com/dkubb/adamantium) gem
  
 You do not need to read part 2 and 3 to fully understand everything down below but you **should** read [part 1](https://troessner.svbtle.com/lessons-learned-from-some-of-the-best-ruby-codebases-out-there-part-1) as I will refer to `Concord` and `Procto` quite often.
 
@@ -1610,7 +1610,7 @@ You can see all the entities we talked about before. Subjects, mutations, mutato
 Well, a lot. I didn't go into details about
 
 * how mutated nodes are re-inserted into the AST
-* how `Mutant` actually generates Ruby code back out of ASTs for generating its warnings and for running the specs (hint: It uses the [Unparser](https://github.com/mbj/mutant) gem under the hood)
+* how `Mutant` actually generates Ruby code back out of ASTs for generating its warnings and for running the specs (hint: It uses the [Unparser](https://github.com/mbj/unparser) gem under the hood)
 * how `Mutant` runs the right specs against the mutations
 
 I also didn't talk about awesome `Mutant` features like the `since` flag:
