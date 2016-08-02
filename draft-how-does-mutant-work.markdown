@@ -45,7 +45,7 @@ def say_hello(name)
 end
 ```
 
-`Mutant` then runs your tests against each mutation. The tests might look like this:
+`Mutant` then runs tests against each mutation. Those tests might look like this:
 
 ```Ruby
 # cat spec/greeter_spec.rb
@@ -146,13 +146,13 @@ While doing research for my presentation, I wrote an introductory series of arti
  
 You do not need to read part 2 and 3 to fully understand everything down below but you **should** read [part 1](https://troessner.svbtle.com/lessons-learned-from-some-of-the-best-ruby-codebases-out-there-part-1) as I will refer to `Concord` and `Procto` quite often.
 
-`Mutant` creates its mutations by utilizing the [abstract syntax tree (AST)](https://en.wikipedia.org/wiki/Abstract_syntax_tree) consisting of [S-expressions](https://en.wikipedia.org/wiki/S-expression) that the ruby parser generates from your source code.
+`Mutant` creates its mutations by utilizing the [abstract syntax tree (AST)](https://en.wikipedia.org/wiki/Abstract_syntax_tree) represented by [S-expressions](https://en.wikipedia.org/wiki/S-expression) that the ruby parser generates from your source code.
 
 Where are ASTs positioned in Ruby compile / interpret cycle?
 
 ![Ruby compile / interpret cycle](http://i.imgur.com/T5LAaqc.jpg)
 
-As you can see above, the ASTs generated out of so called tokens and are used by the Compiler to generate bytecode instructions that are then executed by the Ruby interpreter.
+As you can see above, the ASTs generated out of so called tokens and are used by the Compiler to generate bytecode instructions that are then executed by the Ruby interpreter. Another way to describe the ASTs role is that it is the machine readable semantics of the code the developer tried to express via literal source.
 
 If this is new territory for you I urge you to check out the links above before continuing to get the most out of this article.
 
@@ -511,7 +511,7 @@ infect
 ```
 
 Infection is the process where `Mutant` processes includes and requires and "infects" the ruby VM with the "subjects under tests".
-To put it differently, its the point where the software that is under mutation test gets loaded.
+To put it differently, it's the point where the software that is under mutation test gets loaded.
 
 Let's look at `infect` in detail:
 
@@ -542,7 +542,7 @@ config.includes.each do |include|
 end
 ```
 
-but the first version is arguably more concise. So technicalities aside, this will update the `load_path` with whatever you passed to `Mutant` in your CLI call via the ``--include` flag like shown in the beginning:
+but the first version is arguably more concise. So technicalities aside, this will update the `load_path` with whatever you passed to `Mutant` in your CLI call via the `--include` flag like shown in the beginning:
 
 ```Ruby
 bundle exec mutant --include lib/\
@@ -702,7 +702,7 @@ Let's go through the `env` method step by step:
   end
 ```
 
-First we'll get all "matched subjects", which means all the subjects you want to mutation tests. I won't go into detail how the `matched_subjects` method works because that would probably deserve another blog post so let's just assume it returns your modules and classes you would like to mutation test. 
+First we'll get all "matched subjects", which means all the subjects you want to mutation test. Each subject represents only a specific instance or singleton method that is later subject of mutation (`Mutant` does not yet mutate code at the class or module level).
 
 Let's look at an example - Remember the `Greeter` example from above?
 
@@ -769,7 +769,7 @@ The `Subject` class. As you can see it has 2 attributes:
 ```
 
 which contains:
-  * a [scope](https://github.com/mbj/mutant/blob/master/lib/mutant/scope.rb) called `Greeter`. This should look familiar to you now, doesn't it? That's the class from above we're actually testing.
+  * a [scope](https://github.com/mbj/mutant/blob/master/lib/mutant/scope.rb) called `Greeter`. This should look familiar to you now, doesn't it? That's the module or class (in `Mutant` it's just called "namespace") from which we take our subjects.
   * a `source_path`: Again, no magic here, you can see the path to the "greeter.rb" on my local file system
 
 2.) A [node](https://github.com/mbj/mutant/blob/master/lib/mutant/mutator/node.rb)
@@ -821,9 +821,9 @@ is the abstract syntax tree for this code in form of S-expressions.
 
 __Alright, so this doesn't look so complex anymore, now does it?__
 
-* We have a class with 2 instance methods
+* we have a class with 2 instance methods
 * `Mutant` takes this class and turns it into 2 subjects
-* Where each subject contains a node consisting of S-Expressions that corresponds to one of our instance methods.
+* where each subject contains a node consisting of S-Expressions that corresponds to one of our instance methods.
 
 ### Mutator
 
@@ -853,7 +853,7 @@ you see this line:
 mutations:        subjects.flat_map(&:mutations),
 ```
 
-Each `Subject` can yield N mutations, `Mutant expands these in one step here for better progress reports.
+Each `Subject` can yield N mutations, `Mutant` expands these in one step here for better progress reports.
 
 Let's check out the [Subject](https://github.com/mbj/mutant/blob/master/lib/mutant/subject.rb) class:
 
@@ -928,7 +928,17 @@ end
 ```
 
 As you can see, in `neutral_mutation` we're basically just passing the original node with `Mutation::Neutral` having the expectation that the test pass on this one.
-The purpose of the neutral mutation is kind of a sanity check to make sure that your original code doesn't break your existing specs.
+The purpose of the neutral mutation is kind of a sanity check to make sure that your original code doesn't break your existing specs. Especially it does not break the existing specs on unmodified source when run inside the more demanding mutation testing environment.
+
+`Mutant` requires a test to be simultaneously:
+
+* Idempotent
+* Order dependent free
+* Race condition free under separate address spaces
+
+Lets say all your tests would touch a shared resource (database). Without neutral mutations, your evil mutations might get killed because concurrency makes your specs red, but not because the evil mutation itself that was inserted.
+
+Neutral mutations are a safeguard for this scenario. If you see an neutral mutation being reported, your tests violate above properties, and the evil mutations dead cannot be trusted.
 
 __2 questions now:__
 
@@ -1070,7 +1080,7 @@ module Mutant
 end
 ```
 
-This all sounds very vague so let's check out a the concrete example from above in pry. We'll insert a break point here in the `Mutator`:
+This all sounds very vague so let's check out the concrete example from above in pry. We'll insert a break point here in the `Mutator`:
 
 ```Ruby
 module Mutant
@@ -1274,9 +1284,9 @@ Alright, time for a recap. So far we have:
 
 * A [configuration](https://github.com/mbj/mutant/blob/master/lib/mutant.rb#L191)
 * An [environment](https://github.com/mbj/mutant/blob/master/lib/mutant/env.rb)
-* A [bootstrapping process](https://github.com/mbj/mutant/blob/master/lib/mutant/env/bootstrap.rb), that ties them together
-* [Subjects](https://github.com/mbj/mutant/blob/master/lib/mutant/subject.rb) that we intend to test
-* [A static mutator](https://github.com/mbj/mutant/blob/master/lib/mutant/mutator.rb) that takes the method nodes within those subjects
+* A [bootstrapping process](https://github.com/mbj/mutant/blob/master/lib/mutant/env/bootstrap.rb) that ties them together
+* [Subjects](https://github.com/mbj/mutant/blob/master/lib/mutant/subject.rb) that we intend to mutation test
+* [A mutator](https://github.com/mbj/mutant/blob/master/lib/mutant/mutator.rb) that takes the method nodes within those subjects
 * And applies [mutations](https://github.com/mbj/mutant/blob/master/lib/mutant/mutation.rb) to those subjects
 
 The missing piece now is the logic that actually applies the mutation to the nodes. Let's focus on our good, old ":if" node from above and have again a look at `Mutator#mutate`:
@@ -1365,7 +1375,7 @@ handle(:if)
 
 is the part that registers the "if node" mutator at the global registry to handle ... "if" nodes (make no mistake: other mutators do handle multiple types, so this is not a fixed 1:1 relation).
 
-Next up is the `dispatch` method. That is kind of the workhorse of the all of the mutators and is going to be called via `Mutator#initialize`:
+Next up is the `dispatch` method. That is kind of the workhorse of all the mutators and is going to be called via `Mutator#initialize`:
 
 ```Ruby
 def dispatch
@@ -1463,7 +1473,7 @@ What's missing? Right, running our specs against those mutations!
 
 This is where the [Runner](https://github.com/mbj/mutant/blob/master/lib/mutant/runner.rb) comes into play.
 
-Remember that our investigation how `Mutant` works started With this piece of code in the CLI module:
+Remember that our investigation how `Mutant` works started with this piece of code in the CLI module:
 
 ```Ruby
 module Mutant
@@ -1612,6 +1622,7 @@ Well, a lot. I didn't go into details about
 * how mutated nodes are re-inserted into the AST
 * how `Mutant` actually generates Ruby code back out of ASTs for generating its warnings and for running the specs (hint: It uses the [Unparser](https://github.com/mbj/unparser) gem under the hood)
 * how `Mutant` runs the right specs against the mutations
+* how `Mutant` isolates concurrent mutation kills from each others
 
 I also didn't talk about awesome `Mutant` features like the `since` flag:
 
