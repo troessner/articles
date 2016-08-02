@@ -140,9 +140,9 @@ Please keep the example project and `Mutant` call from above in the back of your
 
 While doing research for my presentation, I wrote an introductory series of articles about the gems `Mutant` uses:
 
-* [part 1](https://troessner.svbtle.com/lessons-learned-from-some-of-the-best-ruby-codebases-out-there-part-1): The [Concord](https://github.com/mbj/concord) gem and the [Procto](https://github.com/snusnu/procto) gem
-* [part 2](https://troessner.svbtle.com/lessons-learned-from-some-of-the-best-ruby-codebases-out-there-part-2): The [IceNine](https://github.com/dkubb/ice_nine) gem
-* [part 3](https://troessner.svbtle.com/lessons-learned-from-some-of-the-best-ruby-codebases-out-there-part-3): The [abstract type](https://en.wikipedia.org/wiki/Abstract_type) gem and the [Adamantium](https://github.com/dkubb/adamantium) gem
+* [part 1](https://troessner.svbtle.com/lessons-learned-from-some-of-the-best-ruby-codebases-out-there-part-1): The [Concord](https://github.com/mbj/concord) gem (which helps cutting down boilerplate code) and the [Procto](https://github.com/snusnu/procto) gem (for method objects)
+* [part 2](https://troessner.svbtle.com/lessons-learned-from-some-of-the-best-ruby-codebases-out-there-part-2): The [IceNine](https://github.com/dkubb/ice_nine) gem (for deep freezing objects)
+* [part 3](https://troessner.svbtle.com/lessons-learned-from-some-of-the-best-ruby-codebases-out-there-part-3): The [AbstractType](https://github.com/dkubb/abstract_type) gem (for, well, [abstract types](https://en.wikipedia.org/wiki/Abstract_type)) and the [Adamantium](https://github.com/dkubb/adamantium) gem (for high level strategies for freezing)
  
 You do not need to read part 2 and 3 to fully understand everything down below but you **should** read [part 1](https://troessner.svbtle.com/lessons-learned-from-some-of-the-best-ruby-codebases-out-there-part-1) as I will refer to `Concord` and `Procto` quite often.
 
@@ -500,15 +500,15 @@ which is a lot easier on the eyes.
 Now you should understand why `super` is there. This will ensure that the `initialize` provided by `Concord` will be called as well.
 Try to remember this, this is a pattern you will see throughout the `Mutant` code base.
 
+Next comes the parser:
+
 ```Ruby
 @parser = Parser.new
 ```
 
-`Mutant` uses the awesome `[parser](https://github.com/whitequark/parser)` gem for producing ASTs from source code and has its own thin wrapper around. That thin wrapper just maintains a cache, so subjects on the same file share the (immutable) AST.
+`Mutant` uses the awesome [parser](https://github.com/whitequark/parser) gem for producing ASTs from source code and has its own thin wrapper around. That thin wrapper just maintains a cache, so subjects on the same file share the (immutable) AST.
 
-```Ruby
-infect
-```
+What about `infect` right after that?
 
 Infection is the process where `Mutant` processes includes and requires and "infects" the ruby VM with the "subjects under tests".
 To put it differently, it's the point where the software that is under mutation test gets loaded.
@@ -576,12 +576,16 @@ Let's look at this one in detail:
 
 ```Ruby
   def initialize_matchable_scopes
-    scopes = ObjectSpace.each_object(Module).each_with_object([]) do |scope, aggregate|
+    scopes = ObjectSpace.
+                    each_object(Module).
+                    each_with_object([]) do |scope, aggregate|
       expression = expression(scope) || next
       aggregate << Scope.new(scope, expression)
     end
 
-    @matchable_scopes = scopes.sort_by { |scope| scope.expression.syntax }
+    @matchable_scopes = scopes.sort_by do |scope|
+      scope.expression.syntax
+    end
   end
 ```
 
@@ -602,7 +606,9 @@ So `initialize_matchable_scopes` will take all the modules it can find and try t
 
 ```Ruby
   def initialize_matchable_scopes
-    scopes = ObjectSpace.each_object(Module).each_with_object([]) do |scope, aggregate|
+    scopes = ObjectSpace.
+                    each_object(Module).
+                    each_with_object([]) do |scope, aggregate|
       expression = expression(scope) || next
       # ... snip
     end
@@ -612,7 +618,8 @@ So `initialize_matchable_scopes` will take all the modules it can find and try t
 With
 
 ```Ruby
-  def expression(scope) # `scope` is one of the modules from ObjectSpace, e.g. Gem::Ext::BuildError, so a constant.
+  # `scope` is one of the modules from ObjectSpace, e.g. Gem::Ext::BuildError, so a constant.
+  def expression(scope)
     name = scope.name # redacted for simplicity.
     # snip
 
@@ -631,13 +638,17 @@ With
 Ok, we went through a lot - let's look at the big picture again:
 
 ```Ruby
-  def initialize_matchable_scopes
-    scopes = ObjectSpace.each_object(Module).each_with_object([]) do |scope, aggregate|
+ def initialize_matchable_scopes
+    scopes = ObjectSpace.
+                    each_object(Module).
+                    each_with_object([]) do |scope, aggregate|
       expression = expression(scope) || next
       aggregate << Scope.new(scope, expression)
     end
 
-    @matchable_scopes = scopes.sort_by { |scope| scope.expression.syntax }
+    @matchable_scopes = scopes.sort_by do |scope|
+      scope.expression.syntax
+    end
   end
 ```
 
@@ -1496,7 +1507,9 @@ The `Runner.call` part should be something familiar for you now. Let's check out
 module Mutant
   # Runner baseclass
   class Runner
-    include Adamantium::Flat, Concord.new(:env), Procto.call(:result)
+    include Adamantium::Flat,
+            Concord.new(:env),
+            Procto.call(:result)
 
     def initialize(*)
       super # You know that pattern as well - Concord.
