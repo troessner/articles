@@ -10,7 +10,19 @@ I did learn a lot from reading its source and I'd like to share this with you.
 
 ### Mutation testing in a nutshell
 
-Let's quickly talk about what mutation testing is first. Mutation testing takes code like this:
+Let's quickly talk about what mutation testing is first.
+
+Quoting from [wikipedia](https://en.wikipedia.org/wiki/Mutation_testing):
+
+>>
+Mutation testing (or Mutation analysis or Program mutation) is used
+to design new software tests and evaluate the quality of existing
+software tests. Mutation testing involves modifying a program in small
+ways.
+
+Now that's a little abstract so let's look at an example!
+
+Mutation testing takes code like this:
 
 ```Ruby
 class Greeter
