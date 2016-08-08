@@ -3,7 +3,7 @@ I have been doing tech recruiting for start-ups over the last 10 years and oh bo
 
 I have seen the biggest douche bags called the "top performers" and the actual performers "constant underachievers". Actually that's a pretty common topic I have seen across companies. Human perception is pretty freakin' bad. We overvalue merits that are tangible and undervalue merits that are kind of fuzzy. For instance, a classical set up I probably have seen dozens of time is the rockstar developer (sometimes also referred to as [ninja](TODO) or [killer](TODO))that delivers this super useful new backend feature that will be used on the web frontend everybody has been waiting for. 
 
-Problem is that he didn't really care about communicating this. QA is missing. Normally not an issue since developers work in a squad where QA is a part of the team (you're doing this, right?) but that rockstar never actually fit in anywhere in so you kind of let him work on his own (what could possibly go wrong?). Supervision by the product team was spotty at best since nobody there really got along with our that dev (which imposes a high entry barrier for communications) and as a consequence the killer feature everybody has been waiting is not **really** the thing that people have been expecting. Customer Care doesn't know about it. And the frontend team has no clue that they should integrate this feature and more importantly, how.
+Problem is that he didn't really care about communicating this. QA is missing. Normally not an issue since developers work in a squad where QA is a part of the team (you're doing this, right?) but that rockstar never actually fit in anywhere in so you kind of let him work on his own (what could possibly go wrong?). Supervision by the product team was spotty at best since nobody there really got along with our that dev (which imposes a high entry barrier for communications) and so on and so on.
 6 months later - the feature still not being live - your CEO barges in and asks you why the hell it is still not live.
 
 Now there are obviously a lot of things that went wrong (and not just with that single developer) but in most cases the overall perception will be that the rockstar developer delivered. While the other teams failed to so.
@@ -14,10 +14,19 @@ Apart from the organisational problems the obvious solution to this is not hirin
 
 I think the way most companies evaluate candidates for tech jobs (probably for all jobs) is upside down.
 
+### Conventional recruiting wisdom is outdated and broken
+
+It's easy to fall prey to conventional recruiting wisdom. It's easy because it offers you the quickest reward possible: It will get you a lot of candidates fast because it just offers you a bunch of core metrics that don't matter that much in the bigger picture. 
+
+"Proficient in language x"? Check.
+"Experience in maintaining y"? Check.
+"Cultural fit"? Well, he seems to be nice and all that, so check as well!
+
+Now the question becomes: What should you actually look for in a candidate?
+
 ### Empathy is king
 
 ![Empathy](https://mcclewis.files.wordpress.com/2013/07/gregory-colbert-man-animal-04.jpg)
-
 
 There was a fascinating article in the New York Times recently that was called [What Google Learned From Its Quest to Build the Perfect Team](http://www.nytimes.com/2016/02/28/magazine/what-google-learned-from-its-quest-to-build-the-perfect-team.html). Google had been trying to find out what kind of behavioural patterns all their successful teams shared. To their surprise, all the obvious metrics failed. Common wisdom like "Put the best guys in a squad" did not work out sometimes and they couldn't really figure out why. Then, after years, they basically realised that all successful teams shared 2 traits (quoting from the article directly):
 
@@ -47,7 +56,6 @@ What makes for good communication?
 * 100 other attributes I won't list here because smarter people than me have written [quite](TODO) [some](TODO) [books](TODO) about this topic.
 
 Bottom line here is, all of those attributes should be part of hiring evaluation as well.
- 
 
 ### Motivation
 
@@ -66,11 +74,9 @@ The key part here is
 
 You should hire motivated people only. That sounds like an empty phrase because nobody would disagree with openly. But I've almost never seen any company that actually really made this a relevant attribute in your hiring process.
 
-
 ### Experience
 
 You can learn everything for sure but there just things you **need** to have experienced yourself. You need to have shut down the production database in your life to **really** understand that you need to be careful what console window you're typing in what. You need to have deployed that critical bug that cost your company....
-
 
 ### Structured and analytical approach
 
@@ -95,11 +101,4 @@ Because over the years I found out that it's way harder to develop skills like e
 
 ### Ok, so what now?
 
-It's easy to fall prey to conventional recruiting wisdom. It's easy because it offers you the quickest reward possible: It will get you a lot of candidates fast because it just offers you a bunch of core metrics that don't matter that much in the bigger picture. 
-
-"Proficient in language x"? Check.
-"Experience in maintaining y"? Check.
-"Cultural fit"? Well, he seems to be nice and all that, so check as well!
-
-Unfortunately it's not so easy to ......
-
+TODO: Talk about hiring commitees
