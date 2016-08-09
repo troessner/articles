@@ -1,26 +1,35 @@
 
 I have been doing tech recruiting for start-ups over the last 10 years and oh boy, did I fuck up a lot. On the plus side of things, I did also learn a lot about human behaviour, [hiring bias](http://recruiterbox.com/blog/remove-hiring-bias-from-recruitment-process/) and common misconceptions about what constitutes a "good" team member. 
 
-I have seen the biggest douche bags called the "top performers" and the actual performers "constant underachievers". Actually that's a pretty common topic I have seen across companies. Human perception is pretty freakin' bad. We overvalue merits that are tangible and undervalue merits that are kind of fuzzy. For instance, a classical set up I probably have seen dozens of time is the rockstar developer (sometimes also referred to as [ninja](TODO) or [killer](TODO))that delivers this super useful new backend feature that will be used on the web frontend everybody has been waiting for. 
+I have seen the biggest douche bags called the "top performers" and the actual performers "constant underachievers". Actually that's a pretty common topic I have seen across companies. Human perception is pretty freakin' bad. We overvalue merits that are tangible and undervalue merits that are kind of fuzzy. Take the rockstar developer (sometimes also referred to as [ninja](https://www.quora.com/Why-are-engineers-called-rockstars-and-ninjas) or killer) for instance. People refer to a "rockstar developer" as to somebody that is exceptionally skilled and that literally carries the whole company on his back. Unfortunately that's not all: A "rockstar" is a rockstar for a reason and only rarely communicates with mere mortals.
+
+A classical set up I probably have seen dozens of time is that one of those rockstar delivers this super useful new backend feature that will be used on the web frontend everybody has been waiting for. 
 
 Problem is that he didn't really care about communicating this. QA is missing. Normally not an issue since developers work in a squad where QA is a part of the team (you're doing this, right?) but that rockstar never actually fit in anywhere in so you kind of let him work on his own (what could possibly go wrong?). Supervision by the product team was spotty at best since nobody there really got along with our that dev (which imposes a high entry barrier for communications) and so on and so on.
-6 months later - the feature still not being live - your CEO barges in and asks you why the hell it is still not live.
+Fast forward 6 months: The feature is still not live, everybody involved is highly frustrated and the first team members are starting to click on the latest "Looking for a new challenge" linkedin requests.
 
 Now there are obviously a lot of things that went wrong (and not just with that single developer) but in most cases the overall perception will be that the rockstar developer delivered. While the other teams failed to so.
 
 **So how can you make sure this doesn't happen to you?**
 
-Apart from the organisational problems the obvious solution to this is not hiring those kind of guys. The problem is that "common recruiting wisdom" says to look for developers that are technically capable first and then look for their so called "soft skills" (which is a very fuzzy term which roughly translates to "the candidate should not be an obvious asshole").
+Apart from the organisational problems the obvious solution to this is not hiring those kind of guys. The problem is that common recruiting wisdom says to look for developers that are technically capable first and then look for their so called "soft skills" (which is a very fuzzy term which roughly translates to "the candidate should not be an obvious asshole").
 
 I think the way most companies evaluate candidates for tech jobs (probably for all jobs) is upside down.
 
 ### Conventional recruiting wisdom is outdated and broken
 
-It's easy to fall prey to conventional recruiting wisdom. It's easy because it offers you the quickest reward possible: It will get you a lot of candidates fast because it just offers you a bunch of core metrics that don't matter that much in the bigger picture. 
+![Out of service](https://www.mrbean2cup.co.uk/repair-service-tips/img/6C/Out-of-service-Restart-to-solve-the-problem.jpg)
 
-"Proficient in language x"? Check.
-"Experience in maintaining y"? Check.
-"Cultural fit"? Well, he seems to be nice and all that, so check as well!
+It's easy to fall prey to conventional recruiting wisdom. It's easy because it offers you the quickest reward possible: It will get you a lot of candidates fast because it relies on a couple of core metrics that you can easily train your HR intern in an hour or two.
+
+The problem with all of those metrics: They actually don't mean anything.
+
+For instance, "cultural fit" is something that is extremely important to all companies because they know that creative knowledge workers need to get along in order to really function well. At the same time, this is also the most fuzzy metric and sometimes almost intentionally so.
+
+In most cases I have seen so far "cultural fit" means "Well, he's nice and doesn't seem to be an asshole, so check!".
+
+The same goes for things like "Proficient in language X": TODO
+TODO: Or, and that is my favourite one: looking for [talent]((http://static6.businessinsider.com/image/56a0ec0de6183ebe4a8bab61-1190-625/ufc-champion-conor-mcgregor-has-a-great-perspective-on-what-it-takes-to-be-successful.jpg))
 
 Now the question becomes: What should you actually look for in a candidate?
 
@@ -36,9 +45,9 @@ Second, the good teams all had high ‘‘average social sensitivity’’ — a
 
 I had never thought about it this (apparently nobody had) but in hindsight, this seems to make sense, doesn't it?
 
-So what if you're not exactly the most emphatic person on this planet?
+If you're know thinking "damn, I'm not the most emphatic person on this planet" like I did after reading this, don't you worry, you can learn that!
 
-One of the biggest lessons in life that I learned is that [talent does not exist](http://static6.businessinsider.com/image/56a0ec0de6183ebe4a8bab61-1190-625/ufc-champion-conor-mcgregor-has-a-great-perspective-on-what-it-takes-to-be-successful.jpg) which in turn means that you can learn anything. Like empathy. I personally liked [Chad Fowler's approach](http://lifehacker.com/why-empathy-is-your-most-important-skill-and-how-to-pr-1505011685) approach and [Six Habits of Highly Empathic People](http://greatergood.berkeley.edu/article/item/six_habits_of_highly_empathic_people1). 
+Chad Fowler wrote an [excellent article](http://lifehacker.com/why-empathy-is-your-most-important-skill-and-how-to-pr-1505011685) on the subject. I also feel that [Six Habits of Highly Empathic People](http://greatergood.berkeley.edu/article/item/six_habits_of_highly_empathic_people1) is highly inspirational.
 
 ### Communication
 
@@ -46,7 +55,7 @@ One of the biggest lessons in life that I learned is that [talent does not exist
 
 The best pundit in his field is utterly worthless if he can't communicate properly.
 
-Again, this is a fuzzy field. I have seen people write huge fyi mails by default as part of a "cover your ass" mentality.
+Again, this is a fuzzy field. There's somewhat surprisingly (at least it was to me) thin line between a succinct mail sent out to all stakeholders and huge fyi mails by default as part of a "cover your ass" mentality.
 
 What makes for good communication?
 
@@ -74,7 +83,30 @@ The key part here is
 
 You should hire motivated people only. That sounds like an empty phrase because nobody would disagree with openly. But I've almost never seen any company that actually really made this a relevant attribute in your hiring process.
 
+### Self-reliance
+
+There is a certain type of people that is especially prevalent in big corporations: The kind of people that you approach for help with one problem and after you come back from them you kind of realize that they didn't help you at all, but instead tried everything in their power to not help, but to push back.
+
+Now that might happen out of malintent or just out of pure laziness but the most common reason I have seen so far is insecurity about your own abilities or to put it differently: A lack of self-reliance.
+
+### Proactivity
+
+![Proactivity](https://bobchoat.files.wordpress.com/2014/04/initiative.jpg)
+
+I've probably had a conversation like the following in one way or another dozens of times in my life:
+
+"Yeah, our monitoring showed some weird numbers the hours before the downtime"
+"So....why didn't you check then"
+"Well, we were hoping it would eventually go away and after a while it seemed like it had fixed itself"
+
 ### Experience
+
+TODO: Pic
+
+ >>
+ Recently, I was asked if I was going to fire an employee who made a mistake that cost the company $600,000. No, I replied, I just spent $600,000 training him. Why would I want somebody to hire his experience?
+
+Thomas John Watson Sr., first CEO at IBM and inspiration for name of Watson (computer)
 
 You can learn everything for sure but there just things you **need** to have experienced yourself. You need to have shut down the production database in your life to **really** understand that you need to be careful what console window you're typing in what. You need to have deployed that critical bug that cost your company....
 
@@ -99,6 +131,17 @@ Alright, so here it is: Technical knowledge is the **least important** attribute
 Why?
 Because over the years I found out that it's way harder to develop skills like empathy than it is to develop technical skills. Somebody who is diligent and analytical, has the energy and the drive, communicates well with the team and knows how to deal with people in general will pick up tech skills fast. Very fast.
 
-### Ok, so what now?
+### Recap
 
-TODO: Talk about hiring commitees
+What we covered today:
+
+* Conventional hiring wisdom is flawed at best because it overvalues tangible features and neglects intangible ones
+* TODO
+
+The next question we should now look into are probably:
+
+* How do we find people that fit the profile above?
+* If the attributes above are not tangible, how do you actually select people based on it?
+* How do we get them into our recruiting funnel?
+
+Those questions will be the topic of the next articles.
