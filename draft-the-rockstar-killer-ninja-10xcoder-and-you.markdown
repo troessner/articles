@@ -5,7 +5,7 @@ I have seen the biggest douche bags called the "top performers" and the actual p
 
 A classical set up I probably have seen dozens of time is that one of those rockstar delivers this super useful new backend feature that will be used on the web frontend everybody has been waiting for. 
 
-Problem is that he didn't really care about communicating this. QA is missing. Normally not an issue since developers work in a squad where QA is a part of the team (you're doing this, right?) but that rockstar never actually fit in anywhere in so you kind of let him work on his own (what could possibly go wrong?). Supervision by the product team was spotty at best since nobody there really got along with our that dev (which imposes a high entry barrier for communications) and so on and so on.
+Problem is that he didn't really care about communicating this. QA is missing. Normally not an issue since developers work in a squad where QA is a part of the team (you're doing this, right?) but that rockstar never actually fit in anywhere in so you kind of let him work on his own. Supervision by the product team was spotty at best since nobody there really got along with our that dev (which imposes a high entry barrier for communications) and so on and so on.
 Fast forward 6 months: The feature is still not live, everybody involved is highly frustrated and the first team members are starting to click on the latest "Looking for a new challenge" linkedin requests.
 
 Now there are obviously a lot of things that went wrong (and not just with that single developer) but in most cases the overall perception will be that the rockstar developer delivered. While the other teams failed to so.
@@ -20,16 +20,15 @@ I think the way most companies evaluate candidates for tech jobs (probably for a
 
 ![Out of service](https://www.mrbean2cup.co.uk/repair-service-tips/img/6C/Out-of-service-Restart-to-solve-the-problem.jpg)
 
-It's easy to fall prey to conventional recruiting wisdom. It's easy because it offers you the quickest reward possible: It will get you a lot of candidates fast because it relies on a couple of core metrics that you can easily train your HR intern in an hour or two.
+It's easy to fall prey to conventional recruiting wisdom because it offers you the quickest reward possible: It will get you a lot of candidates fast because common recruiting wisdom relies on a couple of core metrics that you can easily train on your HR intern in an hour or two.
 
 The problem with all of those metrics: They actually don't mean anything.
 
 For instance, "cultural fit" is something that is extremely important to all companies because they know that creative knowledge workers need to get along in order to really function well. At the same time, this is also the most fuzzy metric and sometimes almost intentionally so.
 
-In most cases I have seen so far "cultural fit" means "Well, he's nice and doesn't seem to be an asshole, so check!".
+Quite often "cultural fit" means "Well, he's nice and doesn't seem to be an asshole, so check!".
 
 The same goes for things like "Proficient in language X": TODO
-TODO: Or, and that is my favourite one: looking for [talent]((http://static6.businessinsider.com/image/56a0ec0de6183ebe4a8bab61-1190-625/ufc-champion-conor-mcgregor-has-a-great-perspective-on-what-it-takes-to-be-successful.jpg))
 
 Now the question becomes: What should you actually look for in a candidate?
 
@@ -37,7 +36,7 @@ Now the question becomes: What should you actually look for in a candidate?
 
 ![Empathy](https://mcclewis.files.wordpress.com/2013/07/gregory-colbert-man-animal-04.jpg)
 
-There was a fascinating article in the New York Times recently that was called [What Google Learned From Its Quest to Build the Perfect Team](http://www.nytimes.com/2016/02/28/magazine/what-google-learned-from-its-quest-to-build-the-perfect-team.html). Google had been trying to find out what kind of behavioural patterns all their successful teams shared. To their surprise, all the obvious metrics failed. Common wisdom like "Put the best guys in a squad" did not work out sometimes and they couldn't really figure out why. Then, after years, they basically realised that all successful teams shared 2 traits (quoting from the article directly):
+There was a fascinating article in the New York Times recently that was called ["What Google Learned From Its Quest to Build the Perfect Team"](http://www.nytimes.com/2016/02/28/magazine/what-google-learned-from-its-quest-to-build-the-perfect-team.html). Google had been trying to find out what kind of behavioural patterns all their successful teams shared. To their surprise, all the obvious metrics failed. Common wisdom like "Put the best guys in a room and let them figure it out" did not work out sometimes and they couldn't really figure out why. Then, after years, they basically realised that all successful teams shared 2 traits:
 
 >>
 As the researchers studied the groups, however, they noticed two behaviors that all the good teams generally shared. First, on the good teams, members spoke in roughly the same proportion, a phenomenon the researchers referred to as ‘‘equality in distribution of conversational turn-taking.’’ On some teams, everyone spoke during each task; on others, leadership shifted among teammates from assignment to assignment. But in each case, by the end of the day, everyone had spoken roughly the same amount. ‘‘As long as everyone got a chance to talk, the team did well,’’ Woolley said. ‘‘But if only one person or a small group spoke all the time, the collective intelligence declined.’’
@@ -45,17 +44,17 @@ Second, the good teams all had high ‘‘average social sensitivity’’ — a
 
 I had never thought about it this (apparently nobody had) but in hindsight, this seems to make sense, doesn't it?
 
-If you're know thinking "damn, I'm not the most emphatic person on this planet" like I did after reading this, don't you worry, you can learn that!
+If you're know thinking "damn, I'm not the most emphatic person on this planet" like I did after reading this, there are good news for you. Like almost all other skills you can learn empathy as well.
 
-Chad Fowler wrote an [excellent article](http://lifehacker.com/why-empathy-is-your-most-important-skill-and-how-to-pr-1505011685) on the subject. I also feel that [Six Habits of Highly Empathic People](http://greatergood.berkeley.edu/article/item/six_habits_of_highly_empathic_people1) is highly inspirational.
+Chad Fowler wrote an [excellent article](http://lifehacker.com/why-empathy-is-your-most-important-skill-and-how-to-pr-1505011685) on the subject. You also might want to check out [Six Habits of Highly Empathic People](http://greatergood.berkeley.edu/article/item/six_habits_of_highly_empathic_people1).
 
 ### Communication
 
 ![Communication](http://10936-presscdn-0-17.pagely.netdna-cdn.com/wp-content/uploads/2015/11/Labor-of-love.jpg)
 
-The best pundit in his field is utterly worthless if he can't communicate properly.
+The best pundit in his field is doesn't do you any good if he can't communicate properly.
 
-Again, this is a fuzzy field. There's somewhat surprisingly (at least it was to me) thin line between a succinct mail sent out to all stakeholders and huge fyi mails by default as part of a "cover your ass" mentality.
+Again, this is a fuzzy field. There's a surprisingly thin line between a succinct mail sent out to all stakeholders and huge fyi mails by default as part of a "cover your ass" mentality.
 
 What makes for good communication?
 
@@ -83,9 +82,11 @@ The key part here is
 
 You should hire motivated people only. That sounds like an empty phrase because nobody would disagree with openly. But I've almost never seen any company that actually really made this a relevant attribute in your hiring process.
 
-### Self-reliance
+### Problem solving attitude
 
-There is a certain type of people that is especially prevalent in big corporations: The kind of people that you approach for help with one problem and after you come back from them you kind of realize that they didn't help you at all, but instead tried everything in their power to not help, but to push back.
+![The problem is your attitude](http://forevergoodlife.com/wp-content/uploads/2016/07/16_07_08_Quote-The-Problem-Is-Your-Attitude.jpg)
+
+There is a certain type of people that is especially prevalent in big corporations: The kind of people that you approach for help with one problem and after you come back from them you kind of realize that they didn't help you at all, but instead tried everything in their power to not help, but to push back. Sometimes they even managed to gave you **more** problems.
 
 Now that might happen out of malintent or just out of pure laziness but the most common reason I have seen so far is insecurity about your own abilities or to put it differently: A lack of self-reliance.
 
@@ -98,6 +99,8 @@ I've probably had a conversation like the following in one way or another dozens
 "Yeah, our monitoring showed some weird numbers the hours before the downtime"
 "So....why didn't you check then"
 "Well, we were hoping it would eventually go away and after a while it seemed like it had fixed itself"
+
+Proactivity is also listed as the number 1 habit of [highly effective people](https://www.stephencovey.com/7habits/7habits-habit1.php).
 
 ### Experience
 
@@ -137,6 +140,9 @@ What we covered today:
 
 * Conventional hiring wisdom is flawed at best because it overvalues tangible features and neglects intangible ones
 * TODO
+
+Overall I tend to be more focused on potential ("what could the candidate be doing") instead of on history ("what has the candidate been doing") since talent is [vastly overrated]((http://static6.businessinsider.com/image/56a0ec0de6183ebe4a8bab61-1190-625/ufc-champion-conor-mcgregor-has-a-great-perspective-on-what-it-takes-to-be-successful.jpg))
+) and, given you are motivated, you can become good at anything in a reasonable amount of time (mind that I said "good", not "excellent", that would be another story).
 
 The next question we should now look into are probably:
 
