@@ -1,12 +1,17 @@
 
+![Rockstars](https://i.ytimg.com/vi/DteDc717FZQ/maxresdefault.jpg)
+
 I have been doing tech recruiting for start-ups over the last 10 years and oh boy, did I fuck up a lot. On the plus side of things, I did also learn a lot about human behaviour, [hiring bias](http://recruiterbox.com/blog/remove-hiring-bias-from-recruitment-process/) and common misconceptions about what constitutes a "good" team member.
 
-I have seen the biggest douche bags called the "top performers" and the actual performers "constant underachievers". Actually that's a pretty common topic I have seen across companies. Human perception is pretty freakin' bad. We overvalue merits that are tangible and undervalue merits that are kind of fuzzy. Take the rockstar developer (sometimes also referred to as [ninja](https://www.quora.com/Why-are-engineers-called-rockstars-and-ninjas)) for instance. People refer to a "rockstar developer" as to somebody that is exceptionally skilled and that literally carries the whole company on his back. Unfortunately that's not all: A "rockstar" is a rockstar for a reason and only rarely communicates with mere mortals. Most senior team members I have ever talked to or [read](https://news.ycombinator.com/item?id=1757059) have a [strong aversion]((http://www.hanselman.com/blog/TheMythOfTheRockstarProgrammer.aspx)) towards those rockstars, but this doesn't mean that the terminology is used any less in software development recruiting unfortunately.
+I have seen the biggest douche bags called the "top performers" and the actual performers "constant underachievers". Actually that's a pretty common topic I have seen across many organizations. Human perception is pretty freakin' bad. We overvalue merits that are tangible and undervalue merits that are kind of fuzzy. Take the "rockstar developer" for instance (sometimes also called a [ninja](https://www.quora.com/Why-are-engineers-called-rockstars-and-ninjas)). People refer to a "rockstar developer" as to somebody that is exceptionally skilled and that literally carries the whole company on his back. Unfortunately that's not all: A "rockstar" is a rockstar for a reason and only rarely communicates with mere mortals. Most senior team members I have ever talked to or [read](https://news.ycombinator.com/item?id=1757059) have a [strong aversion](http://www.hanselman.com/blog/TheMythOfTheRockstarProgrammer.aspx) towards those rockstars (with statements like "bratty prima donna" being quite common).
 
-A classical set up I probably have seen dozens of time is that one of those rockstar delivers this super useful new backend feature that will be used on the web frontend everybody has been waiting for.
+But this doesn't mean that the terminology is used any less in recruiting unfortunately.
 
-Problem is that he didn't really care about communicating this. QA is missing. Normally not an issue since developers work in a squad where QA is a part of the team (you're doing this, right?) but that rockstar never actually fit in anywhere in so you kind of let him work on his own. Supervision by the product team was spotty at best since nobody really got along with our rockstar (which imposes a high entry barrier for communications) and so on and so on.
-Fast forward 6 months: The feature is still not live, everybody involved is highly frustrated and the first team members are starting to click on the latest "Looking for a new challenge" linkedin contact requests.
+A classical set up I probably have seen dozens of time is that one of those rockstars delivers this super useful new backend feature that will be used on the web frontend everybody has been waiting for.
+
+Problem is that he didn't really care about communicating this. QA is missing. Normally not an issue since developers work in a squad where QA is a part of the team (you're doing this, right?) but that rockstar never actually fit in anywhere in so you kind of let him work on his own. Supervision by the product team was spotty at best since nobody really got along with our rockstar and so on and so on.
+
+Fast forward 6 months: The feature is still not live, everybody involved is highly frustrated and the first team members are starting to click on the latest "Looking for a new challenge?" linkedin contact requests.
 
 Now there are obviously a lot of things that went wrong (and not just with that single developer) but in most cases the overall perception will be **that the rockstar developer delivered**. While the other teams failed to so.
 
@@ -22,19 +27,20 @@ I think the way most companies evaluate candidates for tech jobs (probably for a
 
 It's easy to fall prey to conventional recruiting wisdom because it offers you the quickest reward possible: It will get you a lot of candidates fast because common recruiting wisdom relies on a couple of core metrics that you can easily train on your HR intern in an hour or two.
 
-The problem with all of those metrics: They actually don't mean anything.
+**The problem with all of those metrics is that actually don't mean anything.**
 
-"Proficient in language X"? A vanity metric. You can do anything for 10 years or more and still suck at it if you don't embrace constant self-improvement and life-long learning.
-Show me code. Show me your open source contributions. If you don't have any, fine by me. But you have a blog where you have written about it. Or tweeted about a conference visit. Anything.
+*Proficient in language / technology / eco system X* - a vanity metric. You can do anything for 10 years or more and still suck at it if you have not embraced constant self-improvement and life-long learning.
+
+Show me code. Show me your open source contributions. If you don't have any, fine by me. A blog where you have written about your latest learnings works as well. Or an active conference life you tweet about. Or you attended a user group and maybe even did a presentation. Literally anything that shows that you actually care about what you do would suffice.
 
 Somebody saying he has 10 years of experience in X with no traces to be found anywhere on the web except in his CV is probably not the guy you want. Good news is, you can train your HR team how to get a [first impression](https://troessner.svbtle.com/how-to-use-github-to-evaluate-developers) about a candidate's technical skills without being technical themselves in most cases.
 Bad news is, this costs more time so it is **not as rewarding** as quickly ticking off a checkbox that says "can code in Ruby".
 
-"Cultural fit" is something else that seems to be extremely important to most companies because they know that creative knowledge workers need to get along in order to really function well. At the same time, this is also the most fuzzy metric and sometimes it seems almost intentionally so.
+"*Cultural fit* is something else that seems to be extremely important to most companies because they know that creative knowledge workers need to get along in order to really function well. At the same time, this is also the most fuzzy metric and sometimes it seems almost intentionally so.
 
-I have rarely seen a company that actually had a thorough list of soft skills they were looking for in a candidate even though those soft skills were one of their top priorities.
+I have rarely seen a company that actually had a thorough list of soft skills they were looking for in a candidate even though they would claim it was one of their top priorities.
 
-**So now the question becomes: What should you actually look for in a candidate?**
+**So what should you actually look for in a candidate?**
 
 ### Empathy is king
 
@@ -50,17 +56,17 @@ Second, the good teams all had high ‘‘average social sensitivity’’ — a
 
 I had never thought about it this (apparently nobody had) but in hindsight, this seems to make sense, doesn't it?
 
-If you're know thinking "damn, I'm not the most emphatic person on this planet" like I did after reading this, there are good news for you. Like almost all other skills you can learn empathy as well.
+If you're now thinking "damn, I'm not the most emphatic person on this planet for sure" like I did after reading this, don't worry - like almost all other skills you can learn empathy as well.
 
-Chad Fowler wrote an [excellent article](http://lifehacker.com/why-empathy-is-your-most-important-skill-and-how-to-pr-1505011685) on the subject. You also might want to check out ["Six Habits of Highly Empathic People"](http://greatergood.berkeley.edu/article/item/six_habits_of_highly_empathic_people1).
+Chad Fowler wrote an [excellent article](http://lifehacker.com/why-empathy-is-your-most-important-skill-and-how-to-pr-1505011685) on the subject with a lot of good advice on how develop your empathy skills. You also might want to check out ["Six Habits of Highly Empathic People"](http://greatergood.berkeley.edu/article/item/six_habits_of_highly_empathic_people1).
 
 ### Communication
 
 ![Communication](https://d3rtdcymtfngrm.cloudfront.net/wp-content/uploads/2012/11/communication.jpg)
 
-Again, this is a fuzzy field. There's a surprisingly thin line between a succinct mail sent out to all stakeholders and huge fyi mails by default as part of a "cover your ass" mentality.
+Communication skills is probably one of the fuzziest attributes in all soft skills. There's a surprisingly thin line between a succinct mail sent out to all stakeholders and huge fyi mails by default as part of a "cover your ass" mentality.
 
-What makes for good communication?
+**What makes for good communication?**
 
 * Being succinct but still assuming that your receiver has little knowledge about the topic. Yes, that means you should always start with a short introduction and not jump right into the middle even when you think that all stakeholders already know what it is about. Because there's a high chance they don't when [you just assume context](http://blogs.gartner.com/hank-barnes/2016/02/16/the-dangers-of-assuming-context/).
 * Knowing whom to include
@@ -86,7 +92,7 @@ The key part here is
 
 Great, so let's just hire motivated people only and the problem is solved!
 
-You should hire motivated people only. That sounds like an empty phrase because nobody would disagree with openly. But I've almost never seen any company that actually really made this a relevant attribute in your hiring process.
+That sounds like an empty phrase and it is one indeed because probably nobody would disagree with it. But I've almost never seen any company that actually really made this a relevant attribute in your hiring process.
 
 The biggest problem here that getting highly motivated candidates implies a high degree of transparency and openness from the organization itself.
 You can't expect a developer candidate to be highly motivated when you're closed up about your tech stack, now can you? You can't expect a product guy to be motivated about your product if everything is hidden behind registration walls and key account managers that vet you before anything else.
@@ -113,12 +119,12 @@ Proactivity is also listed as the number 1 habit of [highly effective people](ht
 
 ### Experience
 
-TODO: Pic
+![drop database production](http://jordan.broughs.net/images/days-since-drop-production.png)
+
+There's a quote from Thomas John Watson Sr., first CEO at IBM and inspiration for name of Watson (computer):
 
  >>
  Recently, I was asked if I was going to fire an employee who made a mistake that cost the company $600,000. No, I replied, I just spent $600,000 training him. Why would I want somebody to hire his experience?
-
-Thomas John Watson Sr., first CEO at IBM and inspiration for name of Watson (computer)
 
 You can learn everything for sure but there just things you **need** to have experienced yourself. You need to have shut down the production database accidentally to **really** understand that you need to be careful what console window you're typing in what. You need to have written that bad bug that killed your booking funnel to understand that QA needs to be an integral part of your workflow. 
 
@@ -146,12 +152,13 @@ Why?
 
 Because over the years I found out that it's way harder to develop skills like empathy than it is to develop technical skills. Somebody who is diligent and analytical, has the energy and the drive, communicates well with the team and knows how to deal with people in general will pick up tech skills fast. Very fast.
 
-### Look for potential, not the present
+### Focus more on potential than on history or talent
 
-Quite often we are obsessed with looking at what a candidate can do right now.
+[Talent](http://static6.businessinsider.com/image/56a0ec0de6183ebe4a8bab61-1190-625/ufc-champion-conor-mcgregor-has-a-great-perspective-on-what-it-takes-to-be-successful.jpg)
 
-I think we should be more focused on potential ("what could the candidate be capable of") instead of the history ("what has the candidate been doing") since talent is [vastly overrated]((http://static6.businessinsider.com/image/56a0ec0de6183ebe4a8bab61-1190-625/ufc-champion-conor-mcgregor-has-a-great-perspective-on-what-it-takes-to-be-successful.jpg))
-) and, given you are motivated, you can become good at anything in a reasonable amount of time (mind that I said "good", not "excellent", that would be another story).
+Quite often we are obsessed with looking at what a candidate can do right now. Sometimes we call it skills, sometimes it's called talent.
+
+I think we should be more focused on potential ("what could the candidate be capable of") instead of the history ("what has the candidate been doing"). Given you are motivated, you can become good at anything in a reasonable amount of time (mind that I said "good", not "excellent", that would be another story).
 
 ### Recap
 
