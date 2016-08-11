@@ -1,9 +1,9 @@
 
-I have been doing tech recruiting for start-ups over the last 10 years and oh boy, did I fuck up a lot. On the plus side of things, I did also learn a lot about human behaviour, [hiring bias](http://recruiterbox.com/blog/remove-hiring-bias-from-recruitment-process/) and common misconceptions about what constitutes a "good" team member. 
+I have been doing tech recruiting for start-ups over the last 10 years and oh boy, did I fuck up a lot. On the plus side of things, I did also learn a lot about human behaviour, [hiring bias](http://recruiterbox.com/blog/remove-hiring-bias-from-recruitment-process/) and common misconceptions about what constitutes a "good" team member.
 
 I have seen the biggest douche bags called the "top performers" and the actual performers "constant underachievers". Actually that's a pretty common topic I have seen across companies. Human perception is pretty freakin' bad. We overvalue merits that are tangible and undervalue merits that are kind of fuzzy. Take the rockstar developer (sometimes also referred to as [ninja](https://www.quora.com/Why-are-engineers-called-rockstars-and-ninjas)) for instance. People refer to a "rockstar developer" as to somebody that is exceptionally skilled and that literally carries the whole company on his back. Unfortunately that's not all: A "rockstar" is a rockstar for a reason and only rarely communicates with mere mortals. Most senior team members I have ever talked to or [read](https://news.ycombinator.com/item?id=1757059) have a [strong aversion]((http://www.hanselman.com/blog/TheMythOfTheRockstarProgrammer.aspx)) towards those rockstars, but this doesn't mean that the terminology is used any less in software development recruiting unfortunately.
 
-A classical set up I probably have seen dozens of time is that one of those rockstar delivers this super useful new backend feature that will be used on the web frontend everybody has been waiting for. 
+A classical set up I probably have seen dozens of time is that one of those rockstar delivers this super useful new backend feature that will be used on the web frontend everybody has been waiting for.
 
 Problem is that he didn't really care about communicating this. QA is missing. Normally not an issue since developers work in a squad where QA is a part of the team (you're doing this, right?) but that rockstar never actually fit in anywhere in so you kind of let him work on his own. Supervision by the product team was spotty at best since nobody really got along with our rockstar (which imposes a high entry barrier for communications) and so on and so on.
 Fast forward 6 months: The feature is still not live, everybody involved is highly frustrated and the first team members are starting to click on the latest "Looking for a new challenge" linkedin contact requests.
@@ -107,8 +107,7 @@ Good thing is you can develop such an attitude. There are probably gazillions of
 
 ![Proactivity](https://bobchoat.files.wordpress.com/2014/04/initiative.jpg)
 
-A lack of proactivity ....
-"Well, we were hoping it would eventually go away and after a while it seemed like it had fixed itself"
+A lack of proactivity goes a long way. Simple cases like "Yeah, our monitoring showed some weird numbers the hours before the downtime but we were hoping it would eventually go away and after a while it seemed like it had fixed itself" are the most obvious. More complex cases involve **just** doing enough so that you can't be simply called lazy and staying strictly inside your comfort zone. Those cases are harder to spot but at the same times those that do the real damage since they will waste the time of other team members as well.
 
 Proactivity is also listed as the number 1 habit of [highly effective people](https://www.stephencovey.com/7habits/7habits-habit1.php).
 
@@ -121,15 +120,16 @@ TODO: Pic
 
 Thomas John Watson Sr., first CEO at IBM and inspiration for name of Watson (computer)
 
-You can learn everything for sure but there just things you **need** to have experienced yourself. You need to have shut down the production database in your life to **really** understand that you need to be careful what console window you're typing in what. You need to have deployed that critical bug that cost your company....
+You can learn everything for sure but there just things you **need** to have experienced yourself. You need to have shut down the production database accidentally to **really** understand that you need to be careful what console window you're typing in what. You need to have written that bad bug that killed your booking funnel to understand that QA needs to be an integral part of your workflow. 
+
+As a future employer it's obviously best if you have made those mistakes already obviously ;)
+"What was the biggest fuckup you caused in your professionall life?" should be one of your standard questions in the initial interviews with a candidate.
 
 ### Structured and analytical approach
 
-Do a lot of your projects look like this?
-
 ![Success](http://1.bp.blogspot.com/-HArgrMPQ3NI/UFCL1BVeJDI/AAAAAAAAAHg/4ZvTDUSmeVY/s1600/E+to+P+Visual+Aid.jpg)
 
-Mine too.
+Do a lot of your projects look like this?
 
 We're humans and human will go for the quickest reward possible. And what's the quickest reward in software development? Programming. Doing something. Getting shit done.
 Problem is that often you don't know what "Getting shit done" actually means. Usually you need to talk to a lot of people, understand problems in depth, research possible solutions, read on things, prepare an action plan of how to do things and why. Which is something that is not particularly rewarding and in worst case so painful, that people shy away from it.
@@ -140,23 +140,31 @@ Someone with a structured and analytical approach will do all of the above and m
 
 ![Technical Knowledge](https://cdn.meme.am/instances/500x/51744411.jpg)
 
-Alright, so here it is: Technical knowledge is the **least important** attribute I'm looking for in a developer. 
+Alright, so here it is: Technical knowledge is the **least important** attribute I'm looking for in a developer.
+
 Why?
+
 Because over the years I found out that it's way harder to develop skills like empathy than it is to develop technical skills. Somebody who is diligent and analytical, has the energy and the drive, communicates well with the team and knows how to deal with people in general will pick up tech skills fast. Very fast.
+
+### Look for potential, not the present
+
+Quite often we are obsessed with looking at what a candidate can do right now.
+
+I think we should be more focused on potential ("what could the candidate be capable of") instead of the history ("what has the candidate been doing") since talent is [vastly overrated]((http://static6.businessinsider.com/image/56a0ec0de6183ebe4a8bab61-1190-625/ufc-champion-conor-mcgregor-has-a-great-perspective-on-what-it-takes-to-be-successful.jpg))
+) and, given you are motivated, you can become good at anything in a reasonable amount of time (mind that I said "good", not "excellent", that would be another story).
 
 ### Recap
 
 What we covered today:
 
 * Conventional hiring wisdom is flawed at best because it overvalues tangible features and neglects intangible ones
-* TODO
-
-Overall I tend to be more focused on potential ("what could the candidate be doing") instead of on history ("what has the candidate been doing") since talent is [vastly overrated]((http://static6.businessinsider.com/image/56a0ec0de6183ebe4a8bab61-1190-625/ufc-champion-conor-mcgregor-has-a-great-perspective-on-what-it-takes-to-be-successful.jpg))
-) and, given you are motivated, you can become good at anything in a reasonable amount of time (mind that I said "good", not "excellent", that would be another story).
+* The fuzzy term "soft skills" is mostly undefined and as such often way underrated
+* Tech skills are overrated
+* Care more about the potential than about the status quo
 
 The next question we should now look into are probably:
 
-* How do we find people that fit the profile above?
+* How do we find people that fit the profile above without scanning thousands of people?
 * If the attributes above are not tangible, how do you actually select people based on it?
 * How do we get them into our recruiting funnel?
 
