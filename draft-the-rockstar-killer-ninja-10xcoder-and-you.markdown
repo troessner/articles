@@ -1,18 +1,18 @@
 
 I have been doing tech recruiting for start-ups over the last 10 years and oh boy, did I fuck up a lot. On the plus side of things, I did also learn a lot about human behaviour, [hiring bias](http://recruiterbox.com/blog/remove-hiring-bias-from-recruitment-process/) and common misconceptions about what constitutes a "good" team member. 
 
-I have seen the biggest douche bags called the "top performers" and the actual performers "constant underachievers". Actually that's a pretty common topic I have seen across companies. Human perception is pretty freakin' bad. We overvalue merits that are tangible and undervalue merits that are kind of fuzzy. Take the rockstar developer (sometimes also referred to as [ninja](https://www.quora.com/Why-are-engineers-called-rockstars-and-ninjas) or killer) for instance. People refer to a "rockstar developer" as to somebody that is exceptionally skilled and that literally carries the whole company on his back. Unfortunately that's not all: A "rockstar" is a rockstar for a reason and only rarely communicates with mere mortals.
+I have seen the biggest douche bags called the "top performers" and the actual performers "constant underachievers". Actually that's a pretty common topic I have seen across companies. Human perception is pretty freakin' bad. We overvalue merits that are tangible and undervalue merits that are kind of fuzzy. Take the rockstar developer (sometimes also referred to as [ninja](https://www.quora.com/Why-are-engineers-called-rockstars-and-ninjas)) for instance. People refer to a "rockstar developer" as to somebody that is exceptionally skilled and that literally carries the whole company on his back. Unfortunately that's not all: A "rockstar" is a rockstar for a reason and only rarely communicates with mere mortals. Most senior team members I have ever talked to or [read](https://news.ycombinator.com/item?id=1757059) have a [strong aversion]((http://www.hanselman.com/blog/TheMythOfTheRockstarProgrammer.aspx)) towards those rockstars, but this doesn't mean that the terminology is used any less in software development recruiting unfortunately.
 
 A classical set up I probably have seen dozens of time is that one of those rockstar delivers this super useful new backend feature that will be used on the web frontend everybody has been waiting for. 
 
-Problem is that he didn't really care about communicating this. QA is missing. Normally not an issue since developers work in a squad where QA is a part of the team (you're doing this, right?) but that rockstar never actually fit in anywhere in so you kind of let him work on his own. Supervision by the product team was spotty at best since nobody there really got along with our that dev (which imposes a high entry barrier for communications) and so on and so on.
-Fast forward 6 months: The feature is still not live, everybody involved is highly frustrated and the first team members are starting to click on the latest "Looking for a new challenge" linkedin requests.
+Problem is that he didn't really care about communicating this. QA is missing. Normally not an issue since developers work in a squad where QA is a part of the team (you're doing this, right?) but that rockstar never actually fit in anywhere in so you kind of let him work on his own. Supervision by the product team was spotty at best since nobody really got along with our rockstar (which imposes a high entry barrier for communications) and so on and so on.
+Fast forward 6 months: The feature is still not live, everybody involved is highly frustrated and the first team members are starting to click on the latest "Looking for a new challenge" linkedin contact requests.
 
-Now there are obviously a lot of things that went wrong (and not just with that single developer) but in most cases the overall perception will be that the rockstar developer delivered. While the other teams failed to so.
+Now there are obviously a lot of things that went wrong (and not just with that single developer) but in most cases the overall perception will be **that the rockstar developer delivered**. While the other teams failed to so.
 
 **So how can you make sure this doesn't happen to you?**
 
-Apart from the organisational problems the obvious solution to this is not hiring those kind of guys. The problem is that common recruiting wisdom says to look for developers that are technically capable first and then look for their so called "soft skills" (which is a very fuzzy term which roughly translates to "the candidate should not be an obvious asshole").
+Apart from the organisational problems the obvious solution to this is not hiring those kind of guys. The problem is that common recruiting wisdom says to look for developers that are technically capable first and then look for their so called "soft skills", which is a very fuzzy term roughly translating to "the candidate should not be an obvious asshole".
 
 I think the way most companies evaluate candidates for tech jobs (probably for all jobs) is upside down.
 
@@ -24,44 +24,48 @@ It's easy to fall prey to conventional recruiting wisdom because it offers you t
 
 The problem with all of those metrics: They actually don't mean anything.
 
-For instance, "cultural fit" is something that is extremely important to all companies because they know that creative knowledge workers need to get along in order to really function well. At the same time, this is also the most fuzzy metric and sometimes almost intentionally so.
+"Proficient in language X"? A vanity metric. You can do anything for 10 years or more and still suck at it if you don't embrace constant self-improvement and life-long learning.
+Show me code. Show me your open source contributions. If you don't have any, fine by me. But you have a blog where you have written about it. Or tweeted about a conference visit. Anything.
 
-Quite often "cultural fit" means "Well, he's nice and doesn't seem to be an asshole, so check!".
+Somebody saying he has 10 years of experience in X with no traces to be found anywhere on the web except in his CV is probably not the guy you want. Good news is, you can train your HR team how to get a [first impression](https://troessner.svbtle.com/how-to-use-github-to-evaluate-developers) about a candidate's technical skills without being technical themselves in most cases.
+Bad news is, this costs more time so it is **not as rewarding** as quickly ticking off a checkbox that says "can code in Ruby".
 
-The same goes for things like "Proficient in language X": TODO
+"Cultural fit" is something else that seems to be extremely important to most companies because they know that creative knowledge workers need to get along in order to really function well. At the same time, this is also the most fuzzy metric and sometimes it seems almost intentionally so.
 
-Now the question becomes: What should you actually look for in a candidate?
+I have rarely seen a company that actually had a thorough list of soft skills they were looking for in a candidate even though those soft skills were one of their top priorities.
+
+**So now the question becomes: What should you actually look for in a candidate?**
 
 ### Empathy is king
 
 ![Empathy](https://mcclewis.files.wordpress.com/2013/07/gregory-colbert-man-animal-04.jpg)
 
-There was a fascinating article in the New York Times recently that was called ["What Google Learned From Its Quest to Build the Perfect Team"](http://www.nytimes.com/2016/02/28/magazine/what-google-learned-from-its-quest-to-build-the-perfect-team.html). Google had been trying to find out what kind of behavioural patterns all their successful teams shared. To their surprise, all the obvious metrics failed. Common wisdom like "Put the best guys in a room and let them figure it out" did not work out sometimes and they couldn't really figure out why. Then, after years, they basically realised that all successful teams shared 2 traits:
+There was a fascinating article in the New York Times recently that was called ["What Google Learned From Its Quest to Build the Perfect Team"](http://www.nytimes.com/2016/02/28/magazine/what-google-learned-from-its-quest-to-build-the-perfect-team.html). Google had been trying to find out what kind of behavioural patterns all their successful teams shared. To their surprise, all the obvious metrics failed. Common wisdom like "Put the best guys in a room and let them figure it out" did not work out sometimes and they couldn't really figure out why. Then, after years, they realised that all successful teams shared 2 traits:
 
 >>
 As the researchers studied the groups, however, they noticed two behaviors that all the good teams generally shared. First, on the good teams, members spoke in roughly the same proportion, a phenomenon the researchers referred to as ‘‘equality in distribution of conversational turn-taking.’’ On some teams, everyone spoke during each task; on others, leadership shifted among teammates from assignment to assignment. But in each case, by the end of the day, everyone had spoken roughly the same amount. ‘‘As long as everyone got a chance to talk, the team did well,’’ Woolley said. ‘‘But if only one person or a small group spoke all the time, the collective intelligence declined.’’
+
+>>
 Second, the good teams all had high ‘‘average social sensitivity’’ — a fancy way of saying they were skilled at intuiting how others felt based on their tone of voice, their expressions and other nonverbal cues. One of the easiest ways to gauge social sensitivity is to show someone photos of people’s eyes and ask him or her to describe what the people are thinking or feeling — an exam known as the Reading the Mind in the Eyes test. People on the more successful teams in Woolley’s experiment scored above average on the Reading the Mind in the Eyes test. They seemed to know when someone was feeling upset or left out. People on the ineffective teams, in contrast, scored below average. They seemed, as a group, to have less sensitivity toward their colleagues.
 
 I had never thought about it this (apparently nobody had) but in hindsight, this seems to make sense, doesn't it?
 
 If you're know thinking "damn, I'm not the most emphatic person on this planet" like I did after reading this, there are good news for you. Like almost all other skills you can learn empathy as well.
 
-Chad Fowler wrote an [excellent article](http://lifehacker.com/why-empathy-is-your-most-important-skill-and-how-to-pr-1505011685) on the subject. You also might want to check out [Six Habits of Highly Empathic People](http://greatergood.berkeley.edu/article/item/six_habits_of_highly_empathic_people1).
+Chad Fowler wrote an [excellent article](http://lifehacker.com/why-empathy-is-your-most-important-skill-and-how-to-pr-1505011685) on the subject. You also might want to check out ["Six Habits of Highly Empathic People"](http://greatergood.berkeley.edu/article/item/six_habits_of_highly_empathic_people1).
 
 ### Communication
 
-![Communication](http://10936-presscdn-0-17.pagely.netdna-cdn.com/wp-content/uploads/2015/11/Labor-of-love.jpg)
-
-The best pundit in his field is doesn't do you any good if he can't communicate properly.
+![Communication](https://d3rtdcymtfngrm.cloudfront.net/wp-content/uploads/2012/11/communication.jpg)
 
 Again, this is a fuzzy field. There's a surprisingly thin line between a succinct mail sent out to all stakeholders and huge fyi mails by default as part of a "cover your ass" mentality.
 
 What makes for good communication?
 
-* Being succinct but still assuming that your receiver has little knowledge about the topic. Yes, that means you should always start with a short introduction and not jump right into the middle even when you think that all stakeholders already know what it is about. Because they probably are not. 
+* Being succinct but still assuming that your receiver has little knowledge about the topic. Yes, that means you should always start with a short introduction and not jump right into the middle even when you think that all stakeholders already know what it is about. Because there's a high chance they don't when [you just assume context](http://blogs.gartner.com/hank-barnes/2016/02/16/the-dangers-of-assuming-context/).
 * Knowing whom to include
-* Even more important: Knowing whom to exclude because the topic is not relevant. Having half the company on cc is not only pointless, it's also damaging because a lot people **will** read those mails and waste quite some time doing so. I think [Jeff Bezo's 2 pizza rule](http://www.businessinsider.com/jeff-bezos-two-pizza-rule-for-productive-meetings-2013-10?IR=T) does not only apply to meetings, it applies to communication in general (with the rare exception for topics that really are of interest for a broader audience)
-* 100 other attributes I won't list here because smarter people than me have written [quite](TODO) [some](TODO) [books](TODO) about this topic.
+* Maybe even more important: Knowing whom to exclude because the topic is not relevant. I think [Jeff Bezo's 2 pizza rule](http://www.businessinsider.com/jeff-bezos-two-pizza-rule-for-productive-meetings-2013-10?IR=T) does not only apply to meetings, it applies to communication in general (with the rare exception for topics that really are of interest for a broader audience)
+* A lot of other attributes like [bias free communication](http://www.inclusion.msu.edu/Education/BiasFreeCommunication.html) or being able [give and receive feedback](https://www.psychologytoday.com/articles/201103/how-take-feedback)
 
 Bottom line here is, all of those attributes should be part of hiring evaluation as well.
 
@@ -69,7 +73,7 @@ Bottom line here is, all of those attributes should be part of hiring evaluation
 
 ![How bad do you want it?](http://etinspires.com/wp-materials/uploads/2013/11/hbdywi-600x400.jpg)
 
-There was an interesting thread about the mythical 10x developer [on hackernews](https://news.ycombinator.com/item?id=4954003) a while ago.
+There was an interesting thread about being highly productive [on hackernews](https://news.ycombinator.com/item?id=4954003) a while ago.
 
 One of the top comments caught my eye:
 
@@ -80,24 +84,30 @@ The key part here is
 
 >> When I'm producing 10 times as much as my peers, I'm working on something I want to work on.
 
+Great, so let's just hire motivated people only and the problem is solved!
+
 You should hire motivated people only. That sounds like an empty phrase because nobody would disagree with openly. But I've almost never seen any company that actually really made this a relevant attribute in your hiring process.
+
+The biggest problem here that getting highly motivated candidates implies a high degree of transparency and openness from the organization itself.
+You can't expect a developer candidate to be highly motivated when you're closed up about your tech stack, now can you? You can't expect a product guy to be motivated about your product if everything is hidden behind registration walls and key account managers that vet you before anything else.
+
+We can't all be like [buffer and their transparancy policy](https://buffer.com/transparency), granted. It is worth trying though, if it's for your candidates only.
 
 ### Problem solving attitude
 
 ![The problem is your attitude](http://forevergoodlife.com/wp-content/uploads/2016/07/16_07_08_Quote-The-Problem-Is-Your-Attitude.jpg)
 
-There is a certain type of people that is especially prevalent in big corporations: The kind of people that you approach for help with one problem and after you come back from them you kind of realize that they didn't help you at all, but instead tried everything in their power to not help, but to push back. Sometimes they even managed to gave you **more** problems.
+There is a certain type of people that is especially prevalent in big corporations. The kind of people that you approach for help with one problem and after you come back from them you kind of realize that they didn't help you at all, but instead tried everything in their power to push back. Sometimes they even managed to gave you **more** problems.
 
-Now that might happen out of malintent or just out of pure laziness but the most common reason I have seen so far is insecurity about your own abilities or to put it differently: A lack of self-reliance.
+People who lack this attitude will always try to find reasons to not do things instead of looking for ways to do things. The reasons for doing can be complex but in most cases I have seen (including my own!) it boils down to being insecure in your own abilities (so a lack of self-esteem) and being afraid to leave your own comfort zone.
+
+Good thing is you can develop such an attitude. There are probably gazillions of [articles](http://www.businessinsider.com/the-9-attitudes-of-leadership-2011-11?IR=T) about this [topic](http://www.coachingpositiveperformance.com/developing-problem-solving-mindset/) out there. I personally believe that developing a [growth mindset](http://mindsetonline.com/changeyourmindset/firststeps/) is the most important aspect, but maybe that's just me (and if you haven't read, now would be a great time to read Carol Dweck's [awesome book](http://mindsetonline.com/))).
 
 ### Proactivity
 
 ![Proactivity](https://bobchoat.files.wordpress.com/2014/04/initiative.jpg)
 
-I've probably had a conversation like the following in one way or another dozens of times in my life:
-
-"Yeah, our monitoring showed some weird numbers the hours before the downtime"
-"So....why didn't you check then"
+A lack of proactivity ....
 "Well, we were hoping it would eventually go away and after a while it seemed like it had fixed itself"
 
 Proactivity is also listed as the number 1 habit of [highly effective people](https://www.stephencovey.com/7habits/7habits-habit1.php).
