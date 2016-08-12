@@ -1,5 +1,7 @@
 
-![Rockstars](https://i.ytimg.com/vi/DteDc717FZQ/maxresdefault.jpg)
+![Rockstars](http://i.imgur.com/U3ZeFml.jpg)
+
+[Image source](http://www.gettyimages.de/)
 
 I have been doing tech recruiting for start-ups over the last 10 years and oh boy, did I fuck up a lot. On the plus side of things, I did also learn a lot about human behaviour, [hiring bias](http://recruiterbox.com/blog/remove-hiring-bias-from-recruitment-process/) and common misconceptions about what constitutes a "good" team member.
 
@@ -23,7 +25,9 @@ I think the way most companies evaluate candidates for tech jobs (probably for a
 
 ### Conventional recruiting wisdom is outdated and broken
 
-![Out of service](https://www.mrbean2cup.co.uk/repair-service-tips/img/6C/Out-of-service-Restart-to-solve-the-problem.jpg)
+![Out of service](http://i.imgur.com/Y9WeDJc.jpg)
+
+[Image source](https://www.mrbean2cup.co.uk/)
 
 It's easy to fall prey to conventional recruiting wisdom because it offers you the quickest reward possible: It will get you a lot of candidates fast because common recruiting wisdom relies on a couple of core metrics that you can easily train on your HR intern in an hour or two.
 
@@ -44,7 +48,9 @@ I have rarely seen a company that actually had a thorough list of soft skills th
 
 ### Empathy is king
 
-![Empathy](https://mcclewis.files.wordpress.com/2013/07/gregory-colbert-man-animal-04.jpg)
+![Empathy](http://i.imgur.com/uc8eZKm.jpg)
+
+[Image source](https://gregorycolbert.com/)
 
 There was a fascinating article in the New York Times recently that was called ["What Google Learned From Its Quest to Build the Perfect Team"](http://www.nytimes.com/2016/02/28/magazine/what-google-learned-from-its-quest-to-build-the-perfect-team.html). Google had been trying to find out what kind of behavioural patterns all their successful teams shared. To their surprise, all the obvious metrics failed. Common wisdom like "Put the best guys in a room and let them figure it out" did not work out sometimes and they couldn't really figure out why. Then, after years, they realised that all successful teams shared 2 traits:
 
@@ -62,7 +68,7 @@ Chad Fowler wrote an [excellent article](http://lifehacker.com/why-empathy-is-yo
 
 ### Communication
 
-![Communication](https://d3rtdcymtfngrm.cloudfront.net/wp-content/uploads/2012/11/communication.jpg)
+![Communication](http://i.imgur.com/hveZP8B.jpg)
 
 Communication skills is probably one of the fuzziest attributes in all soft skills. There's a surprisingly thin line between a succinct mail sent out to all stakeholders and huge fyi mails by default as part of a "cover your ass" mentality.
 
@@ -77,7 +83,7 @@ Bottom line here is, all of those attributes should be part of hiring evaluation
 
 ### Motivation
 
-![How bad do you want it?](http://etinspires.com/wp-materials/uploads/2013/11/hbdywi-600x400.jpg)
+![How bad do you want it?](http://i.imgur.com/LX8KUxY.jpg)
 
 There was an interesting thread about being highly productive [on hackernews](https://news.ycombinator.com/item?id=4954003) a while ago.
 
@@ -101,7 +107,7 @@ We can't all be like [buffer and their transparancy policy](https://buffer.com/t
 
 ### Problem solving attitude
 
-![The problem is your attitude](http://forevergoodlife.com/wp-content/uploads/2016/07/16_07_08_Quote-The-Problem-Is-Your-Attitude.jpg)
+![The problem is your attitude](http://i.imgur.com/88Nk5Rz.jpg)
 
 There is a certain type of people that is especially prevalent in big corporations. The kind of people that you approach for help with one problem and after you come back from them you kind of realize that they didn't help you at all, but instead tried everything in their power to push back. Sometimes they even managed to gave you **more** problems.
 
@@ -111,7 +117,9 @@ Good thing is you can develop such an attitude. There are probably gazillions of
 
 ### Proactivity
 
-![Proactivity](https://bobchoat.files.wordpress.com/2014/04/initiative.jpg)
+![Proactivity](http://i.imgur.com/QQL0tLl.jpg)
+
+[Image source](http://www.jantoo.com/)
 
 A lack of proactivity goes a long way. Simple cases like "Yeah, our monitoring showed some weird numbers the hours before the downtime but we were hoping it would eventually go away and after a while it seemed like it had fixed itself" are the most obvious. More complex cases involve **just** doing enough so that you can't be simply called lazy and staying strictly inside your comfort zone. Those cases are harder to spot but at the same times those that do the real damage since they will waste the time of other team members as well.
 
@@ -119,7 +127,9 @@ Proactivity is also listed as the number 1 habit of [highly effective people](ht
 
 ### Experience
 
-![drop database production](http://jordan.broughs.net/images/days-since-drop-production.png)
+![drop database production](http://i.imgur.com/oX0SMDo.png)
+
+[Image source](http://jordan.broughs.net/)
 
 There's a quote from Thomas John Watson Sr., first CEO at IBM and inspiration for name of Watson (computer):
 
@@ -133,7 +143,7 @@ As a future employer it's obviously best if you have made those mistakes already
 
 ### Structured and analytical approach
 
-![Success](http://1.bp.blogspot.com/-HArgrMPQ3NI/UFCL1BVeJDI/AAAAAAAAAHg/4ZvTDUSmeVY/s1600/E+to+P+Visual+Aid.jpg)
+![Success](http://i.imgur.com/8bvTbWE.jpg)
 
 Do a lot of your projects look like this?
 
@@ -144,7 +154,7 @@ Someone with a structured and analytical approach will do all of the above and m
 
 ### Technical knowledge
 
-![Technical Knowledge](https://cdn.meme.am/instances/500x/51744411.jpg)
+![Technical Knowledge](http://i.imgur.com/y48AD42.jpg)
 
 Alright, so here it is: Technical knowledge is the **least important** attribute I'm looking for in a developer.
 
@@ -154,7 +164,7 @@ Because over the years I found out that it's way harder to develop skills like e
 
 ### Focus more on potential than on history or talent
 
-[Talent](http://static6.businessinsider.com/image/56a0ec0de6183ebe4a8bab61-1190-625/ufc-champion-conor-mcgregor-has-a-great-perspective-on-what-it-takes-to-be-successful.jpg)
+![Talent](http://i.imgur.com/uDwaFob.png)
 
 Quite often we are obsessed with looking at what a candidate can do right now. Sometimes we call it skills, sometimes it's called talent.
 
