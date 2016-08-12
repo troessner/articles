@@ -23,7 +23,7 @@ Apart from the organisational problems the obvious solution to this is not hirin
 
 I think the way most companies evaluate candidates for tech jobs (probably for all jobs) is upside down.
 
-### Conventional recruiting wisdom is outdated and broken
+<h2 align="center">Conventional recruiting wisdom is outdated and broken</h2>
 
 ![Out of service](http://i.imgur.com/Y9WeDJc.jpg)
 
@@ -46,7 +46,7 @@ I have rarely seen a company that actually had a thorough list of soft skills th
 
 **So what should you actually look for in a candidate?**
 
-### Empathy is king
+<h2 align="center">Empathy is king</h2>
 
 ![Empathy](http://i.imgur.com/uc8eZKm.jpg)
 
@@ -66,7 +66,7 @@ If you're now thinking "damn, I'm not the most emphatic person on this planet fo
 
 Chad Fowler wrote an [excellent article](http://lifehacker.com/why-empathy-is-your-most-important-skill-and-how-to-pr-1505011685) on the subject with a lot of good advice on how develop your empathy skills. You also might want to check out ["Six Habits of Highly Empathic People"](http://greatergood.berkeley.edu/article/item/six_habits_of_highly_empathic_people1).
 
-### Communication
+<h2 align="center">Communication</h2>
 
 ![Communication](http://i.imgur.com/hveZP8B.jpg)
 
@@ -81,7 +81,7 @@ Communication skills is probably one of the fuzziest attributes in all soft skil
 
 Bottom line here is, all of those attributes should be part of hiring evaluation as well.
 
-### Motivation
+<h2 align="center">Motivation</h2>
 
 ![How bad do you want it?](http://i.imgur.com/LX8KUxY.jpg)
 
@@ -105,7 +105,7 @@ You can't expect a developer candidate to be highly motivated when you're closed
 
 We can't all be like [buffer and their transparancy policy](https://buffer.com/transparency), granted. It is worth trying though, if it's for your candidates only.
 
-### Problem solving attitude
+<h2 align="center">Problem solving attitude</h2>
 
 ![The problem is your attitude](http://i.imgur.com/88Nk5Rz.jpg)
 
@@ -115,7 +115,7 @@ People who lack this attitude will always try to find reasons to not do things i
 
 Good thing is you can develop such an attitude. There are probably gazillions of [articles](http://www.businessinsider.com/the-9-attitudes-of-leadership-2011-11?IR=T) about this [topic](http://www.coachingpositiveperformance.com/developing-problem-solving-mindset/) out there. I personally believe that developing a [growth mindset](http://mindsetonline.com/changeyourmindset/firststeps/) is the most important aspect, but maybe that's just me (and if you haven't read, now would be a great time to read Carol Dweck's [awesome book](http://mindsetonline.com/))).
 
-### Proactivity
+<h2 align="center">Proactivity</h2>
 
 ![Proactivity](http://i.imgur.com/QQL0tLl.jpg)
 
@@ -125,7 +125,7 @@ A lack of proactivity goes a long way. Simple cases like "Yeah, our monitoring s
 
 Proactivity is also listed as the number 1 habit of [highly effective people](https://www.stephencovey.com/7habits/7habits-habit1.php).
 
-### Experience
+<h2 align="center">Experience</h2>
 
 ![drop database production](http://i.imgur.com/oX0SMDo.png)
 
@@ -141,7 +141,7 @@ You can learn everything for sure but there just things you **need** to have exp
 As a future employer it's obviously best if you have made those mistakes already obviously ;)
 "What was the biggest fuckup you caused in your professionall life?" should be one of your standard questions in the initial interviews with a candidate.
 
-### Structured and analytical approach
+<h2 align="center">Structured and analytical approach</h2>
 
 ![Success](http://i.imgur.com/8bvTbWE.jpg)
 
@@ -152,7 +152,7 @@ Problem is that often you don't know what "Getting shit done" actually means. Us
 
 Someone with a structured and analytical approach will do all of the above and more **before** even writing one single line of code.
 
-### Technical knowledge
+<h2 align="center">Technical knowledge</h2>
 
 ![Technical Knowledge](http://i.imgur.com/y48AD42.jpg)
 
@@ -162,7 +162,7 @@ Why?
 
 Because over the years I found out that it's way harder to develop skills like empathy than it is to develop technical skills. Somebody who is diligent and analytical, has the energy and the drive, communicates well with the team and knows how to deal with people in general will pick up tech skills fast. Very fast.
 
-### Focus more on potential than on history or talent
+<h2 align="center">Focus more on potential than on history or talent</h2>
 
 ![Talent](http://i.imgur.com/uDwaFob.png)
 
@@ -170,7 +170,7 @@ Quite often we are obsessed with looking at what a candidate can do right now. S
 
 I think we should be more focused on potential ("what could the candidate be capable of") instead of the history ("what has the candidate been doing"). Given you are motivated, you can become good at anything in a reasonable amount of time (mind that I said "good", not "excellent", that would be another story).
 
-### Recap
+<h2 align="center">Recap</h2>
 
 What we covered today:
 
