@@ -5,7 +5,7 @@
 
 I have been doing tech recruiting for start-ups over the last 10 years and oh boy, did I fuck up a lot. On the plus side of things, I did also learn a lot about human behaviour, [hiring bias](http://recruiterbox.com/blog/remove-hiring-bias-from-recruitment-process/) and common misconceptions about what constitutes a "good" team member.
 
-I have seen the biggest douche bags called the "top performers" and the actual performers "constant underachievers". Actually that's a pretty common topic I have seen across many organizations. Human perception is pretty freakin' bad. We overvalue merits that are tangible and undervalue merits that are kind of fuzzy. Take the "rockstar developer" for instance (sometimes also called a [ninja](https://www.quora.com/Why-are-engineers-called-rockstars-and-ninjas)). People refer to a "rockstar developer" as to somebody that is exceptionally skilled and that literally carries the whole company on his back. Unfortunately that's not all: A "rockstar" is a rockstar for a reason and only rarely communicates with mere mortals. Most senior team members I have ever talked to or [read](https://news.ycombinator.com/item?id=1757059) have a [strong aversion](http://www.hanselman.com/blog/TheMythOfTheRockstarProgrammer.aspx) towards those rockstars (with statements like "bratty prima donna" being quite common).
+I have seen the biggest douche bags called the "top performers" and the actual performers "constant underachievers". Actually that's a pretty common topic I have seen across many organisations. Human perception is pretty freakin' bad. We overvalue merits that are tangible and undervalue merits that are kind of fuzzy. Take the "rockstar developer" for instance (sometimes also called a [ninja](https://www.quora.com/Why-are-engineers-called-rockstars-and-ninjas)). People refer to a "rockstar developer" as to somebody that is exceptionally skilled and that literally carries the whole company on his back. Unfortunately that's not all: A "rockstar" is a rockstar for a reason and only rarely communicates with mere mortals. Most senior team members I have ever talked to or [read](https://news.ycombinator.com/item?id=1757059) have a [strong aversion](http://www.hanselman.com/blog/TheMythOfTheRockstarProgrammer.aspx) towards those rockstars (with statements like "bratty prima donna" being quite common).
 
 But this doesn't mean that the terminology is used any less in recruiting unfortunately.
 
@@ -55,7 +55,7 @@ I have rarely seen a company that actually had a thorough list of soft skills th
 There was a fascinating article in the New York Times recently that was called ["What Google Learned From Its Quest to Build the Perfect Team"](http://www.nytimes.com/2016/02/28/magazine/what-google-learned-from-its-quest-to-build-the-perfect-team.html). Google had been trying to find out what kind of behavioural patterns all their successful teams shared. To their surprise, all the obvious metrics failed. Common wisdom like "Put the best guys in a room and let them figure it out" did not work out sometimes and they couldn't really figure out why. Then, after years, they realised that all successful teams shared 2 traits:
 
 >>
-As the researchers studied the groups, however, they noticed two behaviors that all the good teams generally shared. First, on the good teams, members spoke in roughly the same proportion, a phenomenon the researchers referred to as ‘‘equality in distribution of conversational turn-taking.’’ On some teams, everyone spoke during each task; on others, leadership shifted among teammates from assignment to assignment. But in each case, by the end of the day, everyone had spoken roughly the same amount. ‘‘As long as everyone got a chance to talk, the team did well,’’ Woolley said. ‘‘But if only one person or a small group spoke all the time, the collective intelligence declined.’’
+As the researchers studied the groups, however, they noticed two behaviours that all the good teams generally shared. First, on the good teams, members spoke in roughly the same proportion, a phenomenon the researchers referred to as ‘‘equality in distribution of conversational turn-taking.’’ On some teams, everyone spoke during each task; on others, leadership shifted among teammates from assignment to assignment. But in each case, by the end of the day, everyone had spoken roughly the same amount. ‘‘As long as everyone got a chance to talk, the team did well,’’ Woolley said. ‘‘But if only one person or a small group spoke all the time, the collective intelligence declined.’’
 
 >>
 Second, the good teams all had high ‘‘average social sensitivity’’ — a fancy way of saying they were skilled at intuiting how others felt based on their tone of voice, their expressions and other nonverbal cues. One of the easiest ways to gauge social sensitivity is to show someone photos of people’s eyes and ask him or her to describe what the people are thinking or feeling — an exam known as the Reading the Mind in the Eyes test. People on the more successful teams in Woolley’s experiment scored above average on the Reading the Mind in the Eyes test. They seemed to know when someone was feeling upset or left out. People on the ineffective teams, in contrast, scored below average. They seemed, as a group, to have less sensitivity toward their colleagues.
@@ -83,7 +83,7 @@ Bottom line here is, all of those attributes should be part of hiring evaluation
 
 <h2 align="center">Motivation</h2>
 
-![How bad do you want it?](http://i.imgur.com/LX8KUxY.jpg)
+![How bad do you want it?](http://i.imgur.com/LX8KUxY.jpg?5)
 
 There was an interesting thread about being highly productive [on hackernews](https://news.ycombinator.com/item?id=4954003) a while ago.
 
@@ -100,16 +100,16 @@ Great, so let's just hire motivated people only and the problem is solved!
 
 That sounds like an empty phrase and it is one indeed because probably nobody would disagree with it. But I've almost never seen any company that actually really made this a relevant attribute in your hiring process.
 
-The biggest problem here that getting highly motivated candidates implies a high degree of transparency and openness from the organization itself.
+The biggest problem here that getting highly motivated candidates implies a high degree of transparency and openness from the organisation itself.
 You can't expect a developer candidate to be highly motivated when you're closed up about your tech stack, now can you? You can't expect a product guy to be motivated about your product if everything is hidden behind registration walls and key account managers that vet you before anything else.
 
-We can't all be like [buffer and their transparancy policy](https://buffer.com/transparency), granted. It is worth trying though, if it's for your candidates only.
+We can't all be like [buffer and their transparency policy](https://buffer.com/transparency), granted. It is worth trying though, if it's for your candidates only.
 
 <h2 align="center">Problem solving attitude</h2>
 
-![The problem is your attitude](http://i.imgur.com/88Nk5Rz.jpg)
+![The problem is your attitude](http://i.imgur.com/Qq5b2R7.jpg)
 
-There is a certain type of people that is especially prevalent in big corporations. The kind of people that you approach for help with one problem and after you come back from them you kind of realize that they didn't help you at all, but instead tried everything in their power to push back. Sometimes they even managed to gave you **more** problems.
+There is a certain type of people that is especially prevalent in big corporations. The kind of people that you approach for help with one problem and after you come back from them you kind of realise that they didn't help you at all, but instead tried everything in their power to push back. Sometimes they even managed to gave you **more** problems.
 
 People who lack this attitude will always try to find reasons to not do things instead of looking for ways to do things. The reasons for doing can be complex but in most cases I have seen (including my own!) it boils down to being insecure in your own abilities (so a lack of self-esteem) and being afraid to leave your own comfort zone.
 
@@ -117,7 +117,7 @@ Good thing is you can develop such an attitude. There are probably gazillions of
 
 <h2 align="center">Proactivity</h2>
 
-![Proactivity](http://i.imgur.com/QQL0tLl.jpg)
+![Proactivity](http://i.imgur.com/QQL0tLl.jpg?3)
 
 [Image source](http://www.jantoo.com/)
 
@@ -127,7 +127,7 @@ Proactivity is also listed as the number 1 habit of [highly effective people](ht
 
 <h2 align="center">Experience</h2>
 
-![drop database production](http://i.imgur.com/oX0SMDo.png)
+![drop database production](http://i.imgur.com/oX0SMDo.png?5)
 
 [Image source](http://jordan.broughs.net/)
 
@@ -139,11 +139,11 @@ There's a quote from Thomas John Watson Sr., first CEO at IBM and inspiration fo
 You can learn everything for sure but there just things you **need** to have experienced yourself. You need to have shut down the production database accidentally to **really** understand that you need to be careful what console window you're typing in what. You need to have written that bad bug that killed your booking funnel to understand that QA needs to be an integral part of your workflow. 
 
 As a future employer it's obviously best if you have made those mistakes already obviously ;)
-"What was the biggest fuckup you caused in your professionall life?" should be one of your standard questions in the initial interviews with a candidate.
+"What was the biggest fuckup you caused in your professional life?" should be one of your standard questions in the initial interviews with a candidate.
 
 <h2 align="center">Structured and analytical approach</h2>
 
-![Success](http://i.imgur.com/8bvTbWE.jpg)
+![Success](http://i.imgur.com/8bvTbWE.jpg?3)
 
 Do a lot of your projects look like this?
 
@@ -154,7 +154,7 @@ Someone with a structured and analytical approach will do all of the above and m
 
 <h2 align="center">Technical knowledge</h2>
 
-![Technical Knowledge](http://i.imgur.com/y48AD42.jpg)
+![Technical Knowledge](http://i.imgur.com/y48AD42.jpg?2)
 
 Alright, so here it is: Technical knowledge is the **least important** attribute I'm looking for in a developer.
 
@@ -164,7 +164,7 @@ Because over the years I found out that it's way harder to develop skills like e
 
 <h2 align="center">Focus more on potential than on history or talent</h2>
 
-![Talent](http://i.imgur.com/uDwaFob.png)
+![Talent](http://i.imgur.com/uDwaFob.png?1)
 
 Quite often we are obsessed with looking at what a candidate can do right now. Sometimes we call it skills, sometimes it's called talent.
 
