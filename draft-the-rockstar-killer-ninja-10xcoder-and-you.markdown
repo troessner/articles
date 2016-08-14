@@ -11,7 +11,7 @@ But this doesn't mean that the terminology is used any less in recruiting unfort
 
 A classical set up I probably have seen dozens of time is that one of those rockstars delivers this super useful new backend feature that will be used on the web frontend everybody has been waiting for.
 
-Problem is that he didn't really care about communicating this. QA is missing. Normally not an issue since developers work in a squad where QA is a part of the team (you're doing this, right?) but that rockstar never actually fit in anywhere in so you kind of let him work on his own. Supervision by the product team was spotty at best since nobody really got along with our rockstar and so on and so on.
+Problem is that he didn't really care about communicating this. QA is missing. Normally not an issue since developers work in a squad where QA is a part of the team (you're doing this, right?) but that rockstar never actually fit in anywhere so you kind of let him work on his own. Supervision by the product team was spotty at best since nobody really got along with our rockstar and so on and so on.
 
 Fast forward 6 months: The feature is still not live, everybody involved is highly frustrated and the first team members are starting to click on the latest "Looking for a new challenge?" linkedin contact requests.
 
@@ -31,16 +31,16 @@ I think the way most companies evaluate candidates for tech jobs (probably for a
 
 It's easy to fall prey to conventional recruiting wisdom because it offers you the quickest reward possible: It will get you a lot of candidates fast because common recruiting wisdom relies on a couple of core metrics that you can easily train on your HR intern in an hour or two.
 
-**The problem with all of those metrics is that actually don't mean anything.**
+**The problem with all of those metrics is that they actually don't mean anything.**
 
-*Proficient in language / technology / eco system X* - a vanity metric. You can do anything for 10 years or more and still suck at it if you have not embraced constant self-improvement and life-long learning.
+Take "Proficient in language / technology / eco system X" - a vanity metric. You can do anything for 10 years or more and still suck at it if you have not embraced constant self-improvement and life-long learning.
 
 Show me code. Show me your open source contributions. If you don't have any, fine by me. A blog where you have written about your latest learnings works as well. Or an active conference life you tweet about. Or you attended a user group and maybe even did a presentation. Literally anything that shows that you actually care about what you do would suffice.
 
-Somebody saying he has 10 years of experience in X with no traces to be found anywhere on the web except in his CV is probably not the guy you want. Good news is, you can train your HR team how to get a [first impression](https://troessner.svbtle.com/how-to-use-github-to-evaluate-developers) about a candidate's technical skills without being technical themselves in most cases.
+Somebody saying he has 10 years of experience in X with no traces to be found anywhere on the web except in his CV is probably not the guy you want. Good news is, you can train your HR team how to get a [first impression](https://troessner.svbtle.com/how-to-use-github-to-evaluate-developers) about a candidate's technical skills without being technical themselves.
 Bad news is, this costs more time so it is **not as rewarding** as quickly ticking off a checkbox that says "can code in Ruby".
 
-"*Cultural fit* is something else that seems to be extremely important to most companies because they know that creative knowledge workers need to get along in order to really function well. At the same time, this is also the most fuzzy metric and sometimes it seems almost intentionally so.
+"Cultural fit" is something else that seems to be extremely important to most companies because they know that creative knowledge workers need to get along in order to really function well. At the same time, this is also the most fuzzy metric and sometimes it seems almost intentionally so.
 
 I have rarely seen a company that actually had a thorough list of soft skills they were looking for in a candidate even though they would claim it was one of their top priorities.
 
@@ -64,7 +64,7 @@ I had never thought about it this (apparently nobody had) but in hindsight, this
 
 If you're now thinking "damn, I'm not the most emphatic person on this planet for sure" like I did after reading this, don't worry - like almost all other skills you can learn empathy as well.
 
-Chad Fowler wrote an [excellent article](http://lifehacker.com/why-empathy-is-your-most-important-skill-and-how-to-pr-1505011685) on the subject with a lot of good advice on how develop your empathy skills. You also might want to check out ["Six Habits of Highly Empathic People"](http://greatergood.berkeley.edu/article/item/six_habits_of_highly_empathic_people1).
+Chad Fowler wrote an [excellent article](http://lifehacker.com/why-empathy-is-your-most-important-skill-and-how-to-pr-1505011685) on the subject with a lot of good advice on how to develop your empathy skills. You also might want to check out ["Six Habits of Highly Empathic People"](http://greatergood.berkeley.edu/article/item/six_habits_of_highly_empathic_people1).
 
 <h2 align="center">Communication</h2>
 
@@ -76,10 +76,10 @@ Communication skills is probably one of the fuzziest attributes in all soft skil
 
 * Being succinct but still assuming that your receiver has little knowledge about the topic. Yes, that means you should always start with a short introduction and not jump right into the middle even when you think that all stakeholders already know what it is about. Because there's a high chance they don't when [you just assume context](http://blogs.gartner.com/hank-barnes/2016/02/16/the-dangers-of-assuming-context/).
 * Knowing whom to include
-* Maybe even more important: Knowing whom to exclude because the topic is not relevant. I think [Jeff Bezo's 2 pizza rule](http://www.businessinsider.com/jeff-bezos-two-pizza-rule-for-productive-meetings-2013-10?IR=T) does not only apply to meetings, it applies to communication in general (with the rare exception for topics that really are of interest for a broader audience)
+* Maybe even more important: Knowing whom to exclude because the topic is not relevant. I think [Jeff Bezo's 2 pizza rule](http://www.businessinsider.com/jeff-bezos-two-pizza-rule-for-productive-meetings-2013-10?IR=T) does not only apply to meetings, it applies to communication in general (with the rare exception for topics that really are of interest to a broader audience)
 * A lot of other attributes like [bias free communication](http://www.inclusion.msu.edu/Education/BiasFreeCommunication.html) or being able [give and receive feedback](https://www.psychologytoday.com/articles/201103/how-take-feedback)
 
-Bottom line here is, all of those attributes should be part of hiring evaluation as well.
+Bottom line here is, all of those attributes should be part of your hiring evaluation as well.
 
 <h2 align="center">Motivation</h2>
 
@@ -98,9 +98,9 @@ The key part here is
 
 Great, so let's just hire motivated people only and the problem is solved!
 
-That sounds like an empty phrase and it is one indeed because probably nobody would disagree with it. But I've almost never seen any company that actually really made this a relevant attribute in your hiring process.
+That sounds like an empty phrase and it is one indeed because probably nobody would disagree with it. But I've almost never seen any company that actually really made this a relevant attribute in their hiring process.
 
-The biggest problem here that getting highly motivated candidates implies a high degree of transparency and openness from the organisation itself.
+The biggest problem here is that getting highly motivated candidates implies a high degree of transparency and openness from the organisation itself.
 You can't expect a developer candidate to be highly motivated when you're closed up about your tech stack, now can you? You can't expect a product guy to be motivated about your product if everything is hidden behind registration walls and key account managers that vet you before anything else.
 
 We can't all be like [buffer and their transparency policy](https://buffer.com/transparency), granted. It is worth trying though, if it's for your candidates only.
@@ -109,11 +109,11 @@ We can't all be like [buffer and their transparency policy](https://buffer.com/t
 
 ![The problem is your attitude](http://i.imgur.com/Qq5b2R7.jpg)
 
-There is a certain type of people that is especially prevalent in big corporations. The kind of people that you approach for help with one problem and after you come back from them you kind of realise that they didn't help you at all, but instead tried everything in their power to push back. Sometimes they even managed to gave you **more** problems.
+There is a certain type of people that is especially prevalent in big corporations. The kind of people that you approach for help with one problem and after you come back from them you realise that they didn't help you at all, but instead tried everything in their power to push back. Sometimes they even managed to give you **more** problems.
 
-People who lack this attitude will always try to find reasons to not do things instead of looking for ways to do things. The reasons for doing can be complex but in most cases I have seen (including my own!) it boils down to being insecure in your own abilities (so a lack of self-esteem) and being afraid to leave your own comfort zone.
+People who lack a problem solving attitude will always try to find reasons not to do things instead of looking for ways to do things. The reasons for doing so can be complex but in most cases I have seen (including my own!) it boils down to being insecure in your own abilities (so a lack of self-esteem) and being afraid to leave your own comfort zone.
 
-Good thing is you can develop such an attitude. There are probably gazillions of [articles](http://www.businessinsider.com/the-9-attitudes-of-leadership-2011-11?IR=T) about this [topic](http://www.coachingpositiveperformance.com/developing-problem-solving-mindset/) out there. I personally believe that developing a [growth mindset](http://mindsetonline.com/changeyourmindset/firststeps/) is the most important aspect, but maybe that's just me (and if you haven't read, now would be a great time to read Carol Dweck's [awesome book](http://mindsetonline.com/))).
+Good thing is you can develop such an attitude. There are probably gazillions of [articles](http://www.businessinsider.com/the-9-attitudes-of-leadership-2011-11?IR=T) about this [topic](http://www.coachingpositiveperformance.com/developing-problem-solving-mindset/) out there. I personally believe that developing a [growth mindset](http://mindsetonline.com/changeyourmindset/firststeps/) is the most important aspect, but maybe that's just me (and if you haven't read it, now would be a great time to check out Carol Dweck's [awesome book](http://mindsetonline.com/))).
 
 <h2 align="center">Proactivity</h2>
 
@@ -121,7 +121,7 @@ Good thing is you can develop such an attitude. There are probably gazillions of
 
 [Image source](http://www.jantoo.com/)
 
-A lack of proactivity goes a long way. Simple cases like "Yeah, our monitoring showed some weird numbers the hours before the downtime but we were hoping it would eventually go away and after a while it seemed like it had fixed itself" are the most obvious. More complex cases involve **just** doing enough so that you can't be simply called lazy and staying strictly inside your comfort zone. Those cases are harder to spot but at the same times those that do the real damage since they will waste the time of other team members as well.
+A lack of proactivity goes a long way. Simple cases like "Yeah, our monitoring showed some weird numbers the hours before the downtime but we were hoping it would eventually go away and after a while it seemed like it had fixed itself" are the most obvious. More complex cases involve **just** doing enough so that you can't be simply called lazy and staying strictly inside your comfort zone. Those cases are harder to spot but at the same times those are the ones that do the real damage since they will waste the time of other team members as well.
 
 Proactivity is also listed as the number 1 habit of [highly effective people](https://www.stephencovey.com/7habits/7habits-habit1.php).
 
@@ -138,8 +138,8 @@ There's a quote from Thomas John Watson Sr., first CEO at IBM and inspiration fo
 
 You can learn everything for sure but there just things you **need** to have experienced yourself. You need to have shut down the production database accidentally to **really** understand that you need to be careful what console window you're typing in what. You need to have written that bad bug that killed your booking funnel to understand that QA needs to be an integral part of your workflow. 
 
-As a future employer it's obviously best if you have made those mistakes already obviously ;)
-"What was the biggest fuckup you caused in your professional life?" should be one of your standard questions in the initial interviews with a candidate.
+As a future employer it's obviously best if you have made those mistakes already ;)
+Making "What was the biggest fuckup you caused in your professional life?" one of your standard questions in the initial interviews with a candidate can help you to get a better feeling for the candidate's experience. If he goes blank he's either extremely diligent or (more likely) not as experienced as he pretends.
 
 <h2 align="center">Structured and analytical approach</h2>
 
@@ -147,8 +147,8 @@ As a future employer it's obviously best if you have made those mistakes already
 
 Do a lot of your projects look like this?
 
-We're humans and human will go for the quickest reward possible. And what's the quickest reward in software development? Programming. Doing something. Getting shit done.
-Problem is that often you don't know what "Getting shit done" actually means. Usually you need to talk to a lot of people, understand problems in depth, research possible solutions, read on things, prepare an action plan of how to do things and why. Which is something that is not particularly rewarding and in worst case so painful, that people shy away from it.
+We're humans and humans will go for the quickest reward possible. And what's the quickest reward in software development? Programming. Doing something. Getting shit done.
+Problem is that often you don't know what "Getting shit done" actually means. Usually you need to talk to a lot of people, understand problems in depth, research possible solutions, read up on things, prepare an action plan of how to do things and why. Which is something that is not particularly rewarding and in worst case so painful, that people shy away from it.
 
 Someone with a structured and analytical approach will do all of the above and more **before** even writing one single line of code.
 
@@ -168,21 +168,21 @@ Because over the years I found out that it's way harder to develop skills like e
 
 Quite often we are obsessed with looking at what a candidate can do right now. Sometimes we call it skills, sometimes it's called talent.
 
-I think we should be more focused on potential ("what could the candidate be capable of") instead of the history ("what has the candidate been doing"). Given you are motivated, you can become good at anything in a reasonable amount of time (mind that I said "good", not "excellent", that would be another story).
+I think we should be more focused on potential ("what could the candidate be capable of") instead of the history ("what has the candidate been doing"). Given you are motivated, you can become good at anything in a reasonable amount of time (mind that I said "good", not "excellent" - that would be another story).
 
 <h2 align="center">Recap</h2>
 
 What we covered today:
 
 * Conventional hiring wisdom is flawed at best because it overvalues tangible features and neglects intangible ones
-* The fuzzy term "soft skills" is mostly undefined and as such often way underrated
+* The fuzzy term "soft skills" is frequently undefined and as such often way underrated
 * Tech skills are overrated
-* Care more about the potential than about the status quo
+* Care more about the potential of a candidate than about the status quo
 
-The next question we should now look into are probably:
+The next questions we should now look into are probably:
 
 * How do we find people that fit the profile above without scanning thousands of people?
-* If the attributes above are not tangible, how do you actually select people based on it?
+* If the attributes above are not tangible, how do you actually select people based on them?
 * How do we get them into our recruiting funnel?
 
 Those questions will be the topic of the next articles.
