@@ -164,7 +164,7 @@ Where are ASTs positioned in Ruby compile / interpret cycle?
 
 ![Ruby compile / interpret cycle](http://i.imgur.com/T5LAaqc.jpg)
 
-As you can see above, the ASTs generated out of so called tokens and are used by the Compiler to generate bytecode instructions that are then executed by the Ruby interpreter. Another way to describe the ASTs role is that it is the machine readable semantics of the code the developer tried to express via literal source.
+As you can see above, the ASTs are generated out of so called tokens and are used by the Compiler to generate bytecode instructions that are then executed by the Ruby interpreter. Another way to describe the ASTs role is that it is the machine readable semantics of the code the developer tried to express via literal source.
 
 If this is new territory for you I urge you to check out the links above before continuing to get the most out of this article.
 
@@ -344,7 +344,7 @@ def initialize(arguments)
 end
 ```
 
-Ok, nice and easy. First we'll set the configuration to our defaults, then we're parsing the CLI arguments and overwrite our default configuration based on this.
+Ok, nice and easy. First we'll set the configuration to our defaults, then we'll parse the CLI arguments and overwrite our default configuration based on this.
 
 What does the default configuration look like?
 
@@ -398,11 +398,11 @@ pathname:          Pathname,
 requires:          EMPTY_ARRAY,
 ```
 
-What I like here is how configurable `Mutant`. You can even inject another Kernel module, $LOAD_PATH or another Pathname'esque library.
+What I like here is how configurable `Mutant` is. You can even inject another Kernel module, $LOAD_PATH or another Pathname'esque library.
 
 But the configurability is actually just a side effect here. The main goal is to stop relying on IO globals read from a global scope and injecting them explicitly.
 
-This lists the IO dependencies of each unit much more explicit. Makes testing easier, and allows to write a testing tool that works without message expectations (one target of the author in the near future).
+This lists the IO dependencies of each unit much more explicitly. Makes testing easier, and allows to write a testing tool that works without message expectations (one target of the author in the near future).
 
 ### Environment
 
@@ -518,7 +518,7 @@ Next comes the parser:
 @parser = Parser.new
 ```
 
-`Mutant` uses the awesome [parser](https://github.com/whitequark/parser) gem for producing ASTs from source code and has its own thin wrapper around. That thin wrapper just maintains a cache, so subjects on the same file share the (immutable) AST.
+`Mutant` uses the awesome [parser](https://github.com/whitequark/parser) gem for producing ASTs from source code and has its own thin wrapper around it. That thin wrapper just maintains a cache, so subjects in the same file share the (immutable) AST.
 
 What about `infect` right after that?
 
@@ -576,7 +576,7 @@ The last line
 @integration = config.integration.new(config).setup
 ```
 
-sets up the integration with test framework of our choice. As of right now there is only one valid option and that is `RSpec`.
+sets up the integration with the test framework of our choice. As of right now there is only one valid option and that is `RSpec`.
 
 Now we're coming to the last line in our initializer:
 
