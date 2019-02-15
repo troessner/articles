@@ -1,3 +1,4 @@
+## Reek 2 Just Got Released
 
 A couple of days ago we released the new and extremely shiny [Reek](https://github.com/troessner/reek) version 2 to the world!
 

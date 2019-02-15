@@ -1,16 +1,4 @@
-<!-- Uncomment below before publishing via octopress -->
-<!--
----
-layout: post
-title: Lessons learned from some of the best Ruby codebases (part 1)
-date: 2016-04-23 00:45:49 +0200
-comments: true
-categories: ruby
-keywords: ruby, gems, mutant
-description: Lessons learned from some of the best Ruby codebases (part 1)
-author: Timo Rößner
----
--->
+## Lessons Learned From Some Of The Best Ruby Codebases - Part 1
 
 I recently started looking into [Mutant](https://github.com/mbj/mutant) and related gems for an upcoming presentation about abstract syntax trees I am working on at the moment.
 

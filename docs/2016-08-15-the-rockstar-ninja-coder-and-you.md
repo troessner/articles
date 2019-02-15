@@ -1,3 +1,4 @@
+## The Rockstar Ninja Coder And You
 
 ![Rockstars](http://i.imgur.com/U3ZeFml.jpg)
 

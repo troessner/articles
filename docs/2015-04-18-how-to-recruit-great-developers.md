@@ -1,3 +1,5 @@
+## How To Recruit Great Developers
+
 I believe there are 3 ways of recruiting when it comes to technology and startups (ignoring agencies and freelancers):
 
 ### Nr 1 or the common way: Non-organic recruiting through cold calls and direct search

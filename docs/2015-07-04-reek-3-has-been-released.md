@@ -1,3 +1,5 @@
+## Reek 3 Has Been Released
+
 My beloved `Reek` gem has come quite a long way. During the last months we refactored so much of the source code that it almost feels like a new and shiny gem.
 
 Right after the release of `Reek` 2 we started to work on [`Reek` 3](https://github.com/troessner/reek/issues/401) which we released a couple of days ago.

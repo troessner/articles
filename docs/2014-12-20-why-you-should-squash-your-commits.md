@@ -1,3 +1,5 @@
+## Why You Should Squash Your Commits
+
 When you look at bigger pull requests at open-source projects or in closed-source projects of your company, you can see that they often contain dozens and dozens of commits with a lot of them containing useless commit messages like "Fix.", "Typo", and so on.
 
 "Useless" in th sense of the bigger picture - while you might care for a "typo fix" during the lifecycle of your pull request you probably won't a couple of weeks down the road.

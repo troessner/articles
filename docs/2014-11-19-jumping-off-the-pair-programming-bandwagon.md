@@ -1,3 +1,5 @@
+## Jumping off the pair programming bandwagon
+
 For quite some time, a lot of companies have been on the "yes, we do pair programming" bandwagon and still are. Some of them even to the (ridiculous) extent that pair programming was or is mandatory a la "at least 2 days a week".
 
 I've been through that and those were certainly some bad times in my software development career.
