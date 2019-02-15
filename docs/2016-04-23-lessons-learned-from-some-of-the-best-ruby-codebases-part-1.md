@@ -8,8 +8,6 @@ I intend to make this a series with the first part of this series not covering *
 
 Let's get started with *Mutant*s [gem dependencies](https://github.com/mbj/mutant/blob/master/mutant.gemspec).
 
-<!--more-->
-
 ### [Concord](https://github.com/mbj/concord)
 
 *[Concord](https://github.com/mbj/concord)* is a nice little library that helps you turning this:

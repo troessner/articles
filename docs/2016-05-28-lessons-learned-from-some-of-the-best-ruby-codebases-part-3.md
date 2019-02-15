@@ -4,8 +4,6 @@ Welcome to the third part of the series - you can find the first part [here](htt
 
 In this part I will again focus on some other highly interesting gems [Mutant](https://github.com/mbj/mutant) uses, in particular the [Abstract Type](https://github.com/dkubb/abstract_type) gem and the [Adamantium](https://github.com/dkubb/adamantium) gem.
 
-<!--more-->
-
 ### [Abstract Type](https://github.com/dkubb/abstract_type)
 
 The `Abstract Type` gem allows you to declare [abstract type](https://en.wikipedia.org/wiki/Abstract_type) classes and modules in an unobstrusive way:

@@ -6,8 +6,6 @@ We'll continue to look at some other highly interesting gems [Mutant](https://gi
 
 Initially I had planned to cover multiple gems again, but after starting to look into the [IceNine](https://github.com/dkubb/ice_nine) gem I realized that this was big enough for its own blog post.
 
-<!--more-->
-
 ### [IceNine](https://github.com/dkubb/ice_nine)
 
 `IceNine` is a library for deep freezing objects:
