@@ -26,7 +26,7 @@ Now that's a little abstract so let's look at an example!
 
 Mutation testing takes code like this:
 
-```Ruby
+```ruby
 class Greeter
   def initialize(phrase, enabled = true)
     @phrase = phrase
@@ -41,7 +41,7 @@ end
 
 and turns it into something like this:
 
-```Ruby
+```ruby
 def say_hello(name)
   if true
     "#{@phrase}#{" "}#{name}"
@@ -51,7 +51,7 @@ end
 
 or 
 
-```Ruby
+```ruby
 def say_hello(name)
   if false
     "#{@phrase}#{" "}#{name}"
@@ -61,7 +61,7 @@ end
 
 `Mutant` then runs tests against each mutation. Those tests might look like this:
 
-```Ruby
+```ruby
 # cat spec/greeter_spec.rb
 
 require_relative 'spec_helper'
@@ -180,7 +180,7 @@ The great thing about gems with a binary is that it's a lot easier to start expl
 
 Let's look at `bin/mutant`:
 
-```Ruby
+```ruby
 require 'mutant'
 
 namespace =
@@ -219,7 +219,7 @@ Ok, that looks friggin complicated already. Let's keep things simple and ignore 
 
 Here's our new executable:
 
-```Ruby
+```ruby
 require 'mutant'
 
 Kernel.exit(Mutant::CLI.run(ARGV))
@@ -233,7 +233,7 @@ which translates to:
 
 Let's check out `Mutant::CLI.run`:
 
-```Ruby
+```ruby
 class CLI
   include Procto.call(:config)
 
@@ -248,7 +248,7 @@ end
 
 The `include` line is what we need to understand first:
 
-```Ruby
+```ruby
 include Procto.call(:config)
 ```
 
@@ -257,7 +257,7 @@ include Procto.call(:config)
 
 It basically works like this:
 
-```Ruby
+```ruby
 class Printer
   include Procto.call(:print)
 
@@ -275,7 +275,7 @@ Printer.call('world') # => "Hello world"
 
 Now to `run`:
 
-```Ruby
+```ruby
 class CLI
   def self.run(arguments)
     Runner.call(Env::Bootstrap.call(call(arguments))).success?
@@ -288,13 +288,13 @@ end
 
 Let's ignore the exception since that is irrelevant for our scope. So it boils down to:
 
-```Ruby
+```ruby
 Runner.call(Env::Bootstrap.call(call(arguments))).success?
 ```
 
 Let me reformat this line to make it clearer what's happening here:
 
-```Ruby
+```ruby
 Runner.call(
   Env::Bootstrap.call(
     call(arguments)
@@ -304,13 +304,13 @@ Runner.call(
 
 Starting from the inside - this:
 
-```Ruby
+```ruby
 call(arguments)
 ```
 
 translates to:
 
-```Ruby
+```ruby
 CLI.new(arguments).config
 ```
 
@@ -318,7 +318,7 @@ since we're inside the `CLI` class and coming from `Procto` again.
 
 So this
 
-```Ruby
+```ruby
 Runner.call(
   Env::Bootstrap.call(
     call(arguments)
@@ -338,7 +338,7 @@ What does the configuration look like?
 
 If you check out the constructor of `Mutant::CLI` you'll see this:
 
-```Ruby
+```ruby
 def initialize(arguments)
   @config = Config::DEFAULT
 
@@ -353,7 +353,7 @@ What does the default configuration look like?
 For that you'll have to check out the top level library file, so `lib/mutant.rb`:
 
 
-```Ruby
+```ruby
 class Config
   DEFAULT = new(
     debug:             false,
@@ -374,7 +374,7 @@ end
 
 I did remove a lot of the `config` object above to keep it readable. I just want to highlight a couple of lines I find interesting:
 
-```Ruby
+```ruby
 expected_coverage: Rational(1)
 ```
 
@@ -393,7 +393,7 @@ bundle exec mutant --expected-coverage 178/197 # plus the rest of your CLI argum
 
 Back to the configuration:
 
-```Ruby
+```ruby
 kernel:            Kernel,
 load_path:         $LOAD_PATH,
 pathname:          Pathname,
@@ -411,7 +411,7 @@ This lists the IO dependencies of each unit much more explicitly. Makes testing 
 So where were we?
 Keep in mind that we are still talking about this:
 
-```Ruby
+```ruby
 Runner.call(
   Env::Bootstrap.call(
     call(arguments) # -> This part we just discussed.
@@ -421,13 +421,13 @@ Runner.call(
 
 Now that we know what 
 
-```Ruby
+```ruby
 call(arguments)
 ```
 
 does (returning a `Configuration` object), let's look at:
 
-```Ruby
+```ruby
 Env::Bootstrap.call(
   call(arguments) # -> This part we just discussed.
 )
@@ -435,14 +435,14 @@ Env::Bootstrap.call(
 
 What does
 
-```Ruby
+```ruby
 Env::Bootstrap.call configuration
 ```
 
 mean?
 Again, this is `Procto` at work as you can see in the class declaration:
 
-```Ruby
+```ruby
 class Env
   class Bootstrap
     include Procto.call(:env)
@@ -453,19 +453,19 @@ end
 
 So
 
-```Ruby
+```ruby
 Env::Bootstrap.call configuration
 ```
 
 translates to:
 
-```Ruby
+```ruby
 Env::Bootstrap.new(configuration).env
 ```
 
 Let's check out the class declaration of `Env::Bootstrap` with a focus on the initializer:
 
-```Ruby
+```ruby
 class Env
   class Bootstrap
     def initialize(*)
@@ -480,7 +480,7 @@ end
 
 We'll go through the initializer step by step:
 
-```Ruby
+```ruby
 super
 ```
 
@@ -489,7 +489,7 @@ That might seem odd to the innocent reader. `Mutant` makes heavy usage of the [C
 
 You can use `Concord` to transform this:
 
-```Ruby
+```ruby
 class Dummy
   attr_reader :foo, :bar
   protected :foo; :bar
@@ -503,7 +503,7 @@ end
 
 into this:
 
-```Ruby
+```ruby
 class Dummy
   include Concord.new(:foo, :bar)
 end
@@ -516,7 +516,7 @@ Try to remember this, this is a pattern you will see throughout the `Mutant` cod
 
 Next comes the parser:
 
-```Ruby
+```ruby
 @parser = Parser.new
 ```
 
@@ -529,7 +529,7 @@ To put it differently, it's the point where the software that is under mutation 
 
 Let's look at `infect` in detail:
 
-```Ruby
+```ruby
 class Env
   class Bootstrap
     def infect
@@ -543,14 +543,14 @@ end
 
 The first line 
 
-```Ruby
+```ruby
 config.includes.each(&config.load_path.method(:<<))
 ```
 
 uses a neat little `Method#to_proc` feature you can read up on [here](https://andrewjgrimm.wordpress.com/2011/10/03/in-ruby-method-passes-you/). 
 It is basically identical to writing it like this:
 
-```Ruby
+```ruby
 config.includes.each do |include|
   config.load_path << include
 end
@@ -558,7 +558,7 @@ end
 
 but the first version is arguably more concise. So technicalities aside, this will update the `load_path` with whatever you passed to `Mutant` in your CLI call via the `--include` flag like shown in the beginning:
 
-```Ruby
+```ruby
 bundle exec mutant --include lib/\
                    --require hello_world\
                    --use rspec  "Greeter*"
@@ -566,7 +566,7 @@ bundle exec mutant --include lib/\
 
 In analog fashion, the next line in `infect`
 
-```Ruby
+```ruby
 config.requires.each(&config.kernel.method(:require))
 ```
 
@@ -574,7 +574,7 @@ does require everything that we passed to `Mutant` via the `--require` flag, so 
 
 The last line
 
-```Ruby
+```ruby
 @integration = config.integration.new(config).setup
 ```
 
@@ -582,13 +582,13 @@ sets up the integration with the test framework of our choice. As of right now t
 
 Now we're coming to the last line in our initializer:
 
-```Ruby
+```ruby
 initialize_matchable_scopes
 ```
 
 Let's look at this one in detail:
 
-```Ruby
+```ruby
   def initialize_matchable_scopes
     scopes = ObjectSpace.
                     each_object(Module).
@@ -605,7 +605,7 @@ Let's look at this one in detail:
 
 This will walk through the ObjectSpace and get **all** the modules that have been required so far. You can easily check what happens here in `pry`:
 
-```Ruby
+```ruby
 ObjectSpace.each_object(Module).to_a.sample 3
 # => [RubyToken::TkYIELD, Random::Formatter, PryByebug::Helpers::Breakpoints]
 
@@ -618,7 +618,7 @@ ObjectSpace.each_object(Module).to_a.sample 3
 
 So `initialize_matchable_scopes` will take all the modules it can find and try to create an expression out of it
 
-```Ruby
+```ruby
   def initialize_matchable_scopes
     scopes = ObjectSpace.
                     each_object(Module).
@@ -631,7 +631,7 @@ So `initialize_matchable_scopes` will take all the modules it can find and try t
 
 With
 
-```Ruby
+```ruby
   # `scope` is one of the modules from ObjectSpace, e.g. Gem::Ext::BuildError, so a constant.
   def expression(scope)
     name = scope.name # redacted for simplicity.
@@ -651,7 +651,7 @@ With
 
 Ok, we went through a lot - let's look at the big picture again:
 
-```Ruby
+```ruby
  def initialize_matchable_scopes
     scopes = ObjectSpace.
                     each_object(Module).
@@ -672,7 +672,7 @@ Ok, we went through a lot - let's look at the big picture again:
 
 Now that we know how the initializer works we know half of the story of the call to 
 
-```Ruby
+```ruby
 Runner.call(
   Env::Bootstrap.call(
     call(arguments)
@@ -682,7 +682,7 @@ Runner.call(
 
 But what happens when we call `Env::Bootstrap.call`? If you remember the `include` statement in the class declaration:
 
-```Ruby
+```ruby
 module Mutant
   class Env
     class Bootstrap
@@ -698,7 +698,7 @@ end
 
 you can see that we actually call `env` on our `Env::Bootstrap` object:
 
-```Ruby
+```ruby
   def env
     subjects = matched_subjects
     Env.new(
@@ -720,7 +720,7 @@ This now brings us to the topic of "subjects".
 
 Let's go through the `env` method step by step:
 
-```Ruby
+```ruby
   def env
     subjects = matched_subjects
     # snip
@@ -821,7 +821,7 @@ node=s(:def, :say_hello,
 
 you can kind of figure out that both nodes correspond to the methods in our `Greeter` class:
 
-```Ruby
+```ruby
 class Greeter
   def initialize(phrase)
     @enabled = true
@@ -856,7 +856,7 @@ Ok, so now we have talked about "subjects" a lot. What about the "mutations"?
 
 If you recall the `env` method in `Env::Bootstrap` from above:
 
-```Ruby
+```ruby
   def env
     subjects = matched_subjects
     Env.new(
@@ -874,7 +874,7 @@ If you recall the `env` method in `Env::Bootstrap` from above:
 
 you see this line:
 
-```Ruby
+```ruby
 mutations:        subjects.flat_map(&:mutations),
 ```
 
@@ -882,7 +882,7 @@ Each `Subject` can yield N mutations, `Mutant` expands these in one step here fo
 
 Let's check out the [Subject](https://github.com/mbj/mutant/blob/master/lib/mutant/subject.rb) class:
 
-```Ruby
+```ruby
 module Mutant
   class Subject
     # Mutations for this subject
@@ -903,14 +903,14 @@ end
 
 This
 
-```Ruby
+```ruby
 Mutator.mutate(node).
 ```
 
 is the interesting part into which we're going to dive soon.
 But let me give you a high level overview of what happens here first:
 
-```Ruby
+```ruby
 def mutations
   [neutral_mutation].concat(
     Mutator.mutate(node).map do |mutant|
@@ -937,7 +937,7 @@ Now what's up with that neutral mutation?
 
 A neutral mutation means that you're taking the original node without mutating it:
 
-```Ruby
+```ruby
 def neutral_mutation
   Mutation::Neutral.new(self, node)
 end
@@ -945,7 +945,7 @@ end
 
 With `Mutation::Neutral` being:
 
-```Ruby
+```ruby
 # Neutral mutation that should not cause mutations to fail tests
 class Neutral < self
   TEST_PASS_SUCCESS = true
@@ -975,7 +975,7 @@ __2 questions now:__
 
 Let's check out a `Mutation` first:
 
-```Ruby
+```ruby
 class Mutation
   include AbstractType
   include Concord::Public.new(:subject, :node)
@@ -989,13 +989,13 @@ end
 `Mutation` itself is an abstract base class (notice the `include AbstractType`, you can read up on this [here](https://troessner.svbtle.com/lessons-learned-from-some-of-the-best-ruby-codebases-out-there-part-3)), so it won't be instantiated directly.
 As you can see it has basically just 2 attributes:
 
-```Ruby
+```ruby
 include Concord::Public.new(:subject, :node)
 ```
 
 As you've learned above already, this is just a nice shortcut for
 
-```Ruby
+```ruby
 class Subject
   attr_accessor :subject, :node
 
@@ -1026,7 +1026,7 @@ What else is interesting?
 
 The `success?` method:
 
-```Ruby
+```ruby
 def self.success?(test_result)
   self::TEST_PASS_SUCCESS.equal?(test_result.passed)
 end
@@ -1034,7 +1034,7 @@ end
 
 This is the method that `Mutant` uses to check what the expectation for running tests against a mutation is and is basically configured in the instantiatable subclasses:
 
-```Ruby
+```ruby
 class Evil < self
   TEST_PASS_SUCCESS = false
 end # Evil
@@ -1051,7 +1051,7 @@ As you can see, the expectation for "neutral" mutations is true while the expect
 
 Let's recall the `Subject#mutations` method from above:
 
-```Ruby
+```ruby
     def mutations
       [neutral_mutation].concat(
         Mutator.mutate(node).map do |mutant|
@@ -1063,7 +1063,7 @@ Let's recall the `Subject#mutations` method from above:
 
 We talked about "neutral" and "evil" mutations, now it's time to look into how `Mutator#mutate` works under the hood:
 
-```Ruby
+```ruby
 module Mutant
   # Generator for mutations
   class Mutator
@@ -1084,13 +1084,13 @@ The [Registry](https://github.com/mbj/mutant/blob/master/lib/mutant/registry.rb)
 
 So this:
 
-```Ruby
+```ruby
 self::REGISTRY.lookup(node.type)
 ```
 
 will basically just check if for a given node type there is a mutator defined. And if there is this one will be returned as you can see here:
 
-```Ruby
+```ruby
 module Mutant
   # Registry for mapping AST types to classes
   class Registry
@@ -1107,7 +1107,7 @@ end
 
 This all sounds very vague so let's check out the concrete example from above in pry. We'll insert a break point here in the `Mutator`:
 
-```Ruby
+```ruby
 module Mutant
   class Mutator
     def self.mutate(node, parent = nil)
@@ -1181,7 +1181,7 @@ But let's not concern ourselves with the details of the single mutators but firs
 Let's use the console again.
 First keep in mind what the original node looked like:
 
-```Ruby
+```ruby
 s(:def, :say_hello,
   s(:args,
     s(:arg, :name)),
@@ -1197,7 +1197,7 @@ s(:def, :say_hello,
 
 Now let's take samples of what `Mutator.mutate(node)` returns:
 
-```Ruby
+```ruby
 # [18] pry(#<Mutant::Subject::Method::Instance>)> Mutator.mutate(node).to_a.sample
 
  s(:def, :say_hello,
@@ -1217,7 +1217,7 @@ Interesting. See the difference to the original node?
 
 The original:
 
-```Ruby
+```ruby
 s(:dstr,
   s(:begin,
     s(:ivar, :@phrase)),
@@ -1225,7 +1225,7 @@ s(:dstr,
 
 The mutation:
 
-```Ruby
+```ruby
 s(:dstr,
   s(:begin,
     s(:send, nil, :phrase)),
@@ -1233,13 +1233,13 @@ s(:dstr,
 
 This means `Mutant` replaced accessing an instance variable
 
-```Ruby
+```ruby
 "#{@phrase} ...."
 ```
 
 with a method call:
 
-```Ruby
+```ruby
 "#{phrase} ...."
 ```
 
@@ -1269,7 +1269,7 @@ You can quickly check this out yourself using the `ruby-parse` executable that c
 
 Ok, another roll of the dice:
 
-```Ruby
+```ruby
 #[18] pry(#<Mutant::Subject::Method::Instance>)> Mutator.mutate(node).to_a.sample
 
 => s(:def, :say_hello,
@@ -1287,7 +1287,7 @@ Ok, another roll of the dice:
 
 There it is! 
 
-```Ruby
+```ruby
 s(:if,
   s(:true),
   s(:dstr,
@@ -1297,7 +1297,7 @@ s(:if,
 
 That's the mutation from our original example. 
 
-```Ruby
+```ruby
 if true
   "#{@phrase}#{" "}#{name}"
 end
@@ -1316,7 +1316,7 @@ Alright, time for a recap. So far we have:
 
 The missing piece now is the logic that actually applies the mutation to the nodes. Let's focus on our good, old ":if" node from above and have again a look at `Mutator#mutate`:
 
-```Ruby
+```ruby
 class Mutator
   def self.mutate(node, parent = nil)
     self::REGISTRY.lookup(node.type).call(node, parent)
@@ -1328,32 +1328,32 @@ So in case our `node.type` is `:if` the `lookup` method will return `Mutator::No
 
 This means that this:
 
-```Ruby
+```ruby
 self::REGISTRY.lookup(node.type).call(node, parent)
 ```
 
 boils down to:
 
-```Ruby
+```ruby
 Mutator::Node::If.call(node, parent)
 ```
 
 Since `Mutator` uses `Procto` like this:
 
-```Ruby
+```ruby
 include Procto.call(:output)
 ```
 
 this basically means:
 
-```Ruby
+```ruby
 if_node = Mutator::Node::If.new(node, parent)
 if_node.output
 ```
 
 So let's check out the `if` mutator:
 
-```Ruby
+```ruby
 class Mutator
   class Node
     # Mutator for if nodes
@@ -1380,13 +1380,13 @@ end
 
 Let's go through it step by step:
 
-```Ruby
+```ruby
 handle(:if)
 ```
 
 Remember the `Registry` from above in the `Mutator`?
 
-```Ruby
+```ruby
 def self.mutate(node, parent = nil)
   self::REGISTRY.lookup(node.type).call(node, parent)
 end
@@ -1394,7 +1394,7 @@ end
 
 This
 
-```Ruby
+```ruby
 handle(:if)
 ```
 
@@ -1402,7 +1402,7 @@ is the part that registers the "if node" mutator at the global registry to handl
 
 Next up is the `dispatch` method. That is kind of the workhorse of all the mutators and is going to be called via `Mutator#initialize`:
 
-```Ruby
+```ruby
 def dispatch
   emit_singletons
   mutate_condition
@@ -1426,7 +1426,7 @@ Let's focus on the mutant we have been talking about from the very start:
 
 For this mutation we can ignore all method calls in `dispatch` except for `mutate_condition`:
 
-```Ruby
+```ruby
 def dispatch
   emit_singletons # <- Ignore me.
   mutate_condition
@@ -1437,7 +1437,7 @@ end
 
 So let's dive into `mutate_condition`:
 
-```Ruby
+```ruby
 def mutate_condition
   # snip
   emit_type(N_TRUE,  if_branch, else_branch)
@@ -1449,7 +1449,7 @@ What is `N_TRUE`?
 
 It's defined in `ast/nodes`:
 
-```Ruby
+```ruby
 N_TRUE = s(:true)
 ```
 
@@ -1457,7 +1457,7 @@ You probably see by now where I'm going with this: This is the place where our `
 
 Let's check out `emit_type` to understand the call in question:
 
-```Ruby
+```ruby
 # mutator/node.rb
 
 def emit_type(*children)
@@ -1474,7 +1474,7 @@ end
 
 So basically a call like
 
-```Ruby
+```ruby
 emit_type(N_TRUE,  if_branch, else_branch)
 ```
 
@@ -1500,7 +1500,7 @@ This is where the [Runner](https://github.com/mbj/mutant/blob/master/lib/mutant/
 
 Remember that our investigation how `Mutant` works started with this piece of code in the CLI module:
 
-```Ruby
+```ruby
 module Mutant
   class CLI
     def self.run(arguments)
@@ -1517,7 +1517,7 @@ end
 The `Runner.call` part should be something familiar for you now. Let's check out the rest of the code:
 
 
-```Ruby
+```ruby
 module Mutant
   # Runner baseclass
   class Runner
@@ -1540,7 +1540,7 @@ Let's ignore the `reporter` related code here and in the following since that ba
 
 The interesting part is the `run_mutation_analysis` at the end:
 
-```Ruby
+```ruby
 def run_mutation_analysis
   @result = run_driver(Parallel.async(mutation_test_config))
   reporter.report(result)
@@ -1551,7 +1551,7 @@ end
 
 What does the configuration look like?
 
-```Ruby
+```ruby
 # Configuration for parallel execution engine
 #
 # @return [Parallel::Config]
@@ -1568,13 +1568,13 @@ end
 
 with the interesting line being:
 
-```Ruby
+```ruby
 source:    Parallel::Source::Array.new(env.mutations)
 ```
 
 See the `env.mutations` at the end? `env` is what we pass in to the `Runner` via the constructor using `Concord`:
 
-```Ruby
+```ruby
 class Runner
   include Concord.new(:env)
 
@@ -1589,7 +1589,7 @@ So that's how we pass the mutations we want to run our tests against to the para
 
 Let's go back to `run_mutation_analysis`:
 
-```Ruby
+```ruby
 def run_mutation_analysis
   @result = run_driver(Parallel.async(mutation_test_config))
   reporter.report(result)
@@ -1598,7 +1598,7 @@ end
 
 What does `run_driver` look like?
 
-```Ruby
+```ruby
 # Run driver
 #
 # @param [Driver] driver

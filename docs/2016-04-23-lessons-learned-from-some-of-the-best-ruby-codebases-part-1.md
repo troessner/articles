@@ -12,7 +12,7 @@ Let's get started with *Mutant*s [gem dependencies](https://github.com/mbj/mutan
 
 *[Concord](https://github.com/mbj/concord)* is a nice little library that helps you turning this:
 
-```Ruby
+```ruby
 class ComposedObject
   attr_reader :foo, :bar
   protected :foo; :bar
@@ -26,7 +26,7 @@ end
 
 into this:
 
-```Ruby
+```ruby
 class ComposedObject
   include Concord.new(:foo, :bar)
 end
@@ -34,7 +34,7 @@ end
 
 What's interesting here is how we we include it:
 
-```Ruby
+```ruby
 include Concord.new(:foo, :bar)
 ```
 
@@ -84,7 +84,7 @@ Now it gets even more confusing - *include Foo* doesn't work, *include Foo.new* 
 
 Let's see how Rubinius actually handles this in [module.rb](https://github.com/rubinius/rubinius/blob/master/core/module.rb#L471) (the behaviour below is identical to MRI Ruby):
 
-```Ruby
+```ruby
 def include?(mod)
   if !mod.kind_of?(Module) or mod.kind_of?(Class)
     raise TypeError, "wrong argument type #{mod.class} (expected Module)"
@@ -101,7 +101,7 @@ This elegant trick of having a class inherit from *Module* allows us to use a cl
 
 Interesting side note: `Concord` has a limit of 3 arguments. Intentionally hardcoded. It'll not accept
 
-```Ruby
+```ruby
 Concord.new(:a, :b, :c, :d)
 ```
 
@@ -111,7 +111,7 @@ The idea is that because `Concord` creates a positional arguments interface cons
 
 *[Procto](https://github.com/snusnu/procto)* turns your Ruby object into a method object. The code example from the README speaks for itself so I'll just paste it here:
 
-```Ruby
+```ruby
 class Printer
   include Procto.call(:print)
 
@@ -131,13 +131,13 @@ The code to make this work is surprisingly small and very elegant.
 
 Let's start with looking at this part
 
-```Ruby
+```ruby
 Procto.call(:print)
 ```
 
 from the example above without paying attention to what happens when it is included:
 
-```Ruby
+```ruby
 class Procto < Module
   # The default name of the instance method to be called
   DEFAULT_NAME = :call
@@ -153,7 +153,7 @@ We define a singleton method called *call* that takes a name and returns an inst
 
 How does the constructor look like?
 
-```Ruby
+```ruby
 def initialize(name)
   @block = ->(*args) { new(*args).public_send(name) }
 end
@@ -165,7 +165,7 @@ In other words, the lambda will create a new object of whatever it is included i
 
 That's basically the
 
-```Ruby
+```ruby
 Procto.call(:print)
 ```
 
@@ -173,7 +173,7 @@ part.
 
 So what happens when this is included?
 
-```Ruby
+```ruby
 class Procto < Module
   # snip
   def included(host)
@@ -194,7 +194,7 @@ Note that this is not a typo: We need to pass *@block* explicitly to *instance_e
 
 Now by using *[Object.define_singleton_method](http://ruby-doc.org/core-2.3.0/Object.html#method-i-define_singleton_method)* we define the singleton method *call* (or, in layman's terms: class method) so we can finally do
 
-```Ruby
+```ruby
 Printer.call('world')
 ```
 
@@ -204,7 +204,7 @@ Printer.call('world')
 
 An example from the README:
 
-```Ruby
+```ruby
 class GeoLocation
   include Equalizer.new(:latitude, :longitude)
 
@@ -238,7 +238,7 @@ How does equalizer do this?
 
 Let's look again at how it is included:
 
-```Ruby
+```ruby
 include Equalizer.new(:latitude, :longitude)
 ```
 
@@ -246,7 +246,7 @@ Pattern looks familiar, doesn't it?
 
 Ok, let's check out the initializer:
 
-```Ruby
+```ruby
 def initialize(*keys)
   @keys = keys
   define_methods
@@ -256,7 +256,7 @@ end
 
 Nothing really to see here so let's check out *define_methods*:
 
-```Ruby
+```ruby
 def define_methods
   define_cmp_method
   define_hash_method
@@ -266,7 +266,7 @@ end
 
 Let's focus on *define_cmp_method* and ignore the other two methods for now:
 
-```Ruby
+```ruby
 def define_cmp_method
   keys = @keys
   define_method(:cmp?) do |comparator, other|
@@ -283,7 +283,7 @@ We define a method called *cmp?* that takes something that will denote the actua
 
 We then check all keys (read: attributes) and if they satisfy this monster:
 
-```Ruby
+```ruby
 __send__(key).public_send(comparator, other.__send__(key))
 ```
 
@@ -301,7 +301,7 @@ Not so complicated anymore, is it?
 
 With this out of the way, how is it used?
 
-```Ruby
+```ruby
 def ==(other)
   # snip
   other.kind_of?(self.class) && cmp?(__method__, other)
@@ -312,7 +312,7 @@ So first we check if the objects have the same class.
 Then comes the interesting part: We call *cmp?* and pass ```__method__``` to it which is a special identifier that Ruby sets up for when you enter a method and that gives you the actual method name back.
 So we could have also written:
 
-```Ruby
+```ruby
 cmp?(:==, other)
 ```
 
@@ -323,7 +323,7 @@ There are multiple reasons for this. First and foremost, it communicates intent 
 With this quick digression, let's come back to this one:
 
 
-```Ruby
+```ruby
 def ==(other)
   # snip
   cmp?(__method__, other)

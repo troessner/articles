@@ -9,7 +9,7 @@ We have been quite busy since the `Reek` 3 release - here are my favourite featu
 `Reek` now detects unused private methods and warns you.
 Code like this:
 
-```Ruby
+```ruby
 class Car
   def start
     drive
@@ -49,7 +49,7 @@ However it's idiomatic Ruby to use blocks for a lot of different things and most
 
 For instance it's quite common to have `before` and <`after` hooks in the test framework of your choice like this:
 
-```Ruby
+```ruby
 before do
   my_collection.each do |item|
     # do something with `item``

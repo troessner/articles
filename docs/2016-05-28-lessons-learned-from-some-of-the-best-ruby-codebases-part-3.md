@@ -15,7 +15,7 @@ When would you use an abstract type?
 
 Think about your typical web shop. You might have a base user class with some common methods:
 
-```Ruby
+```ruby
 class User
   def full_name
     "#{first_name} #{last_name}"
@@ -25,7 +25,7 @@ end
 
 And then you have 2 other, more concrete classes like this:
 
-```Ruby
+```ruby
 class RegisteredUser < User
   def login
     # Login via email / password
@@ -44,7 +44,7 @@ However in its current state every other user of your classes, e.g. your fellow 
 
 With `Abstract Type` you would fix this like this:
 
-```Ruby
+```ruby
 class User
   include AbstractType
 
@@ -67,7 +67,7 @@ Excellent question!
 
 Ruby being, well, Ruby, there are of course multiple ways to instantiate objects. You could use [allocate](http://ruby-doc.org/core-2.2.3/Class.html#method-i-allocate) for example:
 
-```Ruby
+```ruby
 user = User.new  # raises NotImplementedError: User is an abstract type
 # Ok, let's go with `allocate`
 user = User.allocate
@@ -81,13 +81,13 @@ So how does it work? Let's start with the `include` statement and then work our 
 When you call
 
 
-```Ruby
+```ruby
 include AbstractType
 ```
 
 in your class this will prompt the Ruby runtime to call the [`included`](http://ruby-doc.org/core-2.3.0/Module.html#method-i-included) callback that is defined at the top level of the gem:
 
-```Ruby
+```ruby
 module AbstractType
   def self.included(descendant)
     super
@@ -101,7 +101,7 @@ end
 
 With `create_new_method` looking like this:
 
-```Ruby
+```ruby
 def self.create_new_method(abstract_class)
   abstract_class.define_singleton_method(:new) do |*args, &block|
     if equal?(abstract_class)
@@ -128,7 +128,7 @@ When we're in one of the subclasses of our abstract class this guard will fail i
 With this out of the way let's get back to the `included` callback:
 
 
-```Ruby
+```ruby
 def self.included(descendant)
   super
   create_new_method(descendant)
@@ -140,7 +140,7 @@ The `descendant` (read: "base class" this module is included in) is extending th
 
 One of those methods is the `abstract_method` we saw in the example at the beginning:
 
-```Ruby
+```ruby
 def abstract_method(*names)
   names.each(&method(:create_abstract_instance_method))
   self
@@ -149,7 +149,7 @@ end
 
 This is the method that allows you to declare your abstract method a la:
 
-```Ruby
+```ruby
 abstract_method :foo, :bar
 ```
 
@@ -157,13 +157,13 @@ A bunch of interesting things going on here. First of all, we're using a neat li
 
 This
 
-```Ruby
+```ruby
 names.each(&method(:create_abstract_instance_method))
 ```
 
 basically means
 
-```Ruby
+```ruby
 names.each do |name|
   create_abstract_instance_method name
 end
@@ -173,7 +173,7 @@ and heavily relies on [`Method#to_proc`](http://ruby-doc.org/core-2.3.0/Method.h
 
 The `self` at the end
 
-```Ruby
+```ruby
 def abstract_method(*names)
   names.each(&method(:create_abstract_instance_method))
   self
@@ -184,7 +184,7 @@ allows you to chain calls to `abstract_method` (of which I don't really see the 
 
 And what does `create_abstract_instance_method` do?
 
-```Ruby
+```ruby
 def create_abstract_instance_method(name)
   define_method(name) do |*|
     fail NotImplementedError, "#{self.class}##{name} is not implemented"
@@ -210,7 +210,7 @@ With the resurgence of functional programming these days people talk a lot about
 
 Imagine you have a bank account model like this in Ruby:
 
-```Ruby
+```ruby
 class Account
   attr_reader :balance, :interest
 
@@ -227,7 +227,7 @@ end
 
 In its current form, every other piece of code in your application could mutate it like this:
 
-```Ruby
+```ruby
 account = Account.new
 # => #<Account:0x007fe7d1611e88 @balance=0>
 account.balance
@@ -241,7 +241,7 @@ account.balance
 
 `Adamantium` to the rescue!
 
-```Ruby
+```ruby
 require 'adamantium'
 
 class Account
@@ -254,7 +254,7 @@ end
 
 Now watch what happens when I try my shenanigans from before again:
 
-```Ruby
+```ruby
 account = Account.new
 # => #<Account:0x007fe7d1611e88 @balance=0>
 account.balance
@@ -272,7 +272,7 @@ Basically `Adamantium` offers 3 strategies for freezing your objects:
 
 The default strategy is `deep`. Here's the example from the README:
 
-```Ruby
+```ruby
 require 'adamantium'
 require 'securerandom'
 
@@ -297,7 +297,7 @@ end
 
 And now let's contrast this with the `flat` strategy:
 
-```Ruby
+```ruby
 class FlatExample
   include Adamantium::Flat
 
@@ -321,7 +321,7 @@ For the sake of brevity, we'll exclude the `noop` mode and focus on the `deep` a
 
 Let's start our investigation with the `included` callback for the `Adamantium` module:
 
-```Ruby
+```ruby
 module Adamantium
   def self.included(descendant)
     descendant.class_eval do
@@ -339,7 +339,7 @@ We then include the [`Memoizable`](https://github.com/dkubb/memoizable) module (
 
 We'll start with checking out `ModuleMethods`:
 
-```Ruby
+```ruby
 module Adamantium
   module ModuleMethods
     def freezer
@@ -361,13 +361,13 @@ end
 The `freezer` methods determines what strategy to use. As I already mentioned above you can see that `deep` is the default strategy. And then there's the `memoize` method you saw being used above in our example from the README.
 There's quite a lot going on in this method so let's step through it line by line:
 
-```Ruby
+```ruby
 options = methods.last.kind_of?(Hash) ? methods.pop : {}
 ```
 
 That's a neat trick right there. This allows us to write
 
-```Ruby
+```ruby
 memoize :whatever # or...
 memoize :whatever, option: :bar
 ```
@@ -376,14 +376,14 @@ and it will still work out.
 
 Note that you couldn't do this just with Ruby's default arguments:
 
-```Ruby
+```ruby
 def foo(*names, hashie = {}); end
 # => SyntaxError: unexpected '=', expecting ')'
 ```
 
 You *could* achieve the same using Ruby's keyword arguments like this:
 
-```Ruby
+```ruby
 def foo(*names, hashie: {}); end
 ```
 
@@ -391,19 +391,19 @@ but I assume this code was written with Ruby < 2 in mind which didn't support ke
 
 Next we determine the freezer to use via the options or use the default freezer (which is `deep` like already mentioned):
 
-```Ruby
+```ruby
 method_freezer = Freezer.parse(options) || freezer
 ```
 
 We then iterate over __all__ the methods the object in question has and freeze them via `memoize_method`
 
-```Ruby
+```ruby
 methods.each { |method| memoize_method(method, method_freezer) }
 ```
 
 only to return `self` at the end
 
-```Ruby
+```ruby
 self
 ```
 
@@ -411,7 +411,7 @@ so we can chain the `memoize` calls if we like.
 
 Let's check out how the actual freezing is done:
 
-```Ruby
+```ruby
 module Adamantium
   class Freezer
     class Deep < self
@@ -427,7 +427,7 @@ Ok, so the deep freezing is delegated to [IceNine](https://github.com/dkubb/ice_
 
 One thing I'd quickly like to talk about though is this:
 
-```Ruby
+```ruby
 module Adamantium
   class Freezer
     class Deep < self  # <- Wat?
@@ -439,20 +439,20 @@ end
 
 `Deep` inherits from `self`. And what is `self` here?
 
-```Ruby
+```ruby
 class Omg; puts self; class Bar < self; end; end
 # => Omg
 ```
 
 So
 
-```Ruby
+```ruby
 class Deep < self
 ```
 
 is actually a fancy way of writing
 
-```Ruby
+```ruby
 class Deep < Freezer
 ```
 
@@ -466,7 +466,7 @@ We saw how the default strategy is applied. What about that the `flat` strategy?
 
 A quick reminder to how applying and using the `flat` strategy looked like:
 
-```Ruby
+```ruby
 class FlatExample
   include Adamantium::Flat
   #
@@ -489,7 +489,7 @@ How is this implemented?
 
 Let's look at the `included` callback:
 
-```Ruby
+```ruby
 module Adamantium
   module Flat
     def freezer
@@ -508,7 +508,7 @@ end
 
 That's pretty cool. Let me walk you through it:
 
-```Ruby
+```ruby
 descendant.instance_exec(self) do |mod|
   # snip
 end
@@ -519,13 +519,13 @@ It's the module constant, so...`Adamantium::Flat`.
 We then include `Adamantium`. That is something we already covered above in this article. So business as usual.
 But then we extend `mod`, so `Adamantium::Flat`. Why? Because this basically overwrites the `freezer` methods that we imported in our class by doing
 
-```Ruby
+```ruby
 include Adamantium
 ```
 
 so that this now returns the `flat` strategy
 
-```Ruby
+```ruby
 def freezer
   Freezer::Flat
 end
@@ -533,7 +533,7 @@ end
 
 not the `deep` strategy
 
-```Ruby
+```ruby
 def freezer
   Freezer::Deep
 end

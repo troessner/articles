@@ -8,7 +8,7 @@ Right after the release of `Reek` 2 we started to work on [`Reek` 3](https://git
 
 The changes that I'm most exited about is that we agreed on a [public API](https://github.com/troessner/reek/issues/526)  and [implemented it as well](https://github.com/troessner/reek/pull/544). For this API to use you'll basically just do something like this:
 
-```Ruby
+```ruby
 require 'reek'
 
 reporter = Reek::Report::TextReport.new
@@ -50,7 +50,7 @@ to your `Reek` config and that's it - `Reek` will ignore those directories when 
 
 We fixed one of the most annoying bugs that has been around for years. Until now, `Reek` would not recognise singleton methods if they were defined with the class << self syntax, meaning that this:
 
-```Ruby
+```ruby
 class C
   class << self
     def m(a)

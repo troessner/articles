@@ -58,7 +58,7 @@ This can be very helpful when refactoring when you want to focus on one group of
 
 And last but not least smell detectors can be configured or disabled in code comments like this (in addition to `Reek`'s regular [configuration mechanism](https://github.com/troessner/reek/wiki/Basic-Smell-Options)):
 
-```Ruby
+```ruby
 # This method smells of :reek:NestedIterators
 def smelly_method foo
   foo.each {|bar| bar.each {|baz| baz.qux}}
@@ -77,13 +77,13 @@ We completely restructured and revised the command line interface for `Reek`:
 
 We made the `reek_of` / `reek_only_of` rspec matchers a little smarter - you can still just do something like:
 
-```Ruby
+```ruby
 expect(src).not_to reek_of(:UncommunicativeParameterName)
 ```
 
 but if you really want to be more specific about this you can now add a hash of "smell_details" `reek_of` will check for as well like this:
 
-```Ruby
+```ruby
 expect(src).not_to reek_of(:UncommunicativeParameterName, name: 'x1' )
 ```
 
