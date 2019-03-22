@@ -25,6 +25,7 @@ There are a lot of inspirations in my life but books are certainly one of the mo
 * [Drive](http://www.amazon.com/Drive-Surprising-Truth-About-Motivates/dp/1594484805) - that one was a real eye opener for me. What motivates us? Certainly not carrot and the stick.
 * [The Five Dysfunctions of a Team: A Leadership Fable](http://www.amazon.com/Five-Dysfunctions-Team-Leadership-Fable/dp/0787960756/ref=sr_1_1?s=books&amp;ie=UTF8&amp;qid=1456260202&amp;sr=1-1&amp;keywords=the+5+dysfunctions+of+a+team) - That one caught me of guard quite a few times. Realising that you're showing those dysfunctions yourself can be a painful process
 * [Essentialism](http://gregmckeown.com/essentialism-the-disciplined-pursuit-of-less/) - Do less but better.
+* [It doesn't have to be crazy at work](https://www.amazon.com/Doesnt-Have-Be-Crazy-Work/dp/0062874780/ref=sr_1_1?crid=R7V0DZ2NA7LK&keywords=it+doesnt+have+to+be+crazy+at+work&qid=1553284149&s=gateway&sprefix=it+doesnt+%2Caps%2C236&sr=8-1) - The voice of reason in a mad world.
 
 ### Computer Science
 
