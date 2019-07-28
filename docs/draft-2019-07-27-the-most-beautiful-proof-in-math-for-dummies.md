@@ -40,16 +40,22 @@ Say we have two numbers called a and b (e.g. 15 and 35 in our example above). Bo
 
 Just writing this down gives us two equations:
 
+```
 [1] a = c * m
 [2] b = c * n
+```
 
 We can now do something that might seem odd to you but that is perfectly fine: We just subtract the whole second equation from the first one. So [1] - [2]:
 
+```
 a - b = (c * m)  - (c * n)
+```
 
 By simply applying the [Distributive Property](https://en.wikipedia.org/wiki/Distributive_property) we get:
 
+```
 a - b = c (m - n)
+```
 
 m - n is just another number. Following our example above 7 and 3, so 4.
 Now we just need to read it out loud and we are done: "a minus b is the same as c times some number" and thus, every number that divides two numbers also divides their difference.
@@ -58,4 +64,59 @@ Now we just need to read it out loud and we are done: "a minus b is the same as 
 
 That one is quick and easy: 1 itself is not a prime number and the smallest prime number is 2. 1 divided by 2 doesn't yield an integer (but rather a fraction: 0.5), so 2 doesn't divide 1. The same is by extension valid for all numbers bigger than 2 and thus all prime numbers.
 
+### The Fundamental Theorem Of Arithmetic
+
+Quoting from [wikipedia](https://en.wikipedia.org/wiki/Fundamental_theorem_of_arithmetic)
+
+> The fundamental theorem of arithmetic states that every integer greater than 1 either is a prime number itself or can be represented as the product of prime numbers and that, moreover, this representation is unique, up to (except for) the order of the factors.
+
+Let's look at a simple example to hammer this home.
+
+We'll start with 12. How can we write this in prime factors?
+
+```
+12 = 2 * 6 = 2 * (2 * 3)
+```
+
+Does the order matter? No. So
+
+```
+12 = 2 * 2 * 3 = 2 * 3 * 2 = 3 * 2 * 2
+```
+
+Now the important question: Can we write this in *any* other way as product? The answer is no, We can't. And that's exactly what the theorem of arithemtic is about.
+
 ### The Actual Proof
+
+Ok, you made it this far and now we have everything we need to finally do this proof.
+
+What we are going to do is a so called "reductio ad absurdum" proof. That means assume the opposite of what you want to proof and then show that this will lead to a contradiction, thus proofing what you actually set out to proof. We want to proof that there are infinitely many primes, so the opposite of that is that there are finitely many primes. This means there is a finite list of all primes { 2, 3, 5, 7, ...., X }. We don't know what the last prime number is so I called it X. It doesn't really matter though what X is as you'll see as the proof progresses. Don't be scared of the brackets syntax {}, that is just the mathematical notation for a set: A bucket with different things in it. Numbers in this case.
+
+We'll need to write down this list a bit more mathemical though by abstracting away the concrete numbers so it looks like this: { p<sub>1</sub>, p<sub>2</sub>, p<sub>3</sub>,... p<sub>n</sub> }. p<sub>1</sub> is the first prime number (so 2), p<sub>2</sub> the second (so 3) and so on. p<sub>n</sub> is the last one, X in my example above.
+
+Now let's just multiply all of those numbers together which results in another number that we will call P:
+
+```
+P = p<sub>1</sub>, p<sub>2</sub>, p<sub>3</sub>,... p<sub>n</sub>
+```
+and let's set another number called Q like this:
+
+```
+Q = P + 1
+```
+
+What kind of number is Q? Can it be a prime? No, it can't because it is already greater than the list of all prime numbers itself. Imagine if {2, 3, 5} were the only prime numbers, their product P would be 30. Q would be 31 so it's obvious it can't be on that list.
+
+Can it be a composite number? Remember the fundamental theorem of arithmetic above:
+
+> every integer greater than 1 either is a prime number itself or can be represented as the product of prime numbers
+
+We know P is a composite number (by the way we constructed it) and now we assume that Q is one as well. This means they Q is a product of primes and since we constructed P by multiplying all primes we have this means that there is a prime number, let's call it d, from the set of all prime numbers, that divides both P and Q.
+
+Now let's recall our introduction above: Every number that divides two numbers also divides their difference. The difference between Q and P is:
+
+```
+Q - P = 1
+```
+
+However we previously said that no prime number divides 1. Hence our whole assumption that Q is a composite number is wrong. It also can't be a prime. And now we have arrived at a contradiction. So our assumption that prime numbers are finite is wrong. Hence the opposite is true: Prime numbers are infinite.
