@@ -1,5 +1,6 @@
 ## Thoughts and Musings
 
+* [The Most Beautiful Proof In Math For Dummies](2019-07-27-the-most-beautiful-proof-in-math-for-dummies.md)
 * [Why Does The Universe Favour The Creation Of Life?](2018-06-25-why-does-the-universe-favour-the-creation-of-life.md)
 * [So What’s The Whole Point Of Everything?](2017-10-28-so-whats-the-whole-point-of-everything.md)
 * [The Rockstar Ninja Coder And You](2016-08-15-the-rockstar-ninja-coder-and-you.md)
