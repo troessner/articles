@@ -126,7 +126,7 @@ Does the order matter? No. So
 12 = 2 * 2 * 3 = 2 * 3 * 2 = 3 * 2 * 2
 ```
 
-Now the important question: Can we write this in **any** other way as product? The answer is no, we can't. And that's exactly what the theorem of arithmetic is about. So every composite number can eventually be written as a unique product of prime numbers.
+Now the important question: Can we write this in **any** other way as product? The answer is no, we can't. And that's exactly what the theorem of arithmetic is about. So every composite number can eventually be written as a unique product of prime numbers. Proving this would be (far) beyond of the scope of this article so you either trust me on this one or you check out the proof [here](https://www.youtube.com/watch?v=7sw6LdAfHgE).
 
 ### The Actual Proof
 
@@ -150,22 +150,45 @@ and let's set another number called Q like this:
 Q = P + 1
 ```
 
-What kind of number is Q? Can it be a prime? No, it can't, because it is already greater than the list of all prime numbers itself. Imagine if {2, 3, 5} were the only prime numbers, their product P would be 30. Q would be 31 so it's obvious it can't be on that list.
+What kind of number is Q? Can it be a prime? No, it can't, because it is already greater than the list of all prime numbers itself. Let's create a simple example to make this clearer. Say the list of primes is finite and only contains {2, 3, 5}. Then we have:
 
-Can it be a composite number? Remember the fundamental theorem of arithmetic above:
+```
+P = 2 * 3 * 5 = 30
+```
+
+And Q is
+
+```
+Q = P + 1 = 31
+```
+
+Now it's kind of obvious Q can't be on that prime list.
+
+Can Q be a composite number? Remember the fundamental theorem of arithmetic above:
 
 > every integer greater than 1 either is a prime number itself or can be represented as the product of prime numbers
 
-We know P is a composite number (by the way we constructed it as product of all primes) and now we assume that Q is another composite number. This means that Q is a product of primes as well (just like P) and since we constructed P by multiplying all primes that exists this must mean that there is a prime number, let's call it d, from the set of all prime numbers, that divides both P and Q.
+We know P is a composite number by the way we constructed it as product of all primes. Now we assume that Q is another composite number. This means that Q is a product of primes as well (just like P) and since we constructed P by multiplying all primes this must mean that there is a prime number, let's call it d, that divides both P and Q.
 
-Now we need to recall what we said in introduction above:
+This is quite a complex statement, so let's look at our simple example from above to make this clearer:
+
+Again, the list of primes is finite and only contains {2, 3, 5}. Then we have:
+
+```
+P = 2 * 3 * 5 = 30
+Q = P + 1 = 31
+```
+
+We just excluded that Q is a prime above so that means Q must be a composite number. Since all of the primes were used to construct P, at least one of them, let's call it d, must divide Q as well. So either 2 or 3 or 5 need not only to divide P, but Q as well.
+
+Now we need to recall what we said in our introduction above:
 
 > Every number that divides two numbers also divides their difference.
 
 The difference between Q and P is:
 
 ```
-Q - P = 1
+Q - P = 1  // -> 31 - 30 = 1
 ```
 
 However we previously said that no prime number divides 1. So there is no d. Hence our whole assumption that Q is a composite number is wrong. And now we have arrived at a contradiction. So our assumption that prime numbers are finite is wrong.
