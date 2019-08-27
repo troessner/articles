@@ -38,7 +38,7 @@ Take "Proficient in language / technology / eco system X" - a vanity metric. You
 
 Show me code. Show me your open source contributions. If you don't have any, fine by me. A blog where you have written about your latest learnings works as well. Or an active conference life you tweet about. Or you attended a user group and maybe even did a presentation. Literally anything that shows that you actually care about what you do would suffice.
 
-Somebody saying he has 10 years of experience in X with no traces to be found anywhere on the web except in his CV is probably not the guy you want. Good news is, you can train your HR team how to get a [first impression](https://troessner.svbtle.com/how-to-use-github-to-evaluate-developers) about a candidate's technical skills without being technical themselves.
+Somebody saying he has 10 years of experience in X with no traces to be found anywhere on the web except in his CV is probably not the guy you want. Good news is, you can train your HR team how to get a [first impression](https://github.com/troessner/articles/blob/master/docs/2016-02-06-how-to-use-github-to-evaluate-developers.md) about a candidate's technical skills without being technical themselves.
 Bad news is, this costs more time so it is **not as rewarding** as quickly ticking off a checkbox that says "can code in Ruby".
 
 "Cultural fit" is something else that seems to be extremely important to most companies because they know that creative knowledge workers need to get along in order to really function well. At the same time, this is also the most fuzzy metric and sometimes it seems almost intentionally so.

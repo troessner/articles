@@ -154,11 +154,11 @@ Please keep the example project and `Mutant` call from above in the back of your
 
 While doing research for my presentation, I wrote an introductory series of articles about the gems `Mutant` uses:
 
-* [part 1](https://troessner.svbtle.com/lessons-learned-from-some-of-the-best-ruby-codebases-out-there-part-1): The [Concord](https://github.com/mbj/concord) gem (which helps cutting down boilerplate code) and the [Procto](https://github.com/snusnu/procto) gem (for method objects)
-* [part 2](https://troessner.svbtle.com/lessons-learned-from-some-of-the-best-ruby-codebases-out-there-part-2): The [IceNine](https://github.com/dkubb/ice_nine) gem (for deep freezing objects)
-* [part 3](https://troessner.svbtle.com/lessons-learned-from-some-of-the-best-ruby-codebases-out-there-part-3): The [AbstractType](https://github.com/dkubb/abstract_type) gem (for, well, [abstract types](https://en.wikipedia.org/wiki/Abstract_type)) and the [Adamantium](https://github.com/dkubb/adamantium) gem (for high level strategies for freezing)
+* [part 1](https://github.com/troessner/articles/blob/master/docs/2016-04-23-lessons-learned-from-some-of-the-best-ruby-codebases-part-1.md): The [Concord](https://github.com/mbj/concord) gem (which helps cutting down boilerplate code) and the [Procto](https://github.com/snusnu/procto) gem (for method objects)
+* [part 2](https://github.com/troessner/articles/blob/master/docs/2016-05-04-lessons-learned-from-some-of-the-best-ruby-codebases-part-2.md): The [IceNine](https://github.com/dkubb/ice_nine) gem (for deep freezing objects)
+* [part 3](https://github.com/troessner/articles/blob/master/docs/2016-05-28-lessons-learned-from-some-of-the-best-ruby-codebases-part-3.md): The [AbstractType](https://github.com/dkubb/abstract_type) gem (for, well, [abstract types](https://en.wikipedia.org/wiki/Abstract_type)) and the [Adamantium](https://github.com/dkubb/adamantium) gem (for high level strategies for freezing)
  
-You do not need to read part 2 and 3 to fully understand everything down below but you **should** read [part 1](https://troessner.svbtle.com/lessons-learned-from-some-of-the-best-ruby-codebases-out-there-part-1) as I will refer to `Concord` and `Procto` quite often.
+You do not need to read part 2 and 3 to fully understand everything down below but you **should** read [part 1](https://github.com/troessner/articles/blob/master/docs/2016-04-23-lessons-learned-from-some-of-the-best-ruby-codebases-part-1.md) as I will refer to `Concord` and `Procto` quite often.
 
 `Mutant` creates its mutations by utilizing the [abstract syntax tree (AST)](https://en.wikipedia.org/wiki/Abstract_syntax_tree) represented by [S-expressions](https://en.wikipedia.org/wiki/S-expression) that the ruby parser generates from your source code.
 
@@ -986,7 +986,7 @@ class Mutation
 end
 ```
 
-`Mutation` itself is an abstract base class (notice the `include AbstractType`, you can read up on this [here](https://troessner.svbtle.com/lessons-learned-from-some-of-the-best-ruby-codebases-out-there-part-3)), so it won't be instantiated directly.
+`Mutation` itself is an abstract base class (notice the `include AbstractType`, you can read up on this [here](https://github.com/troessner/articles/blob/master/docs/2016-05-28-lessons-learned-from-some-of-the-best-ruby-codebases-part-3.md)), so it won't be instantiated directly.
 As you can see it has basically just 2 attributes:
 
 ```ruby
