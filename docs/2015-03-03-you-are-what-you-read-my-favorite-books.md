@@ -27,6 +27,8 @@ There are a lot of inspirations in my life but books are certainly one of the mo
 * [Essentialism](http://gregmckeown.com/essentialism-the-disciplined-pursuit-of-less/) - Do less but better.
 * [It doesn't have to be crazy at work](https://www.amazon.com/Doesnt-Have-Be-Crazy-Work/dp/0062874780/ref=sr_1_1?crid=R7V0DZ2NA7LK&keywords=it+doesnt+have+to+be+crazy+at+work&qid=1553284149&s=gateway&sprefix=it+doesnt+%2Caps%2C236&sr=8-1) - The voice of reason in a mad world.
 * [Measure What Matters](https://www.amazon.com/Measure-What-Matters-Google-Foundation/dp/0525536221/ref=sr_1_1?crid=FXKS686Y4IYJ&keywords=john+doerr+measure+what+matters&qid=1571440765&sprefix=john+doerr%2Caps%2C244&sr=8-1) - essential reading for everybody who wants to improve his personal and professional life by (properly) setting goals.
+* [Crucial conversations](https://www.goodreads.com/book/show/15014.Crucial_Conversations) - Should have read this book 10 years ago.
+* [Start With Why](https://www.goodreads.com/book/show/7108725-start-with-why)
 
 ### Computer Science
 
