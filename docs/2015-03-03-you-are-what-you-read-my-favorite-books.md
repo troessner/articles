@@ -23,11 +23,12 @@ There are a lot of inspirations in my life but books are certainly one of the mo
 * [Delivering Happiness: A Path to Profits, Passion, and Purpose](http://www.amazon.com/Delivering-Happiness-Profits-Passion-Purpose/dp/0446576220/ref=sr_1_1?ie=UTF8&amp;qid=1428352401&amp;sr=8-1&amp;keywords=zappos) - funny, witty and honest. Taught me the value of team culture.
 * [How Google Works](http://www.amazon.com/How-Google-Works-Eric-Schmidt/dp/1455582344/ref=sr_1_1?ie=UTF8&amp;qid=1428352473&amp;sr=8-1&amp;keywords=how+google+works) - yes, there is some self-marketing happening here, but it still worth your while.
 * [Drive](http://www.amazon.com/Drive-Surprising-Truth-About-Motivates/dp/1594484805) - that one was a real eye opener for me. What motivates us? Certainly not carrot and the stick.
-* [The Five Dysfunctions of a Team: A Leadership Fable](http://www.amazon.com/Five-Dysfunctions-Team-Leadership-Fable/dp/0787960756/ref=sr_1_1?s=books&amp;ie=UTF8&amp;qid=1456260202&amp;sr=1-1&amp;keywords=the+5+dysfunctions+of+a+team) - That one caught me of guard quite a few times. Realising that you're showing those dysfunctions yourself can be a painful process
+* [The Five Dysfunctions of a Team: A Leadership Fable](https://www.goodreads.com/book/show/27822929) - That one caught me of guard quite a few times. Realising that you're showing those dysfunctions yourself can be a painful process
 * [Essentialism](http://gregmckeown.com/essentialism-the-disciplined-pursuit-of-less/) - Do less but better.
-* [It doesn't have to be crazy at work](https://www.amazon.com/Doesnt-Have-Be-Crazy-Work/dp/0062874780/ref=sr_1_1?crid=R7V0DZ2NA7LK&keywords=it+doesnt+have+to+be+crazy+at+work&qid=1553284149&s=gateway&sprefix=it+doesnt+%2Caps%2C236&sr=8-1) - The voice of reason in a mad world.
-* [Measure What Matters](https://www.amazon.com/Measure-What-Matters-Google-Foundation/dp/0525536221/ref=sr_1_1?crid=FXKS686Y4IYJ&keywords=john+doerr+measure+what+matters&qid=1571440765&sprefix=john+doerr%2Caps%2C244&sr=8-1) - essential reading for everybody who wants to improve his personal and professional life by (properly) setting goals.
+* [It doesn't have to be crazy at work](https://www.goodreads.com/book/show/38900866) - The voice of reason in a mad world.
+* [Measure What Matters](https://www.goodreads.com/book/show/39286958) - essential reading for everybody who wants to improve his personal and professional life by (properly) setting goals.
 * [Crucial conversations](https://www.goodreads.com/book/show/15014.Crucial_Conversations) - Should have read this book 10 years ago.
+* [The Tipping Point: How Little Things Can Make a Big Difference](https://www.goodreads.com/book/show/2612)
 * [Start With Why](https://www.goodreads.com/book/show/7108725-start-with-why)
 
 ### Computer Science
