@@ -30,6 +30,7 @@ There are a lot of inspirations in my life but books are certainly one of the mo
 * [Crucial conversations](https://www.goodreads.com/book/show/15014.Crucial_Conversations) - Should have read this book 10 years ago.
 * [The Tipping Point: How Little Things Can Make a Big Difference](https://www.goodreads.com/book/show/2612)
 * [Start With Why](https://www.goodreads.com/book/show/7108725-start-with-why)
+* Culture Map
 
 ### Computer Science
 
